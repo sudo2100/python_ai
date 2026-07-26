@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT &amp; 파이썬 · 2장 제어문과 자료구조 (AI 활용판)</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#ffffff; --ink:#1f2933; --sub:#52606d;
+    --brand:#2f6fed; --brand-d:#1b4fc0; --accent:#0ea5a4;
+    --line:#e4e9f2; --code-bg:#1e2430; --code-ink:#e6edf3;
+    --goal:#eef4ff; --goal-b:#2f6fed;
+    --ex:#f0fbf7; --ex-b:#0ea5a4;
+    --lab:#fff7ed; --lab-b:#f59e0b;
+    --warn:#fef2f2; --warn-b:#ef4444;
+    --ai:#f3effe; --ai-b:#7c3aed; --ai-ink:#5b21b6;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+
+  header.hero{background:linear-gradient(135deg,#0ea5a4,#6d28d9);color:#fff;
+    padding:52px 20px 44px;margin-bottom:28px}
+  header.hero .inner{max-width:920px;margin:0 auto}
+  .kicker{font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:0 0 10px}
+  header.hero h1{margin:0 0 12px;font-size:2rem;font-weight:800;line-height:1.3}
+  header.hero p{margin:0;opacity:.92;font-size:1.02rem}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .meta span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+    padding:5px 12px;border-radius:20px;font-size:.82rem}
+
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px 24px;margin-bottom:34px;box-shadow:0 1px 3px rgba(20,40,80,.05)}
+  nav.toc h2{margin:0 0 6px;font-size:1.05rem;color:#0b7a72}
+  nav.toc .grp{font-size:.8rem;font-weight:700;color:var(--sub);margin:12px 0 4px;letter-spacing:.03em}
+  nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px}
+  nav.toc li{margin:5px 0;break-inside:avoid}
+  nav.toc a{text-decoration:none;color:var(--ink)}
+  nav.toc a:hover{color:var(--brand);text-decoration:underline}
+  nav.toc .solo{padding-left:20px;margin:4px 0}
+  nav.toc .solo a{font-weight:700;color:var(--ai-ink)}
+
+  section.module{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:0 28px 26px;margin-bottom:30px;box-shadow:0 1px 3px rgba(20,40,80,.05);overflow:hidden}
+  .mod-head{margin:0 -28px 20px;padding:18px 28px;background:#f4fbfa;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px}
+  .mod-num{flex:0 0 auto;width:42px;height:42px;border-radius:11px;background:var(--accent);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:1.15rem}
+  .mod-head h2{margin:0;font-size:1.35rem;font-weight:800}
+
+  section.module.intro .mod-head{background:#f6f2ff;border-bottom-color:#e4d9fb}
+  section.module.intro .mod-num{background:var(--ai-b);font-size:.95rem}
+
+  .block{margin:22px 0}
+  .tag{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:.82rem;
+    letter-spacing:.03em;padding:4px 12px;border-radius:8px;margin-bottom:12px}
+  .tag.goal{background:var(--goal);color:var(--goal-b)}
+  .tag.concept{background:#eef2f9;color:#334155}
+  .tag.ex{background:var(--ex);color:#0b7a72}
+  .tag.lab{background:var(--lab);color:#b45309}
+  .tag.ai{background:var(--ai);color:var(--ai-ink)}
+
+  .goal-box{background:var(--goal);border-left:4px solid var(--goal-b);border-radius:0 10px 10px 0;
+    padding:14px 18px}
+  .goal-box ul{margin:0;padding-left:20px}
+  .goal-box li{margin:4px 0}
+
+  p{margin:10px 0}
+  ul.plain{margin:10px 0;padding-left:22px}
+  ul.plain li{margin:6px 0}
+  b.hl{color:var(--brand-d)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#f1f5fb;font-weight:700;color:#334155}
+  td code{white-space:nowrap}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;
+    overflow-x:auto;margin:12px 0;font-size:.92rem;line-height:1.6}
+  code{font-family:"D2Coding","Consolas","Menlo",monospace}
+  pre code{font-family:"D2Coding","Consolas","Menlo",monospace}
+  p code,li code,td code{background:#eef1f6;color:#b23a48;padding:1px 6px;border-radius:5px;font-size:.9em}
+  .cm{color:#7f9cc0}
+  .kw{color:#ff9d6a}
+  .st{color:#9ae6a0}
+  .nu{color:#f6c177}
+  .fn{color:#7cc7ff}
+  .out{display:block;color:#8b97a7;margin-top:2px}
+  .result{background:#f4fbfa;border:1px dashed #a7ddd8;border-radius:10px;padding:10px 14px;
+    margin:10px 0;font-family:"D2Coding","Consolas",monospace;font-size:.9rem;color:#334155;white-space:pre-wrap}
+  .result b{color:#0b7a72}
+
+  .note{background:#f0fbf7;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.95rem}
+  .warn{background:var(--warn);border-left:4px solid var(--warn-b);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.95rem}
+  .note b,.warn b{display:block;margin-bottom:3px}
+
+  /* AI box */
+  .ai-box{background:var(--ai);border:1px solid #ddd0fb;border-left:4px solid var(--ai-b);
+    border-radius:0 12px 12px 0;padding:16px 18px;margin:14px 0}
+  .ai-box h4{margin:0 0 8px;font-size:1.02rem;color:var(--ai-ink);display:flex;align-items:center;gap:8px}
+  .ai-box p{margin:8px 0}
+  .prompt{background:#fff;border:1px solid #ddd0fb;border-radius:10px;padding:10px 14px;margin:8px 0;
+    font-size:.93rem;white-space:pre-wrap}
+  .prompt::before{content:"💬 프롬프트 예시";display:block;font-size:.72rem;font-weight:800;
+    letter-spacing:.05em;color:var(--ai-b);margin-bottom:5px;text-transform:uppercase}
+  .prompt code{background:transparent;color:#3b0764;padding:0;font-size:.95em}
+  .ai-box ul.plain li{margin:5px 0}
+
+  .lab-box{background:var(--lab);border:1px solid #fcd9a0;border-left:4px solid var(--lab-b);
+    border-radius:0 10px 10px 0;padding:16px 18px;margin:14px 0}
+  .lab-box h4{margin:0 0 8px;font-size:1.02rem;color:#b45309}
+  .lab-box .req{background:#fff;border:1px solid #fcd9a0;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.92rem}
+  .lab-box.ai-lab{background:var(--ai);border-color:#ddd0fb;border-left-color:var(--ai-b)}
+  .lab-box.ai-lab h4{color:var(--ai-ink)}
+  .lab-box.ai-lab .req{border-color:#ddd0fb}
+
+  details.answer{margin-top:12px;background:#fff;border:1px solid #fcd9a0;border-radius:10px;overflow:hidden}
+  details.answer summary{cursor:pointer;padding:10px 14px;font-weight:700;color:#b45309;
+    background:#fffaf1;list-style:none;user-select:none}
+  details.answer summary::-webkit-details-marker{display:none}
+  details.answer summary::before{content:"▶ ";font-size:.8em}
+  details.answer[open] summary::before{content:"▼ "}
+  details.answer .body{padding:6px 14px 14px}
+  .lab-box.ai-lab details.answer{border-color:#ddd0fb}
+  .lab-box.ai-lab details.answer summary{color:var(--ai-ink);background:#f6f2ff}
+
+  footer{text-align:center;color:var(--sub);font-size:.9rem;margin-top:40px}
+  @media(max-width:640px){
+    nav.toc ol{columns:1}
+    header.hero h1{font-size:1.55rem}
+    .wrap{padding:0 14px 60px}
+    section.module{padding:0 18px 20px}
+    .mod-head{margin:0 -18px 18px;padding:16px 18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <p class="kicker">ChatGPT &amp; 파이썬 기초 프로그래밍</p>
+    <h1>2장 · 제어문과 자료구조 <span style="font-weight:700;opacity:.9">— AI 활용판</span></h1>
+    <p>조건·반복으로 프로그램의 흐름을 다루고, 리스트·딕셔너리·튜플·집합으로 데이터를 담는 법 — ChatGPT와 함께 배우고 검증하기</p>
+    <div class="meta">
+      <span>👥 대상: 일반인 입문자</span>
+      <span>🐍 Python 3.x</span>
+      <span>🤖 ChatGPT 활용</span>
+      <span>🧩 AI 학습가이드 + 13개 모듈</span>
+      <span>✍️ 예제 · 실습 · AI 실습(정답 포함)</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h2>📚 학습 목차</h2>
+  <div class="grp">AI 학습 가이드</div>
+  <div class="solo"><a href="#m0">코드를 만드는 AI, 검증하는 나 (ChatGPT 활용법)</a></div>
+  <div class="grp">PART 1. 제어문 — 프로그램의 흐름</div>
+  <ol>
+    <li><a href="#m1">개발 환경 준비 (VS Code)</a></li>
+    <li><a href="#m2">조건문 if · if~else</a></li>
+    <li><a href="#m3">다중 조건문 if~elif~else</a></li>
+    <li><a href="#m4">while 반복문</a></li>
+    <li><a href="#m5">for 반복문과 range()</a></li>
+    <li><a href="#m6">중첩 for문</a></li>
+  </ol>
+  <div class="grp">PART 2. 자료구조 — 데이터 담기</div>
+  <ol start="7">
+    <li><a href="#m7">리스트(List) 기초</a></li>
+    <li><a href="#m8">리스트 메서드와 내포</a></li>
+    <li><a href="#m9">문자열 인덱싱·슬라이싱·함수</a></li>
+    <li><a href="#m10">2차원 리스트</a></li>
+    <li><a href="#m11">딕셔너리(Dictionary)</a></li>
+    <li><a href="#m12">튜플(Tuple)</a></li>
+    <li><a href="#m13">집합(Set)</a></li>
+  </ol>
+</nav>
+
+<!-- ============ MODULE 0 : AI GUIDE ============ -->
+<section class="module intro" id="m0">
+  <div class="mod-head"><div class="mod-num">AI</div><h2>코드를 만드는 AI, 검증하는 나</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>조건문·반복문·자료구조를 배울 때 ChatGPT를 학습 도우미로 활용할 수 있다.</li>
+        <li>“코드를 만들어 줘” 대신 <b>“왜 그런지 설명해 줘”</b>로 묻는 법을 익힌다.</li>
+        <li>AI가 준 코드를 <b>직접 실행하고 검증</b>하는 습관을 기른다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>1장에서 배운 변수·자료형·연산자에 이어, 2장에서는 <b class="hl">조건문·반복문</b>으로 프로그램의 흐름을 만들고 <b class="hl">리스트·딕셔너리</b> 같은 자료구조로 데이터를 담습니다. 이 단계부터는 코드가 몇 줄로 길어지고 <b>논리(logic)</b>가 중요해집니다.</p>
+    <p>이럴 때 <b class="hl">ChatGPT</b>는 특히 유용합니다. 반복문이 왜 무한 루프에 빠지는지, 조건이 왜 원하는 대로 안 걸리는지, 리스트 메서드가 원본을 바꾸는지 등을 즉시 물어볼 수 있습니다. 다만 AI는 <b>그럴듯하지만 틀린 코드</b>를 줄 때도 있으므로, 이 교안은 항상 <b>“AI에게 묻고 → 직접 실행해 확인하고 → 이해한다”</b>는 흐름을 지킵니다.</p>
+    <table>
+      <tr><th>2장에서 이럴 때 물어보세요</th><th>이렇게</th></tr>
+      <tr><td>조건이 원하는 대로 안 걸릴 때</td><td>코드와 함께 “왜 이 조건이 참/거짓이 돼?”</td></tr>
+      <tr><td>반복문이 안 멈추거나 결과가 이상할 때</td><td>“이 while문이 왜 무한 루프에 빠져?”</td></tr>
+      <tr><td>리스트·딕셔너리 메서드가 헷갈릴 때</td><td>“append와 extend 차이를 예시로 설명해 줘”</td></tr>
+      <tr><td>연습이 더 필요할 때</td><td>“이 개념으로 초보자용 문제 3개 내 줘(정답은 숨기고)”</td></tr>
+    </table>
+    <div class="warn"><b>⚠️ 학습 원칙</b>
+      정답 코드를 그대로 복붙만 하면 논리력이 늘지 않습니다. <b>먼저 스스로 짜 본 뒤</b> “내 코드 어디가 틀렸어?”, “더 간결한 방법 있어?”라고 물어보세요.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 좋은 프롬프트의 4가지 요소</span>
+    <div class="ai-box">
+      <h4>🤖 원하는 답을 얻는 질문법</h4>
+      <p>같은 질문도 <b>구체적으로</b> 물으면 훨씬 좋은 답이 나옵니다.</p>
+      <ul class="plain">
+        <li><b>① 역할</b> — “너는 파이썬을 가르치는 친절한 선생님이야.”</li>
+        <li><b>② 상황/수준</b> — “나는 조건문을 오늘 처음 배우는 초보야.”</li>
+        <li><b>③ 원하는 것</b> — “if와 elif의 차이를 예시로 설명해 줘.”</li>
+        <li><b>④ 형식</b> — “표로 정리하고, 짧은 코드도 하나 넣어서.”</li>
+      </ul>
+      <div class="prompt"><code>너는 파이썬을 가르치는 친절한 선생님이야. 나는 오늘 처음 반복문을 배우는 완전 초보야. while문과 for문의 차이를 표로 정리하고, 각각 짧은 예시 코드를 하나씩 보여 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 0-1. 나만의 학습 파트너 만들기</h4>
+      <div class="req">위의 4가지 요소(역할·수준·원하는 것·형식)를 모두 넣어, ChatGPT에게 “조건문(if)이 왜 필요한지” 물어보는 프롬프트를 직접 작성하고 실제로 질문해 보세요. 답이 어려우면 “더 쉽게”, “예시 더 줘”라고 이어서 물어보세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>너는 코딩 학원 선생님이야. 나는 프로그래밍을 배운 지 일주일 된 초보야. 조건문(if)이 왜 필요한지 실생활 예(자판기, 신호등)로 3가지 들어 설명하고, 아주 짧은 파이썬 코드도 하나 보여 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">핵심: 역할·수준·원하는 것·형식을 모두 담았습니다. AI 답의 코드는 꼭 직접 실행해 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 1 ============ -->
+<section class="module" id="m1">
+  <div class="mod-head"><div class="mod-num">1</div><h2>개발 환경 준비 (VS Code)</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>대표적인 파이썬 개발 도구의 종류를 안다.</li>
+        <li>VS Code를 설치하고 파이썬 확장 팩을 적용할 수 있다.</li>
+        <li>작업 폴더를 열고 .py 파일을 실행해 터미널 결과를 확인할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>코드를 편하게 작성·실행하도록 돕는 프로그램을 <b class="hl">IDE(통합개발환경)</b>라고 합니다. 파이썬 IDLE 외에도 <b>VS Code, 파이참(PyCharm), 주피터 노트북</b> 등이 널리 쓰이며, 이 장에서는 가볍고 무료인 <b class="hl">VS Code</b>를 사용합니다.</p>
+    <p><b>설치와 설정 순서</b></p>
+    <ul class="plain">
+      <li><b>① VS Code 설치</b> — <a href="https://code.visualstudio.com" target="_blank" rel="noopener">code.visualstudio.com</a>에서 내려받아 설치</li>
+      <li><b>② 확장 설치</b> — 확장(Extensions) 메뉴에서 <code>Python</code> 검색·설치, <code>Korean</code> 검색해 한국어 팩 설치</li>
+      <li><b>③ 작업 폴더 열기</b> — 작업할 폴더를 만들고 <code>File → Open Folder</code>로 연다</li>
+      <li><b>④ 편의 설정</b> — 관리(⚙) → 설정에서 자동 저장(Auto Save), 글꼴 크기 조정</li>
+    </ul>
+    <div class="note"><b>파일 실행</b> 편집기 오른쪽 위 ▶ 실행 버튼, 또는 <b>디버깅 없이 실행(Ctrl + F5)</b>을 누르면 아래 <b>터미널</b> 창에 결과가 나옵니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p><code>hello.py</code> 파일을 만들어 아래를 작성하고 Ctrl + F5로 실행합니다.</p>
+<pre><code><span class="fn">print</span>(<span class="st">"VS Code에서 실행 성공!"</span>)</code></pre>
+    <div class="result"><b>터미널 출력</b>
+VS Code에서 실행 성공!</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 설치·확장 설정이 막힐 때</h4>
+      <p>VS Code 설치나 파이썬 확장 연결에서 자주 막힙니다. 화면 상태를 설명하면 단계별로 안내받을 수 있습니다.</p>
+      <div class="prompt"><code>윈도우에 VS Code를 설치했는데, 파이썬 코드를 실행하면 'Python 인터프리터를 선택하세요'라는 메시지가 떠. 초보자도 따라 할 수 있게 인터프리터를 선택하는 방법을 단계별로 알려 줘.</code></div>
+      <p>IDE 선택이 고민될 때:</p>
+      <div class="prompt"><code>파이썬 초보에게 IDLE, VS Code, 파이참 중 어떤 걸 추천해? 각각의 장단점을 표로 정리해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 1-1. 개발 환경 세팅</h4>
+      <div class="req">VS Code를 설치하고 Python·Korean 확장을 적용한 뒤, 작업 폴더를 열어 <code>test.py</code>를 만들어 오늘 날짜와 이름을 출력하고 실행하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="fn">print</span>(<span class="st">"2026-07-25 / 홍길동"</span>)</code></pre>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">확장 설치 → 폴더 열기 → 파일 작성 → Ctrl + F5 순서로 진행하면 됩니다.</p>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 1-2. 터미널 오류, AI에게 통역받기</h4>
+      <div class="req">실행 중 터미널에 빨간 오류 메시지가 나오면 <b>전체를 그대로 복사</b>해 ChatGPT에 붙여넣고 원인·해결법을 물어보세요. 오류가 없다면, 아래 상황을 가정해 프롬프트를 작성해 보세요.<br><br>“<code>python : 용어가 cmdlet, 함수... 이름으로 인식되지 않습니다</code>”</div>
+      <details class="answer"><summary>예시 프롬프트 · 핵심 보기</summary><div class="body">
+        <div class="prompt"><code>VS Code 터미널에서 파이썬 파일을 실행하니 "python : 용어가 cmdlet, 함수, 스크립트 파일 또는 실행할 수 있는 프로그램 이름으로 인식되지 않습니다"라는 오류가 나. 초보자용으로 원인과 해결 방법을 단계별로 알려 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">보통 파이썬이 PATH에 없거나 <code>python</code> 대신 <code>py</code>를 써야 하는 경우입니다. AI 답을 <b>실제 터미널에서 실행</b>해 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 2 ============ -->
+<section class="module" id="m2">
+  <div class="mod-head"><div class="mod-num">2</div><h2>조건문 if · if~else</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>조건문이 프로그램의 흐름을 나누는 원리를 이해한다.</li>
+        <li><code>if</code>와 <code>if~else</code>로 두 갈래 분기를 만들 수 있다.</li>
+        <li>들여쓰기로 조건 블록을 올바르게 구분할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">조건문(Choice Structure)</b>은 특정 조건에 따라 프로그램의 진행이 <b>분기</b>되는 구문입니다. 조건식이 참(True)이냐 거짓(False)이냐에 따라 다른 코드를 실행합니다.</p>
+<pre><code><span class="kw">if</span> 조건식:
+    수행문        <span class="cm"># 조건이 참일 때만 실행 (4칸 들여쓰기)</span>
+
+<span class="kw">if</span> 조건식:
+    수행문1       <span class="cm"># 참이면 이쪽</span>
+<span class="kw">else</span>:
+    수행문2       <span class="cm"># 거짓이면 이쪽</span></code></pre>
+    <div class="warn"><b>⚠️ 콜론과 들여쓰기</b>
+      조건식 끝에는 반드시 <code>:</code>(콜론)을 붙이고, 그 아래 수행문은 <b>4칸 들여쓰기</b>합니다. 들여쓰지 않으면 오류가 납니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p>나이에 따라 입장 여부를 판정합니다.</p>
+<pre><code>age = <span class="nu">15</span>
+
+<span class="kw">if</span> age &gt;= <span class="nu">15</span>:
+    <span class="fn">print</span>(<span class="st">"입장 가능합니다."</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"입장할 수 없습니다."</span>)</code></pre>
+    <div class="result"><b>실행 결과</b>
+입장 가능합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 조건식을 말로 설명 → 코드로</h4>
+      <p>“이런 조건일 때 이렇게 하고 싶다”를 말로 설명하면 AI가 조건식으로 옮겨 줍니다. 받은 코드는 조건을 바꿔가며 직접 검증하세요.</p>
+      <div class="prompt"><code>파이썬 초보야. '점수가 60점 이상이면 합격, 아니면 불합격'을 출력하는 if~else 코드를 만들어 주고, 조건식의 &gt;= 기호가 무슨 뜻인지 설명해 줘.</code></div>
+      <p>들여쓰기 오류가 났을 때:</p>
+      <div class="prompt"><code>if문 아래 줄에서 IndentationError: expected an indented block 오류가 났어. 무슨 뜻이고 어떻게 고쳐?</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 2-1. 홀짝 판별</h4>
+      <div class="req">정수를 입력받아 짝수면 "짝수입니다", 홀수면 "홀수입니다"를 출력하세요. (힌트: 2로 나눈 나머지가 0이면 짝수)</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>num = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"정수: "</span>))
+<span class="kw">if</span> num % <span class="nu">2</span> == <span class="nu">0</span>:
+    <span class="fn">print</span>(<span class="st">"짝수입니다"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"홀수입니다"</span>)</code></pre>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 2-2. 윤년 판정</h4>
+      <div class="req">연도를 입력받아 윤년인지 판정하세요. 윤년 조건: <b>4로 나누어떨어지고 100으로는 안 떨어지거나</b>, <b>400으로 나누어떨어지면</b> 윤년.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>year = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"연도: "</span>))
+<span class="kw">if</span> (year % <span class="nu">4</span> == <span class="nu">0</span> <span class="kw">and</span> year % <span class="nu">100</span> != <span class="nu">0</span>) <span class="kw">or</span> year % <span class="nu">400</span> == <span class="nu">0</span>:
+    <span class="fn">print</span>(year, <span class="st">"년은 윤년입니다."</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(year, <span class="st">"년은 평년입니다."</span>)</code></pre>
+        <div class="result">2024 년은 윤년입니다.</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 2-3. 복잡한 조건, AI로 이해하기</h4>
+      <div class="req">윤년 조건식 <code>(year % 4 == 0 and year % 100 != 0) or year % 400 == 0</code>이 왜 그렇게 생겼는지 ChatGPT에 물어보세요. 그리고 <b>2000년·1900년·2024년</b>을 직접 넣어 실행해, AI 설명이 맞는지 검증하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 · 검증 보기</summary><div class="body">
+        <div class="prompt"><code>파이썬 윤년 판정식 (year % 4 == 0 and year % 100 != 0) or year % 400 == 0 을 초보자용으로 한 부분씩 나눠 설명해 줘. 특히 1900년과 2000년이 왜 다르게 처리되는지 알려 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">직접 검증: 1900 → 평년, 2000 → 윤년, 2024 → 윤년. AI 설명과 실행 결과가 일치하는지 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 3 ============ -->
+<section class="module" id="m3">
+  <div class="mod-head"><div class="mod-num">3</div><h2>다중 조건문 if~elif~else</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>세 갈래 이상의 조건을 <code>elif</code>로 나눌 수 있다.</li>
+        <li>조건이 위에서 아래로 순서대로 검사됨을 이해한다.</li>
+        <li>등급·분류 같은 다중 분기 프로그램을 작성할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>조건이 3개 이상일 때는 <b class="hl">if ~ elif ~ else</b>를 씁니다. 위에서부터 순서대로 검사하다 <b>처음으로 참이 되는 블록만</b> 실행하고 나머지는 건너뜁니다. 모두 거짓이면 <code>else</code>가 실행됩니다.</p>
+<pre><code><span class="kw">if</span> 조건1:
+    수행문1
+<span class="kw">elif</span> 조건2:
+    수행문2
+<span class="kw">else</span>:
+    수행문3</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p>신호등 색에 따라 안내하는 미니 프로그램입니다.</p>
+<pre><code>signal = <span class="st">"노랑"</span>
+
+<span class="kw">if</span> signal == <span class="st">"빨강"</span>:
+    <span class="fn">print</span>(<span class="st">"멈추세요"</span>)
+<span class="kw">elif</span> signal == <span class="st">"노랑"</span>:
+    <span class="fn">print</span>(<span class="st">"주의하세요"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"건너가세요"</span>)</code></pre>
+    <div class="result"><b>실행 결과</b>
+주의하세요</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 조건 순서 실수, AI로 잡기</h4>
+      <p><code>elif</code>는 <b>순서</b>가 생명입니다. 순서 때문에 결과가 틀릴 때 AI가 원인을 짚어 줍니다.</p>
+      <div class="prompt"><code>아래 학점 코드에서 90점을 넣어도 'D'가 나와. 왜 그런지, 어떻게 고쳐야 하는지 초보자용으로 설명해 줘.
+if score &gt;= 60:
+    grade = "D"
+elif score &gt;= 90:
+    grade = "A"</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 3-1. 학점 계산 프로그램</h4>
+      <div class="req">점수를 입력받아 아래 표에 따라 학점을 출력하세요.<br>
+        90~100 → A, &nbsp;80~89 → B, &nbsp;70~79 → C, &nbsp;60~69 → D, &nbsp;60 미만 → F</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>score = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"점수: "</span>))
+<span class="kw">if</span> score &gt;= <span class="nu">90</span>:
+    grade = <span class="st">"A"</span>
+<span class="kw">elif</span> score &gt;= <span class="nu">80</span>:
+    grade = <span class="st">"B"</span>
+<span class="kw">elif</span> score &gt;= <span class="nu">70</span>:
+    grade = <span class="st">"C"</span>
+<span class="kw">elif</span> score &gt;= <span class="nu">60</span>:
+    grade = <span class="st">"D"</span>
+<span class="kw">else</span>:
+    grade = <span class="st">"F"</span>
+<span class="fn">print</span>(<span class="st">"학점:"</span>, grade)</code></pre>
+        <div class="result">점수: 85
+학점: B</div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">높은 점수부터 검사하는 게 핵심입니다. <code>score &gt;= 60</code>을 맨 위에 두면 90점도 D가 되어 버립니다.</p>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 3-2. 출생연도로 접종 요일 안내</h4>
+      <div class="req">출생연도를 입력받아 <b>끝자리 숫자</b>로 접종 요일을 안내하세요.<br>
+        1·6 → 월, &nbsp;2·7 → 화, &nbsp;3·8 → 수, &nbsp;4·9 → 목, &nbsp;5·0 → 금</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>year = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"출생연도: "</span>))
+last = year % <span class="nu">10</span>              <span class="cm"># 끝자리 숫자</span>
+<span class="kw">if</span> last == <span class="nu">1</span> <span class="kw">or</span> last == <span class="nu">6</span>:
+    <span class="fn">print</span>(<span class="st">"월요일"</span>)
+<span class="kw">elif</span> last == <span class="nu">2</span> <span class="kw">or</span> last == <span class="nu">7</span>:
+    <span class="fn">print</span>(<span class="st">"화요일"</span>)
+<span class="kw">elif</span> last == <span class="nu">3</span> <span class="kw">or</span> last == <span class="nu">8</span>:
+    <span class="fn">print</span>(<span class="st">"수요일"</span>)
+<span class="kw">elif</span> last == <span class="nu">4</span> <span class="kw">or</span> last == <span class="nu">9</span>:
+    <span class="fn">print</span>(<span class="st">"목요일"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"금요일"</span>)</code></pre>
+        <div class="result">출생연도: 1995
+금요일</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 3-3. AI로 채점 로직 확장하기</h4>
+      <div class="req">실습 3-1을 완성한 뒤, ChatGPT에 “A/B/C에 +, 0, - 를 붙이는 세부 등급(예: 97점 → A+)”을 추가해 달라고 요청하세요. AI가 준 코드를 실행해 여러 점수로 검증하고, 새로 등장한 문법이 있으면 설명을 요청하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>아래 파이썬 학점 코드에, 같은 등급 안에서 +/0/- 를 붙이는 기능을 추가해 줘(예: 97~100은 A+, 93~96은 A0, 90~92은 A-). 초보자가 이해하기 쉽게 주석도 달아 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">검증: 97·93·90·85·59점을 넣어 기대한 등급이 나오는지 직접 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 4 ============ -->
+<section class="module" id="m4">
+  <div class="mod-head"><div class="mod-num">4</div><h2>while 반복문</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>반복문의 개념과 필요성을 이해한다.</li>
+        <li>초기값·조건·증감값으로 <code>while</code> 반복을 구성할 수 있다.</li>
+        <li><code>break</code>로 반복을 중간에 빠져나올 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">반복문</b>은 조건이 만족하는 동안 실행문을 여러 번 되풀이합니다. 대표적으로 <code>while</code>문과 <code>for</code>문이 있습니다. <code>while</code>은 <b>조건이 참인 동안 계속</b> 반복합니다.</p>
+<pre><code>초기값
+<span class="kw">while</span> 조건문:
+    실행문
+    증감값      <span class="cm"># 조건을 언젠가 거짓으로 만들 값 변화</span></code></pre>
+    <div class="warn"><b>⚠️ 무한 루프 주의</b>
+      증감값이 없어 조건이 영영 참이면 프로그램이 멈추지 않습니다. 반드시 반복을 끝낼 조건 변화를 넣으세요.</div>
+    <p><b>break</b> — 반복 도중 <code>break</code>를 만나면 즉시 반복문을 빠져나옵니다. <code>while True:</code>(무한 반복)와 함께 자주 씁니다.</p>
+<pre><code><span class="kw">while</span> <span class="kw">True</span>:
+    수행문
+    <span class="kw">if</span> 조건:
+        <span class="kw">break</span>      <span class="cm"># 조건을 만족하면 탈출</span></code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p>1부터 10까지의 합을 구합니다.</p>
+<pre><code>n = <span class="nu">1</span>
+total = <span class="nu">0</span>
+<span class="kw">while</span> n &lt;= <span class="nu">10</span>:
+    total += n     <span class="cm"># 합계에 n을 더함</span>
+    n += <span class="nu">1</span>          <span class="cm"># n을 1 증가 (증감값)</span>
+<span class="fn">print</span>(<span class="st">"1~10의 합:"</span>, total)</code></pre>
+    <div class="result"><b>실행 결과</b>
+1~10의 합: 55</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 무한 루프, AI에게 진단받기</h4>
+      <p>while문 초보의 가장 흔한 실수가 <b>무한 루프</b>입니다. 코드를 붙여넣으면 원인을 정확히 짚어 줍니다.</p>
+      <div class="prompt"><code>아래 파이썬 코드가 끝나지 않고 계속 실행돼. 왜 무한 루프에 빠지는지, 어떻게 고치는지 초보자용으로 알려 줘.
+n = 1
+while n &lt;= 10:
+    print(n)</code></div>
+      <div class="warn" style="margin-top:10px"><b>⚠️ 팁</b> 프로그램이 멈추지 않으면 터미널에서 <b>Ctrl + C</b>로 강제 종료할 수 있습니다.</div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 4-1. 1부터 입력값까지의 합</h4>
+      <div class="req">정수 n을 입력받아 1부터 n까지의 합을 <code>while</code>문으로 계산해 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>n = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"정수: "</span>))
+i = <span class="nu">1</span>
+total = <span class="nu">0</span>
+<span class="kw">while</span> i &lt;= n:
+    total += i
+    i += <span class="nu">1</span>
+<span class="fn">print</span>(<span class="st">"1부터"</span>, n, <span class="st">"까지의 합:"</span>, total)</code></pre>
+        <div class="result">정수: 100
+1부터 100 까지의 합: 5050</div>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 4-2. 종료어가 나올 때까지 반복 (챗봇)</h4>
+      <div class="req">사용자 입력을 계속 받아 그대로 되돌려 출력하되, <b>"종료"</b>를 입력하면 <code>break</code>로 반복을 끝내세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">while</span> <span class="kw">True</span>:
+    msg = <span class="fn">input</span>(<span class="st">"입력(종료=끝): "</span>)
+    <span class="kw">if</span> msg == <span class="st">"종료"</span>:
+        <span class="fn">print</span>(<span class="st">"대화를 종료합니다."</span>)
+        <span class="kw">break</span>
+    <span class="fn">print</span>(<span class="st">"입력한 말:"</span>, msg)</code></pre>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 4-3. AI로 미니 챗봇 업그레이드</h4>
+      <div class="req">실습 4-2의 챗봇에, 입력한 말이 몇 번째인지 번호를 붙여 출력하는 기능을 ChatGPT에 요청해 추가하세요(예: “1번: 안녕”). 받은 코드를 실행해 번호가 올바르게 증가하는지 검증하고, 이해 안 되는 줄은 설명을 요청하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>아래 파이썬 챗봇 코드에, 사용자가 입력할 때마다 '1번: ...', '2번: ...'처럼 순서 번호를 붙여 출력하는 기능을 추가해 줘. 번호를 세는 변수의 역할을 주석으로 설명해 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">핵심은 반복 밖에서 <code>count = 0</code>을 만들고 반복 안에서 <code>count += 1</code> 하는 것입니다. AI 코드가 이 구조인지 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 5 ============ -->
+<section class="module" id="m5">
+  <div class="mod-head"><div class="mod-num">5</div><h2>for 반복문과 range()</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li><code>for ~ in</code>으로 순서열의 원소를 순회할 수 있다.</li>
+        <li><code>range()</code>의 시작·종료·증감값을 이해하고 사용한다.</li>
+        <li>정해진 횟수만큼 반복하는 프로그램을 만들 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">for문</b>은 리스트·튜플·문자열 같은 순서열의 각 원소를 <b>처음부터 하나씩</b> 반복변수에 담아 반복합니다.</p>
+<pre><code><span class="kw">for</span> 반복변수 <span class="kw">in</span> 순서열:
+    실행문
+
+<span class="kw">for</span> 반복변수 <span class="kw">in</span> <span class="fn">range</span>(시작값, 종료값, 증감값):
+    실행문</code></pre>
+    <p><b>range() 함수</b></p>
+    <ul class="plain">
+      <li>시작값을 생략하면 <b>0부터</b> 시작한다.</li>
+      <li>종료값은 포함하지 않는다 — 실제로는 <b>종료값 − 1</b>까지 반복.</li>
+      <li>증감값을 생략하면 1씩 증가한다.</li>
+    </ul>
+    <table>
+      <tr><th>코드</th><th>생성되는 수</th></tr>
+      <tr><td><code>range(5)</code></td><td>0, 1, 2, 3, 4</td></tr>
+      <tr><td><code>range(1, 6)</code></td><td>1, 2, 3, 4, 5</td></tr>
+      <tr><td><code>range(0, 10, 2)</code></td><td>0, 2, 4, 6, 8</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code><span class="cm"># 1부터 5까지 한 줄에 출력</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>):
+    <span class="fn">print</span>(i, end=<span class="st">" "</span>)
+<span class="fn">print</span>()
+
+<span class="cm"># 리스트 순회</span>
+<span class="kw">for</span> fruit <span class="kw">in</span> [<span class="st">"사과"</span>, <span class="st">"바나나"</span>, <span class="st">"포도"</span>]:
+    <span class="fn">print</span>(fruit)</code></pre>
+    <div class="result"><b>실행 결과</b>
+1 2 3 4 5
+사과
+바나나
+포도</div>
+    <div class="note"><b>print(end=" ")</b> <code>print</code>는 기본적으로 줄을 바꾸지만, <code>end=" "</code>를 주면 줄을 바꾸지 않고 공백으로 이어 붙입니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 range() 결과, 예측 → AI로 확인</h4>
+      <p><code>range()</code>는 종료값을 포함하지 않아 초보자가 자주 헷갈립니다. 예측 후 AI로 확인하면 확실히 익힐 수 있습니다.</p>
+      <div class="prompt"><code>다음 range가 만드는 숫자를 내가 맞혀볼게. 정답은 숨기고, 내가 답하면 채점해 줘: range(2, 10, 3), range(10), range(5, 0, -1)</code></div>
+      <p>원하는 반복을 만들 때:</p>
+      <div class="prompt"><code>파이썬 for문과 range()로 100부터 0까지 10씩 줄어드는 숫자를 출력하는 코드를 만들어 주고, range의 세 숫자가 각각 무슨 뜻인지 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 5-1. 구구단 출력</h4>
+      <div class="req">단을 입력받아 그 단의 구구단(1~9)을 출력하세요. 예: 3단 입력 → <code>3 x 1 = 3</code> … <code>3 x 9 = 27</code></div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>dan = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"단: "</span>))
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">10</span>):
+    <span class="fn">print</span>(dan, <span class="st">"x"</span>, i, <span class="st">"="</span>, dan * i)</code></pre>
+        <div class="result">단: 3
+3 x 1 = 3
+3 x 2 = 6
+ ...
+3 x 9 = 27</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 5-2. AI 코드에서 버그 찾기</h4>
+      <div class="req">ChatGPT에 “1부터 100까지 짝수의 합을 for문으로 구하는 코드”를 요청하세요. 받은 코드를 <b>직접 실행</b>해 결과가 <b>2550</b>이 맞는지 검증하고, 틀리면 “결과가 이상해, 다시 확인해 줘”라고 되물으세요.</div>
+      <details class="answer"><summary>정답·검증 보기</summary><div class="body">
+<pre><code>total = <span class="nu">0</span>
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">2</span>, <span class="nu">101</span>, <span class="nu">2</span>):
+    total += i
+<span class="fn">print</span>(total)      <span class="cm"># 2550</span></code></pre>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">AI가 <code>range(2, 100, 2)</code>처럼 100을 빼먹으면 결과가 2450이 됩니다. 이래서 <b>직접 실행 검증</b>이 필요합니다.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 6 ============ -->
+<section class="module" id="m6">
+  <div class="mod-head"><div class="mod-num">6</div><h2>중첩 for문</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>for문 안에 for문을 넣는 중첩 구조를 이해한다.</li>
+        <li>행과 열(표) 형태의 반복을 구현할 수 있다.</li>
+        <li>구구단 전체·별 찍기 같은 2차원 출력을 만들 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">중첩(이중) for문</b>은 반복 안에 또 반복을 두는 구조로, <b>행과 열</b>처럼 두 방향으로 반복할 때 씁니다. 바깥 반복(i)이 한 번 돌 때마다 안쪽 반복(j)이 전부 돕니다.</p>
+<pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>):     <span class="cm"># 행</span>
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>): <span class="cm"># 열</span>
+        실행문
+    <span class="fn">print</span>()               <span class="cm"># 한 행이 끝나면 줄바꿈</span></code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p>별(*)로 삼각형을 출력합니다.</p>
+<pre><code><span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>):
+    <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(i):
+        <span class="fn">print</span>(<span class="st">"*"</span>, end=<span class="st">""</span>)
+    <span class="fn">print</span>()          <span class="cm"># 행마다 줄바꿈</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+*
+**
+***
+****
+*****</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 별 찍기 패턴, AI와 함께 만들기</h4>
+      <p>중첩 for문은 머릿속으로 그리기 어렵습니다. 원하는 모양을 <b>그림처럼 보여주면</b> AI가 코드로 옮겨 줍니다.</p>
+      <div class="prompt"><code>파이썬 중첩 for문으로 아래처럼 오른쪽 정렬된 직각삼각형을 출력하고 싶어. 코드를 만들고, 안쪽/바깥쪽 for가 각각 무슨 역할인지 설명해 줘.
+    *
+   **
+  ***
+ ****
+*****</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 6-1. 구구단 전체 출력 (2~9단)</h4>
+      <div class="req">중첩 for문으로 2단부터 9단까지 전체 구구단을 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">for</span> dan <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">2</span>, <span class="nu">10</span>):
+    <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">10</span>):
+        <span class="fn">print</span>(dan, <span class="st">"x"</span>, i, <span class="st">"="</span>, dan * i)
+    <span class="fn">print</span>()      <span class="cm"># 단 사이 빈 줄</span></code></pre>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 6-2. 좌석 번호 출력</h4>
+      <div class="req">A~C행, 1~4열 좌석 번호를 <code>A1 A2 A3 A4</code> / <code>B1 ...</code> 형태로 출력하세요. (힌트: 행은 문자열 <code>"ABC"</code> 순회)</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">for</span> row <span class="kw">in</span> <span class="st">"ABC"</span>:
+    <span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">5</span>):
+        <span class="fn">print</span>(row + <span class="fn">str</span>(col), end=<span class="st">" "</span>)
+    <span class="fn">print</span>()</code></pre>
+        <div class="result">A1 A2 A3 A4
+B1 B2 B3 B4
+C1 C2 C3 C4</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 6-3. 도전 패턴 만들고 AI로 검증</h4>
+      <div class="req">마름모(다이아몬드)나 숫자 피라미드 같은 도전 패턴을 하나 정해, 먼저 스스로 시도해 보세요. 막히면 ChatGPT에 원하는 모양을 그림으로 보여주며 도움을 청하고, 받은 코드를 실행해 <b>모양이 정확히 일치하는지</b> 검증하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>파이썬 중첩 for문으로 아래 숫자 피라미드를 출력하고 싶어. 코드를 만들고 한 줄씩 설명해 줘.
+1
+1 2
+1 2 3
+1 2 3 4</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">AI가 준 코드를 실행해 줄 수·간격이 정확히 맞는지 눈으로 대조하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 7 ============ -->
+<section class="module" id="m7">
+  <div class="mod-head"><div class="mod-num">7</div><h2>리스트(List) 기초</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>리스트가 왜 필요한지 변수와 비교해 설명할 수 있다.</li>
+        <li>리스트를 생성하고 인덱스로 원소에 접근할 수 있다.</li>
+        <li><code>sum</code>·<code>len</code>·<code>max</code>·<code>min</code>으로 리스트를 다룰 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>변수 하나에는 값 하나만 담깁니다. 학생 10명의 점수를 <code>num1</code>~<code>num10</code>처럼 따로 관리하면 이름이 많아 비효율적입니다. <b class="hl">리스트(list)</b>는 여러 값을 <b>하나의 이름으로 순서대로</b> 저장하는 자료형입니다.</p>
+    <ul class="plain">
+      <li>대괄호 <code>[ ]</code>로 만들고 값(요소)을 쉼표로 구분한다.</li>
+      <li>맨 앞 요소의 위치(<b>인덱스</b>)는 <b>0번</b>부터 시작한다.</li>
+      <li>인덱스 <code>-1</code>은 맨 마지막 요소를 가리킨다.</li>
+    </ul>
+<pre><code>season = [<span class="st">"봄"</span>, <span class="st">"여름"</span>, <span class="st">"가을"</span>, <span class="st">"겨울"</span>]
+number = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>]</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>season = [<span class="st">"봄"</span>, <span class="st">"여름"</span>, <span class="st">"가을"</span>, <span class="st">"겨울"</span>]
+<span class="fn">print</span>(season[<span class="nu">0</span>])      <span class="cm"># 첫 번째 요소</span>
+<span class="fn">print</span>(season[-<span class="nu">1</span>])     <span class="cm"># 마지막 요소</span>
+<span class="fn">print</span>(<span class="fn">len</span>(season))   <span class="cm"># 요소 개수</span>
+
+scores = [<span class="nu">90</span>, <span class="nu">85</span>, <span class="nu">77</span>, <span class="nu">60</span>, <span class="nu">95</span>]
+<span class="fn">print</span>(<span class="fn">sum</span>(scores))          <span class="cm"># 합계</span>
+<span class="fn">print</span>(<span class="fn">sum</span>(scores) / <span class="fn">len</span>(scores))  <span class="cm"># 평균</span>
+<span class="fn">print</span>(<span class="fn">max</span>(scores), <span class="fn">min</span>(scores)) <span class="cm"># 최대, 최소</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+봄
+겨울
+4
+407
+81.4
+95 60</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 인덱스 헷갈림, AI로 정리</h4>
+      <p>0번부터 시작하는 인덱스와 음수 인덱스는 초보자의 단골 실수입니다.</p>
+      <div class="prompt"><code>파이썬 리스트 [10, 20, 30, 40, 50]에서 인덱스 0, 2, -1, -2가 각각 어떤 값을 가리키는지 표로 정리해 설명해 줘. 왜 0번부터 시작하는지도 알려 줘.</code></div>
+      <p>실무 감각을 키우고 싶을 때:</p>
+      <div class="prompt"><code>sum, len, max, min 말고도 파이썬 리스트로 자주 쓰는 내장 함수를 초보자용으로 3개 더 알려 주고, 각각 짧은 예시를 보여 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 7-1. 성적 통계</h4>
+      <div class="req">점수 리스트 <code>[88, 92, 79, 95, 60]</code>의 합계·평균·최고점·최저점을 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>scores = [<span class="nu">88</span>, <span class="nu">92</span>, <span class="nu">79</span>, <span class="nu">95</span>, <span class="nu">60</span>]
+<span class="fn">print</span>(<span class="st">"합계:"</span>, <span class="fn">sum</span>(scores))
+<span class="fn">print</span>(<span class="st">"평균:"</span>, <span class="fn">sum</span>(scores) / <span class="fn">len</span>(scores))
+<span class="fn">print</span>(<span class="st">"최고점:"</span>, <span class="fn">max</span>(scores))
+<span class="fn">print</span>(<span class="st">"최저점:"</span>, <span class="fn">min</span>(scores))</code></pre>
+        <div class="result">합계: 414
+평균: 82.8
+최고점: 95
+최저점: 60</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 7-2. AI 통계 코드 검증하기</h4>
+      <div class="req">ChatGPT에 “리스트 <code>[88, 92, 79, 95, 60]</code>에서 평균 이상인 점수만 골라 출력하는 코드”를 요청하세요. 받은 코드를 실행해 결과가 맞는지(평균 82.8 이상: 88, 92, 95) <b>손으로 계산한 값과 대조</b>해 검증하세요.</div>
+      <details class="answer"><summary>정답·검증 보기</summary><div class="body">
+<pre><code>scores = [<span class="nu">88</span>, <span class="nu">92</span>, <span class="nu">79</span>, <span class="nu">95</span>, <span class="nu">60</span>]
+avg = <span class="fn">sum</span>(scores) / <span class="fn">len</span>(scores)
+<span class="kw">for</span> s <span class="kw">in</span> scores:
+    <span class="kw">if</span> s &gt;= avg:
+        <span class="fn">print</span>(s)</code></pre>
+        <div class="result">88
+92
+95</div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">평균 82.8과 각 점수를 손으로 비교해 AI 결과가 맞는지 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 8 ============ -->
+<section class="module" id="m8">
+  <div class="mod-head"><div class="mod-num">8</div><h2>리스트 메서드와 내포</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>추가·삭제·정렬 등 리스트 메서드를 사용할 수 있다.</li>
+        <li>메서드가 원본 리스트를 바꾼다는 점을 이해한다.</li>
+        <li>리스트 내포(comprehension)로 리스트를 간결하게 만들 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>리스트에는 값을 다루는 여러 <b class="hl">메서드(함수)</b>가 있습니다. <code>리스트.메서드()</code> 형태로 호출합니다.</p>
+    <table>
+      <tr><th>메서드</th><th>기능</th><th>예 (a = [1, 2, 3])</th></tr>
+      <tr><td><code>append(x)</code></td><td>맨 뒤에 추가</td><td><code>a.append(4)</code> → [1,2,3,4]</td></tr>
+      <tr><td><code>insert(i,x)</code></td><td>i 위치에 삽입</td><td><code>a.insert(1,9)</code> → [1,9,2,3]</td></tr>
+      <tr><td><code>pop()</code></td><td>마지막 요소 삭제</td><td><code>a.pop()</code> → [1,2]</td></tr>
+      <tr><td><code>remove(x)</code></td><td>값 x를 직접 삭제</td><td><code>a.remove(2)</code> → [1,3]</td></tr>
+      <tr><td><code>sort()</code></td><td>오름차순 정렬</td><td><code>[3,1,2].sort()</code> → [1,2,3]</td></tr>
+      <tr><td><code>reverse()</code></td><td>순서 뒤집기</td><td>→ 역순</td></tr>
+      <tr><td><code>extend(리스트)</code></td><td>다른 리스트를 이어 붙임</td><td><code>a.extend([4,5])</code></td></tr>
+    </table>
+    <p><b>리스트 내포(List Comprehension)</b> — 반복으로 리스트를 <b>한 줄로</b> 만드는 문법입니다.</p>
+<pre><code>[ 표현식 <span class="kw">for</span> 항목 <span class="kw">in</span> 순서열 ]</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>a = [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>]
+a.<span class="fn">append</span>(<span class="nu">4</span>)      <span class="cm"># [1, 2, 3, 4]</span>
+a.<span class="fn">insert</span>(<span class="nu">1</span>, <span class="nu">10</span>)   <span class="cm"># [1, 10, 2, 3, 4]</span>
+a.<span class="fn">remove</span>(<span class="nu">2</span>)      <span class="cm"># [1, 10, 3, 4]</span>
+<span class="fn">print</span>(a)
+
+<span class="cm"># 리스트 내포: 1~5의 제곱 리스트</span>
+squares = [x * x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">6</span>)]
+<span class="fn">print</span>(squares)</code></pre>
+    <div class="result"><b>실행 결과</b>
+[1, 10, 3, 4]
+[1, 4, 9, 16, 25]</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 헷갈리는 메서드 짝, 예시로 비교</h4>
+      <p><code>append/extend</code>, <code>remove/pop</code>처럼 비슷한 메서드는 예시 비교가 최고입니다.</p>
+      <div class="prompt"><code>파이썬 리스트의 append와 extend 차이를, 같은 입력에 각각 적용한 전후 결과를 보여주며 초보자용으로 설명해 줘. remove와 pop의 차이도 함께 정리해 줘.</code></div>
+      <p>리스트 내포가 어려울 때:</p>
+      <div class="prompt"><code>이 for문 코드를 리스트 내포(comprehension) 한 줄로 바꿔 주고, 어떻게 바뀌었는지 대응 관계를 설명해 줘.
+result = []
+for x in range(1, 6):
+    result.append(x * x)</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 8-1. 장바구니 관리</h4>
+      <div class="req">빈 리스트 <code>cart</code>를 만들고 "우유", "빵", "계란"을 순서대로 추가한 뒤, "빵"을 삭제하고 결과를 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>cart = []
+cart.<span class="fn">append</span>(<span class="st">"우유"</span>)
+cart.<span class="fn">append</span>(<span class="st">"빵"</span>)
+cart.<span class="fn">append</span>(<span class="st">"계란"</span>)
+cart.<span class="fn">remove</span>(<span class="st">"빵"</span>)
+<span class="fn">print</span>(cart)      <span class="cm"># ['우유', '계란']</span></code></pre>
+        <div class="result">['우유', '계란']</div>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 8-2. 짝수만 담기 (내포)</h4>
+      <div class="req">리스트 내포를 사용해 1~10 중 <b>짝수</b>만 담은 리스트를 만들어 출력하세요. (힌트: <code>if</code>를 뒤에 붙일 수 있음)</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>evens = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">11</span>) <span class="kw">if</span> x % <span class="nu">2</span> == <span class="nu">0</span>]
+<span class="fn">print</span>(evens)      <span class="cm"># [2, 4, 6, 8, 10]</span></code></pre>
+        <div class="result">[2, 4, 6, 8, 10]</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 8-3. 내포로 리팩터링 요청하기</h4>
+      <div class="req">실습 8-2를 <b>먼저 for문과 append로</b> 스스로 작성해 보세요. 그다음 그 코드를 ChatGPT에 붙여넣고 “리스트 내포 한 줄로 바꿔 줘”라고 요청해, 두 코드의 결과가 같은지 실행해 검증하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>아래 파이썬 코드를 리스트 내포 한 줄로 바꿔 주고, if 조건이 내포 안에서 어디로 가는지 설명해 줘.
+evens = []
+for x in range(1, 11):
+    if x % 2 == 0:
+        evens.append(x)</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">두 방식의 <code>print(evens)</code> 결과가 같으면 리팩터링 성공입니다.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 9 ============ -->
+<section class="module" id="m9">
+  <div class="mod-head"><div class="mod-num">9</div><h2>문자열 인덱싱·슬라이싱·함수</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>문자열을 1차원 리스트처럼 인덱싱·슬라이싱할 수 있다.</li>
+        <li><code>split</code>·<code>replace</code>·<code>find</code>·<code>strip</code> 등 문자열 함수를 사용한다.</li>
+        <li>입력 문자열을 가공하는 프로그램을 만들 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>문자열은 문자들이 순서대로 이어진 <b class="hl">특별한 1차원 리스트</b>입니다. 그래서 인덱스로 한 글자를 뽑거나(<b>인덱싱</b>), 범위로 잘라낼 수 있습니다(<b>슬라이싱</b>).</p>
+<pre><code>문자열[시작번호:끝번호]   <span class="cm"># 끝번호는 포함 안 함 (끝번호 - 1까지)</span></code></pre>
+    <table>
+      <tr><th>메서드</th><th>기능</th><th>예</th></tr>
+      <tr><td><code>split(구분자)</code></td><td>구분자로 나눠 리스트로</td><td><code>"a,b".split(",")</code> → ['a','b']</td></tr>
+      <tr><td><code>replace(a,b)</code></td><td>a를 b로 바꿈</td><td><code>"World".replace("W","K")</code></td></tr>
+      <tr><td><code>find(x)</code></td><td>x 위치 반환(없으면 -1)</td><td><code>"Hi".find("i")</code> → 1</td></tr>
+      <tr><td><code>strip()</code></td><td>양쪽 공백 제거</td><td><code>"  hi  ".strip()</code> → "hi"</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>s = <span class="st">"Python"</span>
+<span class="fn">print</span>(s[<span class="nu">0</span>])       <span class="cm"># P</span>
+<span class="fn">print</span>(s[<span class="nu">0</span>:<span class="nu">3</span>])     <span class="cm"># Pyt</span>
+<span class="fn">print</span>(s[-<span class="nu">1</span>])      <span class="cm"># n</span>
+
+fruit = <span class="st">"banana,grape,kiwi"</span>
+<span class="fn">print</span>(fruit.<span class="fn">split</span>(<span class="st">","</span>))     <span class="cm"># 리스트로 분리</span>
+<span class="fn">print</span>(<span class="st">"Hello"</span>.<span class="fn">replace</span>(<span class="st">"l"</span>, <span class="st">"L"</span>))
+<span class="fn">print</span>(<span class="st">"  hi  "</span>.<span class="fn">strip</span>())</code></pre>
+    <div class="result"><b>실행 결과</b>
+P
+Pyt
+n
+['banana', 'grape', 'kiwi']
+HeLLo
+hi</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 슬라이싱, 예측 게임으로 익히기</h4>
+      <p>슬라이싱 범위는 헷갈리기 쉬우니 AI와 예측 게임을 해 보세요.</p>
+      <div class="prompt"><code>문자열 s = "Programming" 일 때 s[0:4], s[3:], s[-4:], s[::2] 의 결과를 내가 맞혀볼게. 정답은 숨기고, 내가 답하면 채점하고 틀린 것만 이유를 알려 줘.</code></div>
+      <p>실전 문자열 가공이 필요할 때:</p>
+      <div class="prompt"><code>파이썬으로 "홍길동 / 010-1234-5678 / 서울" 형식의 문자열에서 이름, 전화번호, 도시를 각각 뽑아내는 코드를 만들어 주고 split 사용법을 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 9-1. 이메일 아이디 추출</h4>
+      <div class="req">이메일 <code>"user@naver.com"</code>에서 <code>@</code>를 기준으로 나눠 아이디(user)와 도메인(naver.com)을 각각 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>email = <span class="st">"user@naver.com"</span>
+parts = email.<span class="fn">split</span>(<span class="st">"@"</span>)
+<span class="fn">print</span>(<span class="st">"아이디:"</span>, parts[<span class="nu">0</span>])
+<span class="fn">print</span>(<span class="st">"도메인:"</span>, parts[<span class="nu">1</span>])</code></pre>
+        <div class="result">아이디: user
+도메인: naver.com</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 9-2. 내 문자열 문제를 AI로 풀기</h4>
+      <div class="req">일상에서 가공하고 싶은 문자열(예: 파일명에서 확장자 떼기, 주소에서 동 이름만 뽑기)을 하나 정해 ChatGPT에 코드를 요청하세요. 여러 입력값으로 실행해 <b>항상 잘 되는지</b> 검증하고, 안 되는 경우를 발견하면 다시 물어 고치세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>파이썬으로 파일 이름 "report_2026.pdf"에서 확장자(pdf)와 파일명(report_2026)을 분리해 출력하는 코드를 만들어 줘. 점(.)이 여러 개일 때도 잘 되는지 알려 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">"a.b.c.txt" 같은 입력도 넣어 보며 경계 상황을 검증하는 습관을 기르세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 10 ============ -->
+<section class="module" id="m10">
+  <div class="mod-head"><div class="mod-num">10</div><h2>2차원 리스트</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>리스트 안에 리스트를 담는 2차원 구조를 이해한다.</li>
+        <li>행·열 인덱스로 원소에 접근할 수 있다.</li>
+        <li>중첩 for문으로 2차원 리스트를 순회할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">2차원 리스트</b>는 리스트의 요소가 다시 리스트인 구조로, <b>행과 열의 표(테이블)</b> 형태를 나타냅니다. 성적표, 좌석표처럼 격자형 데이터에 적합합니다.</p>
+<pre><code>a = [ [<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>], [<span class="nu">4</span>, <span class="nu">5</span>, <span class="nu">6</span>] ]
+<span class="cm"># a[행][열] 로 접근 : a[0][2] → 3,  a[1][0] → 4</span></code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>a = [[<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>], [<span class="nu">4</span>, <span class="nu">5</span>, <span class="nu">6</span>]]
+<span class="fn">print</span>(a[<span class="nu">0</span>][<span class="nu">2</span>])    <span class="cm"># 3</span>
+<span class="fn">print</span>(a[<span class="nu">1</span>][<span class="nu">0</span>])    <span class="cm"># 4</span>
+
+<span class="cm"># 중첩 for로 전체 출력</span>
+<span class="kw">for</span> row <span class="kw">in</span> a:
+    <span class="kw">for</span> x <span class="kw">in</span> row:
+        <span class="fn">print</span>(x, end=<span class="st">" "</span>)
+    <span class="fn">print</span>()</code></pre>
+    <div class="result"><b>실행 결과</b>
+3
+4
+1 2 3
+4 5 6</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 a[행][열], 그림으로 이해하기</h4>
+      <p>이중 인덱스 <code>a[i][j]</code>가 헷갈릴 때 AI에게 표로 그려 달라고 하면 직관적으로 이해됩니다.</p>
+      <div class="prompt"><code>파이썬 2차원 리스트 a = [[1,2,3],[4,5,6]] 를 행과 열이 있는 표로 그려서 보여 주고, a[0][2]와 a[1][0]이 표에서 어디를 가리키는지 표시해 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 10-1. 학생별 총점 구하기</h4>
+      <div class="req">2차원 리스트 <code>[[90,80],[70,100],[60,75]]</code>는 학생 3명의 두 과목 점수입니다. 학생별 총점을 각각 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>scores = [[<span class="nu">90</span>, <span class="nu">80</span>], [<span class="nu">70</span>, <span class="nu">100</span>], [<span class="nu">60</span>, <span class="nu">75</span>]]
+<span class="kw">for</span> row <span class="kw">in</span> scores:
+    <span class="fn">print</span>(<span class="st">"총점:"</span>, <span class="fn">sum</span>(row))</code></pre>
+        <div class="result">총점: 170
+총점: 170
+총점: 135</div>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 10-2. 과목별 평균, AI로 확장</h4>
+      <div class="req">실습 10-1의 데이터에서 이번엔 <b>과목별 평균</b>(열 방향 합산)을 구하고 싶다고 ChatGPT에 요청하세요. 행 방향과 열 방향 계산이 어떻게 다른지 설명을 받고, 결과를 손으로 검산해 검증하세요.</div>
+      <details class="answer"><summary>정답·검증 보기</summary><div class="body">
+<pre><code>scores = [[<span class="nu">90</span>, <span class="nu">80</span>], [<span class="nu">70</span>, <span class="nu">100</span>], [<span class="nu">60</span>, <span class="nu">75</span>]]
+<span class="kw">for</span> col <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">2</span>):
+    total = scores[<span class="nu">0</span>][col] + scores[<span class="nu">1</span>][col] + scores[<span class="nu">2</span>][col]
+    <span class="fn">print</span>(<span class="st">"과목"</span>, col + <span class="nu">1</span>, <span class="st">"평균:"</span>, total / <span class="nu">3</span>)</code></pre>
+        <div class="result">과목 1 평균: 73.33...
+과목 2 평균: 85.0</div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">검산: 1과목 (90+70+60)/3 = 73.3, 2과목 (80+100+75)/3 = 85. AI 결과와 일치하는지 확인!</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 11 ============ -->
+<section class="module" id="m11">
+  <div class="mod-head"><div class="mod-num">11</div><h2>딕셔너리(Dictionary)</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>키-값 쌍으로 데이터를 저장하는 딕셔너리를 이해한다.</li>
+        <li>값 추가·수정·삭제·조회를 할 수 있다.</li>
+        <li><code>keys</code>·<code>values</code>·<code>get</code> 메서드를 사용할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">딕셔너리(Dictionary)</b>는 <b>키(key)와 값(value)을 짝지어</b> 저장하는 자료구조입니다. 리스트가 순서(인덱스)로 찾는다면, 딕셔너리는 <b>이름(키)으로</b> 값을 찾습니다. 중괄호 <code>{ }</code>를 씁니다.</p>
+<pre><code>딕셔너리 = { 키: 값, 키: 값, ... }
+student = {<span class="st">"name"</span>: <span class="st">"한국민"</span>, <span class="st">"age"</span>: <span class="nu">28</span>}</code></pre>
+    <table>
+      <tr><th>동작</th><th>사용 예</th></tr>
+      <tr><td>조회</td><td><code>d["name"]</code></td></tr>
+      <tr><td>추가·수정</td><td><code>d["city"] = "서울"</code></td></tr>
+      <tr><td>삭제</td><td><code>del d["age"]</code> 또는 <code>d.pop("age")</code></td></tr>
+      <tr><td>키/값 전체</td><td><code>d.keys()</code>, <code>d.values()</code></td></tr>
+      <tr><td>안전한 조회</td><td><code>d.get("phone")</code> → 없으면 None</td></tr>
+    </table>
+    <div class="note"><b>get() vs [ ]</b> 없는 키를 <code>d["없는키"]</code>로 조회하면 오류가 나지만, <code>d.get("없는키")</code>는 <code>None</code>을 돌려줘 안전합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>student = {<span class="st">"name"</span>: <span class="st">"한국민"</span>, <span class="st">"age"</span>: <span class="nu">28</span>}
+<span class="fn">print</span>(student[<span class="st">"name"</span>])      <span class="cm"># 한국민</span>
+
+student[<span class="st">"age"</span>] = <span class="nu">29</span>          <span class="cm"># 수정</span>
+student[<span class="st">"city"</span>] = <span class="st">"서울"</span>       <span class="cm"># 추가</span>
+<span class="fn">print</span>(student.<span class="fn">keys</span>())      <span class="cm"># 모든 키</span>
+<span class="fn">print</span>(student.<span class="fn">get</span>(<span class="st">"phone"</span>)) <span class="cm"># 없는 키 → None</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+한국민
+dict_keys(['name', 'age', 'city'])
+None</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 리스트 vs 딕셔너리, 언제 뭘 쓸까</h4>
+      <p>초보자가 가장 궁금해하는 “언제 어떤 자료구조를 쓰나”를 AI에게 물어보세요.</p>
+      <div class="prompt"><code>파이썬에서 리스트와 딕셔너리를 각각 언제 쓰는 게 좋은지, 실생활 예시(성적표, 전화번호부 등)를 들어 비교해 줘. 표로 정리하면 좋겠어.</code></div>
+      <p>KeyError가 났을 때:</p>
+      <div class="prompt"><code>딕셔너리에서 KeyError: 'phone' 오류가 났어. 원인이 뭐고, get()을 쓰면 왜 안전한지 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 11-1. 회원 정보 (member.py)</h4>
+      <div class="req">딕셔너리로 회원 정보(이름, 나이, 도시)를 만들고, 나이를 한 살 늘린 뒤 "이름님은 도시에 사는 나이살입니다." 형태로 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>member = {<span class="st">"name"</span>: <span class="st">"이순신"</span>, <span class="st">"age"</span>: <span class="nu">30</span>, <span class="st">"city"</span>: <span class="st">"서울"</span>}
+member[<span class="st">"age"</span>] += <span class="nu">1</span>
+<span class="fn">print</span>(member[<span class="st">"name"</span>] + <span class="st">"님은 "</span> + member[<span class="st">"city"</span>] +
+      <span class="st">"에 사는 "</span> + <span class="fn">str</span>(member[<span class="st">"age"</span>]) + <span class="st">"살입니다."</span>)</code></pre>
+        <div class="result">이순신님은 서울에 사는 31살입니다.</div>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 11-2. 용어 사전 검색</h4>
+      <div class="req">컴퓨터 용어 딕셔너리를 만들고, 사용자가 용어를 입력하면 뜻을 보여주되 없으면 "정의된 단어가 없습니다"를 출력하세요. (<code>get</code> 활용)</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>terms = {<span class="st">"CPU"</span>: <span class="st">"중앙처리장치"</span>, <span class="st">"RAM"</span>: <span class="st">"주기억장치"</span>}
+word = <span class="fn">input</span>(<span class="st">"검색할 용어: "</span>)
+<span class="fn">print</span>(terms.<span class="fn">get</span>(word, <span class="st">"정의된 단어가 없습니다"</span>))</code></pre>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)"><code>get(키, 기본값)</code>은 키가 없을 때 두 번째 인자를 대신 돌려줍니다.</p>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 11-3. AI로 나만의 사전 앱 만들기</h4>
+      <div class="req">실습 11-2를 확장해, “계속 검색하다 <code>종료</code>를 입력하면 끝나는” 반복 기능을 ChatGPT에 요청하세요(4장 while + break 복습). 받은 코드를 실행해 여러 단어로 검증하고, 없는 단어 처리까지 확인하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>아래 파이썬 용어 사전 코드를, 사용자가 '종료'를 입력할 때까지 계속 검색할 수 있도록 while문으로 감싸 줘. 없는 단어를 입력하면 안내 문구가 나오게 해 줘.
+terms = {"CPU": "중앙처리장치", "RAM": "주기억장치"}</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">이 실습은 2장에서 배운 반복문 + 자료구조를 합치는 좋은 연습입니다.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 12 ============ -->
+<section class="module" id="m12">
+  <div class="mod-head"><div class="mod-num">12</div><h2>튜플(Tuple)</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>튜플과 리스트의 차이(변경 가능 여부)를 이해한다.</li>
+        <li>튜플을 생성하고 인덱싱·슬라이싱할 수 있다.</li>
+        <li>변하면 안 되는 데이터에 튜플을 선택할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">튜플(tuple)</b>은 리스트와 비슷하지만 <b>한 번 만들면 요소를 바꿀 수 없는(추가·수정·삭제 불가)</b> 자료형입니다. 소괄호 <code>( )</code>를 씁니다. 인덱싱·슬라이싱은 리스트와 똑같이 됩니다.</p>
+<pre><code>튜플 = (요소1, 요소2, ...)
+point = (<span class="nu">3</span>, <span class="nu">5</span>)</code></pre>
+    <div class="note"><b>언제 쓰나?</b> 요일 이름, 좌표처럼 <b>바뀌면 안 되는 값</b>을 안전하게 보관할 때 씁니다. 요소를 바꾸려 하면 오류가 나서 실수를 막아 줍니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>t = (<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>)
+<span class="fn">print</span>(t[<span class="nu">0</span>])        <span class="cm"># 1</span>
+<span class="fn">print</span>(t + (<span class="nu">4</span>, <span class="nu">5</span>))  <span class="cm"># 합치기는 가능 → (1, 2, 3, 4, 5)</span>
+
+<span class="cm"># t[0] = 10   → 오류! 튜플은 수정할 수 없음</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+1
+(1, 2, 3, 4, 5)</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "왜 못 바꾸는데 쓰나요?"를 AI에게</h4>
+      <p>튜플의 존재 이유가 잘 와닿지 않을 때, 실무 관점의 답을 들으면 이해가 깊어집니다.</p>
+      <div class="prompt"><code>파이썬에서 리스트로도 되는데 왜 굳이 못 바꾸는 튜플을 쓰는지, 초보자도 납득할 수 있게 실제 사용 예 3가지를 들어 설명해 줘.</code></div>
+      <p>수정 오류를 만났을 때:</p>
+      <div class="prompt"><code>튜플에서 t[0] = 10 을 하니 TypeError: 'tuple' object does not support item assignment 오류가 나. 무슨 뜻이야?</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 12-1. 요일 튜플</h4>
+      <div class="req">요일 튜플 <code>("월","화","수","목","금","토","일")</code>을 만들고, 인덱스 0과 6의 요일을 출력하세요. 또 이 데이터를 튜플로 만든 이유를 한 줄로 설명하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>days = (<span class="st">"월"</span>, <span class="st">"화"</span>, <span class="st">"수"</span>, <span class="st">"목"</span>, <span class="st">"금"</span>, <span class="st">"토"</span>, <span class="st">"일"</span>)
+<span class="fn">print</span>(days[<span class="nu">0</span>], days[<span class="nu">6</span>])   <span class="cm"># 월 일</span></code></pre>
+        <p style="margin:6px 0 0">이유: 요일 이름은 <b>바뀔 일이 없는 고정 데이터</b>라, 실수로 수정되지 않도록 튜플로 만든다.</p>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 12-2. 리스트 vs 튜플 판단력 기르기</h4>
+      <div class="req">일상 데이터 5가지(예: 장바구니 목록, 생년월일, 지도 좌표, 할 일 목록, RGB 색상값)를 정해, 각각 <b>리스트가 나을지 튜플이 나을지</b> 스스로 판단해 적으세요. 그다음 ChatGPT에 판단을 검토받고 이유를 비교하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>다음 데이터를 파이썬에서 리스트로 저장할지 튜플로 저장할지 각각 판단하고 이유를 알려 줘: (1) 장바구니 목록 (2) 생년월일 (3) 지도 좌표(위도,경도) (4) 오늘 할 일 (5) RGB 색상값. 내 생각은 이런데 맞는지도 봐 줘: ...</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">핵심 기준: <b>바뀔 수 있으면 리스트, 고정이면 튜플</b>. AI와 판단을 비교하며 감각을 키우세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 13 ============ -->
+<section class="module" id="m13">
+  <div class="mod-head"><div class="mod-num">13</div><h2>집합(Set)</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>집합의 특징(중복 없음, 순서 없음)을 이해한다.</li>
+        <li>요소 추가·삭제와 포함 여부를 확인할 수 있다.</li>
+        <li>교집합·합집합·차집합 연산을 사용할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">집합(set)</b>은 수학의 집합처럼 <b>중복을 허용하지 않고 순서가 없는</b> 자료구조입니다. 중괄호 <code>{ }</code>를 씁니다. 중복 제거나 집합 연산에 유용합니다.</p>
+    <table>
+      <tr><th>연산/메서드</th><th>기능</th></tr>
+      <tr><td><code>add(x)</code></td><td>요소 추가</td></tr>
+      <tr><td><code>remove(x)</code></td><td>요소 삭제</td></tr>
+      <tr><td><code>x in s</code></td><td>포함 여부(True/False)</td></tr>
+      <tr><td><code>a &amp; b</code></td><td>교집합(둘 다 있는 것)</td></tr>
+      <tr><td><code>a | b</code></td><td>합집합(둘을 합친 것)</td></tr>
+      <tr><td><code>a - b</code></td><td>차집합(a에만 있는 것)</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+<pre><code>s = {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">2</span>, <span class="nu">3</span>}
+<span class="fn">print</span>(s)          <span class="cm"># {1, 2, 3}  중복 자동 제거</span>
+
+a = {<span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>}
+b = {<span class="nu">3</span>, <span class="nu">4</span>, <span class="nu">5</span>}
+<span class="fn">print</span>(a &amp; b)      <span class="cm"># {3}       교집합</span>
+<span class="fn">print</span>(a | b)      <span class="cm"># {1,2,3,4,5} 합집합</span>
+<span class="fn">print</span>(a - b)      <span class="cm"># {1, 2}    차집합</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+{1, 2, 3}
+{3}
+{1, 2, 3, 4, 5}
+{1, 2}</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 집합 연산, 벤 다이어그램으로 설명받기</h4>
+      <p>교집합·합집합·차집합은 그림으로 보면 한 번에 이해됩니다.</p>
+      <div class="prompt"><code>파이썬 집합 연산 &amp;(교집합), |(합집합), -(차집합)을 벤 다이어그램처럼 글로 그려가며 초보자용으로 설명해 줘. 각 연산의 실생활 활용 예도 하나씩 들어 줘.</code></div>
+      <p>실전 활용이 궁금할 때:</p>
+      <div class="prompt"><code>두 명의 팔로워 목록에서 '공통 팔로워'와 '한쪽에만 있는 팔로워'를 집합으로 구하는 파이썬 코드를 만들어 주고 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 13-1. 중복 제거</h4>
+      <div class="req">리스트 <code>[3, 1, 2, 3, 1, 4]</code>에서 집합을 이용해 중복을 제거한 결과를 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>nums = [<span class="nu">3</span>, <span class="nu">1</span>, <span class="nu">2</span>, <span class="nu">3</span>, <span class="nu">1</span>, <span class="nu">4</span>]
+<span class="fn">print</span>(<span class="fn">set</span>(nums))    <span class="cm"># {1, 2, 3, 4}</span></code></pre>
+        <div class="result">{1, 2, 3, 4}</div>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 13-2. 공통 관심사 찾기</h4>
+      <div class="req">A의 취미 <code>{"영화","독서","게임"}</code>, B의 취미 <code>{"게임","운동","독서"}</code>에서 <b>둘 다 좋아하는 취미</b>(교집합)를 출력하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>a = {<span class="st">"영화"</span>, <span class="st">"독서"</span>, <span class="st">"게임"</span>}
+b = {<span class="st">"게임"</span>, <span class="st">"운동"</span>, <span class="st">"독서"</span>}
+<span class="fn">print</span>(a &amp; b)    <span class="cm"># {'게임', '독서'}</span></code></pre>
+        <div class="result">{'독서', '게임'}</div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">집합은 순서가 없어 출력 순서는 다를 수 있습니다.</p>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 13-3. 종합 프로젝트 — AI와 함께 만들고 검증</h4>
+      <div class="req">2장에서 배운 것을 모아, 두 사람의 관심사를 입력받아 <b>공통 관심사·전체 관심사·나만의 관심사</b>를 보여주는 프로그램을 기획하세요. ChatGPT에 아이디어를 설명해 코드를 받은 뒤 <b>직접 실행·검증</b>하고, 새 문법은 설명을 요청하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 · 검증 체크리스트 보기</summary><div class="body">
+        <div class="prompt"><code>파이썬 초보야. 두 사람의 관심사를 각각 input()으로 쉼표 구분해 입력받아(예: 영화,독서,게임), 공통 관심사(교집합), 전체 관심사(합집합), A에게만 있는 관심사(차집합)를 출력하는 프로그램을 만들어 줘. split과 set 사용 부분을 주석으로 설명해 줘.</code></div>
+        <p style="margin:8px 0 4px"><b>실행 후 스스로 점검(검증 체크리스트)</b></p>
+        <ul class="plain" style="margin-top:0">
+          <li>입력을 <code>split(",")</code>으로 나누고 <code>set()</code>으로 바꿨는가?</li>
+          <li>교집합·합집합·차집합 결과가 손으로 계산한 것과 같은가?</li>
+          <li>모든 줄을 내가 설명할 수 있는가? (못 하면 AI에 “이 줄 설명해 줘”)</li>
+        </ul>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>ChatGPT &amp; 파이썬 기초 프로그래밍 · 2장 제어문과 자료구조 (AI 활용판)<br>
+  본 교안은 강의용 학습 자료입니다. · 학습 원칙: <b>AI에게 묻고 → 직접 실행해 검증하고 → 스스로 이해하기</b></p>
+</footer>
+
+</div>
+</body>
+</html>
