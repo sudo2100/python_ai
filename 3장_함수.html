@@ -261,7 +261,7 @@
     <span class="tag ex">💡 예제</span>
     <p>인사말을 출력하는, 반환값(return)이 없는 함수입니다.</p>
 <pre><code><span class="kw">def</span> <span class="fn">greet</span>(name):        <span class="cm"># 함수 정의</span>
-    <span class="fn">print</span>(name + <span class="st">"님, 환영합니다!"</span>)
+    <span class="fn">print</span>(<span class="st">f"{name}님, 환영합니다!"</span>)
 
 <span class="fn">greet</span>(<span class="st">"홍길동"</span>)             <span class="cm"># 함수 호출</span>
 <span class="fn">greet</span>(<span class="st">"김파이"</span>)             <span class="cm"># 다시 재사용</span></code></pre>
@@ -291,7 +291,7 @@ print("이순신님, 환영합니다!")</code></div>
       <div class="req">이름과 나이를 매개변수로 받아 "OOO님은 OO살입니다."를 출력하는 함수 <code>info</code>를 만들고, 서로 다른 값으로 두 번 호출하세요.</div>
       <details class="answer"><summary>정답 보기</summary><div class="body">
 <pre><code><span class="kw">def</span> <span class="fn">info</span>(name, age):
-    <span class="fn">print</span>(name + <span class="st">"님은 "</span> + <span class="fn">str</span>(age) + <span class="st">"살입니다."</span>)
+    <span class="fn">print</span>(<span class="st">f"{name}님은 {age}살입니다."</span>)
 
 <span class="fn">info</span>(<span class="st">"홍길동"</span>, <span class="nu">20</span>)
 <span class="fn">info</span>(<span class="st">"김파이"</span>, <span class="nu">25</span>)</code></pre>
@@ -725,7 +725,7 @@ def add_price(p):
       <div class="req">이름과 인사말을 받는 함수 <code>hello(name, msg="안녕하세요")</code>를 만드세요. 인사말을 생략하면 "안녕하세요"가, 넘기면 그 인사말이 출력되게 하세요.</div>
       <details class="answer"><summary>정답 보기</summary><div class="body">
 <pre><code><span class="kw">def</span> <span class="fn">hello</span>(name, msg=<span class="st">"안녕하세요"</span>):
-    <span class="fn">print</span>(name + <span class="st">"님, "</span> + msg)
+    <span class="fn">print</span>(<span class="st">f"{name}님, {msg}"</span>)
 
 <span class="fn">hello</span>(<span class="st">"홍길동"</span>)              <span class="cm"># 기본값 사용</span>
 <span class="fn">hello</span>(<span class="st">"김파이"</span>, <span class="st">"반갑습니다"</span>)   <span class="cm"># 값 전달</span></code></pre>
