@@ -215,18 +215,6 @@
       <div class="prompt"><code>너는 파이썬을 가르치는 친절한 선생님이야. 나는 오늘 함수를 처음 배우는 완전 초보야. 함수의 '매개변수'와 'return'이 각각 무슨 역할인지 자판기에 비유해서 설명하고, 아주 짧은 예시 함수도 하나 보여 줘.</code></div>
     </div>
   </div>
-
-  <div class="block">
-    <span class="tag lab">✏️ 실습문제</span>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 0-1. 나만의 학습 파트너 만들기</h4>
-      <div class="req">위의 4가지 요소(역할·수준·원하는 것·형식)를 모두 넣어, ChatGPT에게 “함수가 왜 필요한지” 물어보는 프롬프트를 직접 작성하고 실제로 질문해 보세요. 답이 어려우면 “더 쉽게”, “예시 더 줘”라고 이어서 물어보세요.</div>
-      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>너는 코딩 학원 선생님이야. 나는 파이썬을 배운 지 2주 된 초보야. 함수가 왜 필요한지(반복을 줄이고 재사용한다는 점)를 요리 레시피에 비유해 3가지 이유로 설명하고, 아주 짧은 파이썬 함수 예시도 하나 보여 줘.</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">핵심: 역할·수준·원하는 것·형식을 모두 담았습니다. AI가 준 함수 예시는 꼭 직접 실행해 보세요.</p>
-      </div></details>
-    </div>
-  </div>
 </section>
 
 <!-- ============ MODULE 1 ============ -->
@@ -519,15 +507,6 @@ s, avg, lo, hi = <span class="fn">stats</span>([<span class="nu">70</span>, <spa
   </div>
 
   <div class="block">
-    <span class="tag ai">🤖 ChatGPT 활용</span>
-    <div class="ai-box">
-      <h4>🤖 "함수가 원본 리스트를 바꿔버려요"</h4>
-      <p>리스트를 함수에 넘기면 원본이 함께 바뀌는 <b>부작용(side effect)</b>이 초보자를 당황시킵니다. AI에게 원리를 물어보세요.</p>
-      <div class="prompt"><code>파이썬에서 리스트를 함수에 넘겨 함수 안에서 append 하면, 함수 밖의 원본 리스트도 바뀌는 이유를 초보자용으로 설명해 줘. 원본을 안 바꾸려면 어떻게 해야 하는지도 알려 줘.</code></div>
-    </div>
-  </div>
-
-  <div class="block">
     <span class="tag lab">✏️ 실습문제</span>
     <div class="lab-box">
       <h4>실습 4-1. 최대값과 위치 찾기</h4>
@@ -545,17 +524,6 @@ s, avg, lo, hi = <span class="fn">stats</span>([<span class="nu">70</span>, <spa
 v, i = <span class="fn">find_max</span>([<span class="nu">70</span>, <span class="nu">80</span>, <span class="nu">55</span>, <span class="nu">60</span>, <span class="nu">90</span>, <span class="nu">40</span>])
 <span class="fn">print</span>(<span class="st">"최대값:"</span>, v, <span class="st">"/ 위치:"</span>, i)</code></pre>
         <div class="result">최대값: 90 / 위치: 4</div>
-      </div></details>
-    </div>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 4-2. 경계 입력으로 함수 무너뜨리기</h4>
-      <div class="req">ChatGPT에 “<code>find_max</code> 함수를 테스트할 <b>까다로운 입력</b>(빈 리스트, 원소 1개, 같은 값이 여러 개 등)”을 추천받아 직접 넣어 보세요. 오류나 이상한 결과가 나오면 “이 경우도 처리하게 고쳐 줘”라고 요청해 개선하세요.</div>
-      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>아래 find_max 함수를 테스트하려고 해. 빈 리스트나 원소가 하나뿐인 경우 등 문제가 될 만한 입력을 알려 주고, 그런 경우도 안전하게 처리하도록 함수를 개선해 줘.
-def find_max(nums):
-    max_v = nums[0]
-    ...</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">빈 리스트를 넣으면 <code>IndexError</code>가 납니다. 이런 <b>경계 상황 테스트</b>가 함수를 튼튼하게 만듭니다.</p>
       </div></details>
     </div>
   </div>
@@ -611,21 +579,6 @@ count = <span class="nu">0</span>
     <div class="result"><b>실행 결과</b>
 10 5
 2</div>
-  </div>
-
-  <div class="block">
-    <span class="tag ai">🤖 ChatGPT 활용</span>
-    <div class="ai-box">
-      <h4>🤖 UnboundLocalError, AI에게 진단받기</h4>
-      <p>전역 변수를 함수 안에서 바꾸려다 <code>UnboundLocalError</code>를 만나기 쉽습니다. 오류를 붙여넣으면 정확히 짚어 줍니다.</p>
-      <div class="prompt"><code>아래 파이썬 코드에서 UnboundLocalError: local variable 'count' referenced before assignment 오류가 나. 원인이 뭐고 global 키워드로 어떻게 고치는지 초보자용으로 설명해 줘.
-count = 0
-def up():
-    count += 1
-up()</code></div>
-      <p>더 나은 설계가 궁금할 때:</p>
-      <div class="prompt"><code>global을 쓰는 게 왜 위험하다고들 하는지, 대신 매개변수와 return으로 바꾸면 어떻게 되는지 같은 예제로 비교해 설명해 줘.</code></div>
-    </div>
   </div>
 
   <div class="block">
@@ -713,8 +666,6 @@ def add_price(p):
       <h4>🤖 *args와 **kwargs, 한 번에 정리받기</h4>
       <p><code>*args</code>가 익숙해지면 <code>**kwargs</code>가 궁금해집니다. AI에게 둘을 예시로 비교해 달라고 하세요.</p>
       <div class="prompt"><code>파이썬의 가변 매개변수 *args와 키워드 가변 매개변수 **kwargs의 차이를, 같은 함수에 둘 다 쓰는 짧은 예시와 함께 초보자용으로 설명해 줘.</code></div>
-      <p>기본값 관련 함정도 물어보세요:</p>
-      <div class="prompt"><code>파이썬에서 기본 매개변수로 빈 리스트(def f(x=[]))를 쓰면 위험하다는데 왜 그런지, 초보자도 이해할 수 있게 예시로 설명해 줘.</code></div>
     </div>
   </div>
 
@@ -807,7 +758,19 @@ def add_price(p):
       <h4>🤖 "이 작업에 맞는 내장 함수 있어?"</h4>
       <p>직접 for문으로 짜기 전에, 이미 있는 내장 함수를 물어보면 코드가 짧아집니다.</p>
       <div class="prompt"><code>파이썬에서 리스트를 정렬하거나, 요소별 인덱스와 값을 함께 순회하거나, 참인 요소가 하나라도 있는지 확인할 때 쓸 수 있는 내장 함수를 알려 주고, 각각 짧은 예시를 보여 줘.</code></div>
-      <div class="warn" style="margin-top:10px"><b>⚠️ eval 주의</b> <code>eval</code>은 문자열을 코드로 실행하므로, 사용자 입력에 그대로 쓰면 위험합니다. AI에게 “eval이 왜 위험한지”도 물어보세요.</div>
+      <details class="answer"><summary>예시 답변 보기</summary><div class="body" style="font-size:.93rem">
+        <p>위에서 질문한 세 가지 상황에 각각 이런 내장 함수를 씁니다.</p>
+        <p><b class="hl">정렬</b>은 <code>sorted()</code> — 원본은 그대로 두고 정렬된 새 리스트를 돌려줍니다.</p>
+<pre><code><span class="fn">print</span>(<span class="fn">sorted</span>([<span class="nu">3</span>, <span class="nu">1</span>, <span class="nu">2</span>]))              <span class="cm"># [1, 2, 3]</span>
+<span class="fn">print</span>(<span class="fn">sorted</span>([<span class="nu">3</span>, <span class="nu">1</span>, <span class="nu">2</span>], reverse=<span class="kw">True</span>))  <span class="cm"># [3, 2, 1]</span></code></pre>
+        <p><b class="hl">인덱스와 값</b>을 함께 순회할 때는 <code>enumerate()</code>.</p>
+<pre><code><span class="kw">for</span> i, name <span class="kw">in</span> <span class="fn">enumerate</span>([<span class="st">"사과"</span>, <span class="st">"바나나"</span>, <span class="st">"체리"</span>]):
+    <span class="fn">print</span>(i, name)
+<span class="cm"># 0 사과 / 1 바나나 / 2 체리</span></code></pre>
+        <p><b class="hl">참인 요소가 하나라도</b> 있는지는 <code>any()</code> (모두 참인지는 <code>all()</code>).</p>
+<pre><code><span class="fn">print</span>(<span class="fn">any</span>([<span class="nu">0</span>, <span class="nu">0</span>, <span class="nu">85</span>]))  <span class="cm"># True</span>
+<span class="fn">print</span>(<span class="fn">all</span>([<span class="nu">0</span>, <span class="nu">0</span>, <span class="nu">85</span>]))  <span class="cm"># False</span></code></pre>
+      </div></details>
     </div>
   </div>
 
@@ -825,20 +788,6 @@ def add_price(p):
 
 <span class="fn">print</span>(<span class="fn">sum1</span>(<span class="nu">100</span>), <span class="fn">sum2</span>(<span class="nu">100</span>))    <span class="cm"># 5050 5050</span></code></pre>
         <div class="result">5050 5050</div>
-      </div></details>
-    </div>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 7-2. 내 함수를 내장 함수 한 줄로</h4>
-      <div class="req">실습 7-1처럼 직접 for문으로 만든 함수(예: 리스트 최대값 찾기)를 하나 정해, ChatGPT에 “이걸 파이썬 내장 함수로 짧게 바꿀 수 있어?”라고 물어보세요. 두 버전의 결과가 같은지 여러 리스트로 검증하세요.</div>
-      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>아래는 for문으로 리스트 최대값을 찾는 내 함수야. 파이썬 내장 함수를 써서 더 짧게 바꿀 수 있어? 두 방법의 결과가 항상 같은지도 알려 줘.
-def my_max(nums):
-    m = nums[0]
-    for x in nums:
-        if x > m:
-            m = x
-    return m</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">“직접 만들어 원리를 이해한 뒤, 내장 함수로 짧게”가 좋은 학습 순서입니다.</p>
       </div></details>
     </div>
   </div>
