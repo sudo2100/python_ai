@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT &amp; 파이썬 · 5장 윈도우(GUI)·서버·바이브 코딩 (AI 활용판)</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#ffffff; --ink:#1f2933; --sub:#52606d;
+    --brand:#e11d48; --brand-d:#9f1239; --accent:#e11d48;
+    --line:#e4e9f2; --code-bg:#1e2430; --code-ink:#e6edf3;
+    --goal:#fff1f4; --goal-b:#e11d48;
+    --lab:#fff7ed; --lab-b:#f59e0b;
+    --warn:#fef2f2; --warn-b:#ef4444;
+    --ai:#ecfeff; --ai-b:#0d9488; --ai-ink:#0f766e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+
+  header.hero{background:linear-gradient(135deg,#e11d48,#0d9488);color:#fff;
+    padding:52px 20px 44px;margin-bottom:28px}
+  header.hero .inner{max-width:920px;margin:0 auto}
+  .kicker{font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:0 0 10px}
+  header.hero h1{margin:0 0 12px;font-size:2rem;font-weight:800;line-height:1.3}
+  header.hero p{margin:0;opacity:.92;font-size:1.02rem}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .meta span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+    padding:5px 12px;border-radius:20px;font-size:.82rem}
+
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px 24px;margin-bottom:34px;box-shadow:0 1px 3px rgba(20,40,80,.05)}
+  nav.toc h2{margin:0 0 6px;font-size:1.05rem;color:var(--brand-d)}
+  nav.toc .grp{font-size:.8rem;font-weight:700;color:var(--sub);margin:12px 0 4px;letter-spacing:.03em}
+  nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px}
+  nav.toc li{margin:5px 0;break-inside:avoid}
+  nav.toc a{text-decoration:none;color:var(--ink)}
+  nav.toc a:hover{color:var(--brand);text-decoration:underline}
+  nav.toc .solo{padding-left:20px;margin:0 0 4px}
+  nav.toc .solo a{font-weight:700;color:var(--ai-ink)}
+
+  section.module{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:0 28px 26px;margin-bottom:30px;box-shadow:0 1px 3px rgba(20,40,80,.05);overflow:hidden}
+  .mod-head{margin:0 -28px 20px;padding:18px 28px;background:#fff5f7;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px}
+  .mod-num{flex:0 0 auto;width:42px;height:42px;border-radius:11px;background:var(--brand);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:1.15rem}
+  .mod-head h2{margin:0;font-size:1.35rem;font-weight:800}
+
+  section.module.intro .mod-head{background:#ecfeff;border-bottom-color:#bff0ec}
+  section.module.intro .mod-num{background:var(--ai-b);font-size:.95rem}
+
+  .block{margin:22px 0}
+  .tag{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:.82rem;
+    letter-spacing:.03em;padding:4px 12px;border-radius:8px;margin-bottom:12px}
+  .tag.goal{background:var(--goal);color:var(--goal-b)}
+  .tag.concept{background:#eef2f9;color:#334155}
+  .tag.ex{background:#f0fbf7;color:#0b7a72}
+  .tag.lab{background:var(--lab);color:#b45309}
+  .tag.ai{background:var(--ai);color:var(--ai-ink)}
+
+  .goal-box{background:var(--goal);border-left:4px solid var(--goal-b);border-radius:0 10px 10px 0;
+    padding:14px 18px}
+  .goal-box ul{margin:0;padding-left:20px}
+  .goal-box li{margin:4px 0}
+
+  p{margin:10px 0}
+  ul.plain{margin:10px 0;padding-left:22px}
+  ul.plain li{margin:6px 0}
+  b.hl{color:var(--brand-d)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#f1f5fb;font-weight:700;color:#334155}
+  td code{white-space:nowrap}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;
+    overflow-x:auto;margin:12px 0;font-size:.92rem;line-height:1.6}
+  code{font-family:"D2Coding","Consolas","Menlo",monospace}
+  pre code{font-family:"D2Coding","Consolas","Menlo",monospace}
+  p code,li code,td code{background:#eef1f6;color:#b23a48;padding:1px 6px;border-radius:5px;font-size:.9em}
+  .cm{color:#7f9cc0}
+  .kw{color:#ff9d6a}
+  .st{color:#9ae6a0}
+  .nu{color:#f6c177}
+  .fn{color:#7cc7ff}
+  .out{display:block;color:#8b97a7;margin-top:2px}
+  .result{background:#fff5f7;border:1px dashed #f4b8c6;border-radius:10px;padding:10px 14px;
+    margin:10px 0;font-family:"D2Coding","Consolas",monospace;font-size:.9rem;color:#334155;white-space:pre-wrap}
+  .result b{color:var(--brand-d)}
+
+  .note{background:#f0fbf7;border-left:4px solid #0ea5a4;border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.95rem}
+  .warn{background:var(--warn);border-left:4px solid var(--warn-b);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.95rem}
+  .note b,.warn b{display:block;margin-bottom:3px}
+
+  .ai-box{background:var(--ai);border:1px solid #bff0ec;border-left:4px solid var(--ai-b);
+    border-radius:0 12px 12px 0;padding:16px 18px;margin:14px 0}
+  .ai-box h4{margin:0 0 8px;font-size:1.02rem;color:var(--ai-ink);display:flex;align-items:center;gap:8px}
+  .ai-box p{margin:8px 0}
+  .prompt{background:#fff;border:1px solid #bff0ec;border-radius:10px;padding:10px 14px;margin:8px 0;
+    font-size:.93rem;white-space:pre-wrap}
+  .prompt::before{content:"💬 프롬프트 예시";display:block;font-size:.72rem;font-weight:800;
+    letter-spacing:.05em;color:var(--ai-b);margin-bottom:5px;text-transform:uppercase}
+  .prompt code{background:transparent;color:#134e4a;padding:0;font-size:.95em}
+  .ai-box ul.plain li{margin:5px 0}
+
+  .lab-box{background:var(--lab);border:1px solid #fcd9a0;border-left:4px solid var(--lab-b);
+    border-radius:0 10px 10px 0;padding:16px 18px;margin:14px 0}
+  .lab-box h4{margin:0 0 8px;font-size:1.02rem;color:#b45309}
+  .lab-box .req{background:#fff;border:1px solid #fcd9a0;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.92rem}
+  .lab-box.ai-lab{background:var(--ai);border-color:#bff0ec;border-left-color:var(--ai-b)}
+  .lab-box.ai-lab h4{color:var(--ai-ink)}
+  .lab-box.ai-lab .req{border-color:#bff0ec}
+
+  details.answer{margin-top:12px;background:#fff;border:1px solid #fcd9a0;border-radius:10px;overflow:hidden}
+  details.answer summary{cursor:pointer;padding:10px 14px;font-weight:700;color:#b45309;
+    background:#fffaf1;list-style:none;user-select:none}
+  details.answer summary::-webkit-details-marker{display:none}
+  details.answer summary::before{content:"▶ ";font-size:.8em}
+  details.answer[open] summary::before{content:"▼ "}
+  details.answer .body{padding:6px 14px 14px}
+  .lab-box.ai-lab details.answer{border-color:#bff0ec}
+  .lab-box.ai-lab details.answer summary{color:var(--ai-ink);background:#ecfeff}
+
+  footer{text-align:center;color:var(--sub);font-size:.9rem;margin-top:40px}
+  @media(max-width:640px){
+    nav.toc ol{columns:1}
+    header.hero h1{font-size:1.55rem}
+    .wrap{padding:0 14px 60px}
+    section.module{padding:0 18px 20px}
+    .mod-head{margin:0 -18px 18px;padding:16px 18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <p class="kicker">ChatGPT &amp; 파이썬 기초 프로그래밍</p>
+    <h1>5장 · 윈도우(GUI)·서버·바이브 코딩 <span style="font-weight:700;opacity:.9">— AI 활용판</span></h1>
+    <p>tkinter로 창이 있는 프로그램을 만들고, AI(코파일럿)와 함께 앱을 완성하고, Flask로 나만의 웹 서버까지 — 만들면서 배우는 실전 단원</p>
+    <div class="meta">
+      <span>👥 대상: 일반인 입문자</span>
+      <span>🐍 Python 3.x</span>
+      <span>🖥️ tkinter GUI</span>
+      <span>🤖 코파일럿 · ChatGPT</span>
+      <span>🌐 Flask 웹 서버</span>
+      <span>✍️ 예제 · 실습 · 미니 프로젝트</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h2>📚 학습 목차</h2>
+  <div class="grp">AI 학습 가이드</div>
+  <div class="solo"><a href="#m0">바이브 코딩 — AI와 함께 만들며 배우기</a></div>
+  <div class="grp">PART 1. 윈도우(GUI) 프로그래밍 — tkinter</div>
+  <ol>
+    <li><a href="#m1">GUI와 tkinter 기초</a></li>
+    <li><a href="#m2">레이아웃 — pack()과 grid()</a></li>
+    <li><a href="#m3">버튼 클릭 이벤트</a></li>
+    <li><a href="#m4">미니 프로젝트: 컴퓨터 용어 사전</a></li>
+  </ol>
+  <div class="grp">PART 2. 바이브 코딩 — AI와 함께 만들기</div>
+  <ol start="5">
+    <li><a href="#m5">GitHub Copilot로 코딩하기</a></li>
+    <li><a href="#m6">실행 파일(.exe) 배포 — PyInstaller</a></li>
+    <li><a href="#m7">미니 프로젝트: 단위 변환기</a></li>
+    <li><a href="#m8">미니 프로젝트: QR 코드 생성기</a></li>
+  </ol>
+  <div class="grp">PART 3. 서버와 웹 — Flask</div>
+  <ol start="9">
+    <li><a href="#m9">클라이언트와 서버</a></li>
+    <li><a href="#m10">Flask로 웹 서버 만들기</a></li>
+    <li><a href="#m11">HTML과 CSS 기초</a></li>
+    <li><a href="#m12">종합 프로젝트: Flask 사진 갤러리</a></li>
+  </ol>
+</nav>
+
+<!-- ============ MODULE 0 : AI GUIDE ============ -->
+<section class="module intro" id="m0">
+  <div class="mod-head"><div class="mod-num">AI</div><h2>바이브 코딩 — AI와 함께 만들며 배우기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>‘바이브 코딩’ — AI에게 원하는 것을 말로 설명해 프로그램을 만들어 가는 방식을 이해한다.</li>
+        <li>GitHub Copilot·ChatGPT를 <b>설계·작성·디버깅 도우미</b>로 활용할 수 있다.</li>
+        <li>AI가 만든 코드를 <b>직접 실행해 검증</b>하고, 안 되면 오류를 붙여넣어 고치는 습관을 기른다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>이번 장에서는 지금까지 배운 파이썬 문법으로 <b class="hl">진짜 쓸 수 있는 프로그램</b>을 만듭니다. 창(윈도우)이 있는 <b class="hl">GUI 프로그램</b>, 실행 파일(<code>.exe</code>)로 배포하기, 그리고 <b class="hl">Flask 웹 서버</b>까지 직접 만들어 봅니다.</p>
+    <p><b class="hl">바이브 코딩(Vibe Coding)</b>은 "이런 걸 만들고 싶어"라고 <b>말로 설명</b>하면 AI가 코드를 만들어 주고, 우리는 그것을 <b>실행·수정·이해</b>하며 완성해 가는 개발 방식입니다. 문법을 다 외우지 못해도, 만들고 싶은 것이 분명하면 AI와 함께 만들 수 있습니다. 대신 <b>내가 코드를 읽고 검증</b>할 수 있어야 진짜 실력이 됩니다.</p>
+    <table>
+      <tr><th>이럴 때 AI에게 물어보세요</th><th>이렇게</th></tr>
+      <tr><td>무엇부터 만들지 막막할 때</td><td>"tkinter로 버튼 하나 있는 창을 만드는 가장 짧은 코드 보여 줘"</td></tr>
+      <tr><td>기능을 추가하고 싶을 때</td><td>"이 코드에 입력창과 검색 버튼을 추가해 줘"</td></tr>
+      <tr><td>오류가 날 때</td><td>오류 전체를 붙여넣고 "왜 이런 오류가 나? 어떻게 고쳐?"</td></tr>
+      <tr><td>배포하고 싶을 때</td><td>"이 파이썬 파일을 윈도우 exe로 만드는 방법 알려 줘"</td></tr>
+    </table>
+    <div class="warn"><b>⚠️ 학습 원칙</b>
+      AI가 준 코드를 그대로 붙여넣기만 하면 실력이 늘지 않습니다. <b>한 줄씩 읽고</b> "이 줄이 무슨 일을 해?"라고 물으며, 반드시 <b>직접 실행해 결과를 확인</b>하세요.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 좋은 프롬프트의 4가지 요소</span>
+    <div class="ai-box">
+      <h4>🤖 원하는 프로그램을 얻는 질문법</h4>
+      <p>만들고 싶은 것을 <b>구체적으로</b> 설명할수록 좋은 코드가 나옵니다.</p>
+      <ul class="plain">
+        <li><b>① 역할</b> — "너는 파이썬 GUI를 가르치는 선생님이야."</li>
+        <li><b>② 상황/수준</b> — "나는 tkinter를 처음 쓰는 초보야."</li>
+        <li><b>③ 원하는 것</b> — "입력창·버튼·결과 표시가 있는 창을 만들어 줘."</li>
+        <li><b>④ 형식</b> — "각 줄에 주석을 달아 초보자용으로."</li>
+      </ul>
+      <div class="prompt"><code>너는 파이썬 GUI를 가르치는 친절한 선생님이야. 나는 tkinter를 오늘 처음 쓰는 완전 초보야. '입력창 + 확인 버튼 + 결과 라벨'이 있는 아주 짧은 tkinter 창 코드를 만들어 주고, 각 줄이 무슨 일을 하는지 주석으로 설명해 줘.</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 1 ============ -->
+<section class="module" id="m1">
+  <div class="mod-head"><div class="mod-num">1</div><h2>GUI와 tkinter 기초</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>GUI(그래픽 사용자 인터페이스)가 무엇인지 이해한다.</li>
+        <li><code>tkinter</code>로 창(윈도우)을 만들고 제목·크기를 지정할 수 있다.</li>
+        <li>라벨·버튼 같은 <b>위젯</b>을 창에 올릴 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">GUI</b>(Graphical User Interface)는 화면의 <b>메뉴·버튼·입력창</b>으로 사용자와 상호작용하는 프로그램입니다. 우리가 매일 쓰는 대부분의 앱이 GUI 프로그램이죠. 지금까지 만든 <b>콘솔(검은 화면) 프로그램</b>과 달리, 창이 뜨고 마우스로 클릭할 수 있습니다.</p>
+    <p>파이썬은 표준 라이브러리 <b class="hl">tkinter</b>로 GUI를 만듭니다. 별도 설치 없이 <code>import tkinter</code>로 바로 쓸 수 있어요. GUI 프로그램의 뼈대는 다음 표처럼 <b>항상 같은 순서</b>를 따릅니다.</p>
+    <table>
+      <tr><th>단계</th><th>코드</th><th>설명</th></tr>
+      <tr><td>모듈 가져오기</td><td><code>from tkinter import *</code></td><td>tkinter의 모든 위젯 사용</td></tr>
+      <tr><td>윈도우 생성</td><td><code>root = Tk()</code></td><td>기본 창(루트 윈도우) 만들기</td></tr>
+      <tr><td>제목 지정</td><td><code>root.title("제목")</code></td><td>창 제목 표시줄 글자</td></tr>
+      <tr><td>위젯 구성</td><td><code>Label(...)</code>, <code>Button(...)</code></td><td>라벨·버튼 등을 배치</td></tr>
+      <tr><td>실행(대기)</td><td><code>root.mainloop()</code></td><td>창을 띄우고 이벤트를 기다림</td></tr>
+    </table>
+    <div class="note"><b>자주 쓰는 위젯</b> Label(글자 표시), Button(버튼), Entry(한 줄 입력상자), Text(여러 줄 출력상자), Frame(위젯을 담는 상자).</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p>제목이 있는 창을 만들고, 라벨과 버튼을 올린 가장 기본적인 tkinter 프로그램입니다.</p>
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+root = <span class="fn">Tk</span>()                       <span class="cm"># 1. 기본 창 생성</span>
+root.<span class="fn">title</span>(<span class="st">"첫 GUI 프로그램"</span>)         <span class="cm"># 2. 창 제목</span>
+root.<span class="fn">geometry</span>(<span class="st">"300x150"</span>)          <span class="cm"># 3. 창 크기(너비x높이)</span>
+
+<span class="fn">Label</span>(root, text=<span class="st">"안녕하세요! 👋"</span>).<span class="fn">pack</span>()   <span class="cm"># 4. 라벨 배치</span>
+<span class="fn">Button</span>(root, text=<span class="st">"확인"</span>).<span class="fn">pack</span>()          <span class="cm"># 5. 버튼 배치</span>
+
+root.<span class="fn">mainloop</span>()                  <span class="cm"># 6. 창 띄우고 대기</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+"첫 GUI 프로그램" 제목의 300x150 창이 뜨고,
+"안녕하세요! 👋" 라벨과 [확인] 버튼이 세로로 나타납니다.</div>
+    <p style="text-align:center;margin:12px 0"><img src="images/5장_첫GUI프로그램.png" alt="첫 GUI 프로그램 실행 화면 — 안녕하세요! 라벨과 확인 버튼" style="max-width:340px;width:100%;border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 4px rgba(20,40,80,.12)"></p>
+    <div class="warn"><b>⚠️ mainloop() 필수</b> <code>root.mainloop()</code>가 없으면 창이 떴다가 바로 사라집니다. GUI 코드의 <b>맨 마지막 줄</b>에 꼭 넣으세요.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "콘솔 프로그램과 뭐가 다른가요?"</h4>
+      <p>GUI는 흐름이 콘솔과 달라 처음엔 낯섭니다. AI에게 개념을 비유로 물어보세요.</p>
+      <div class="prompt"><code>파이썬 tkinter의 mainloop()가 무슨 일을 하는지, 콘솔 프로그램(input/print)과 GUI 프로그램의 실행 흐름이 어떻게 다른지 초보자용으로 비유를 들어 설명해 줘.</code></div>
+      <p>위젯 종류가 궁금할 때:</p>
+      <div class="prompt"><code>tkinter에서 자주 쓰는 위젯 Label, Button, Entry, Text의 차이와 용도를 표로 정리하고, 각각을 하나씩 올린 짧은 예시 코드를 주석과 함께 보여 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 1-1. 내 첫 창 만들기</h4>
+      <div class="req">제목이 "내 이름의 앱", 크기가 <code>320x200</code>인 창을 만들고, 자기 이름을 표시하는 라벨과 [닫기] 버튼을 배치하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+root = <span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="st">"내 이름의 앱"</span>)
+root.<span class="fn">geometry</span>(<span class="st">"320x200"</span>)
+
+<span class="fn">Label</span>(root, text=<span class="st">"홍길동"</span>, font=(<span class="st">"맑은 고딕"</span>, <span class="nu">20</span>)).<span class="fn">pack</span>(pady=<span class="nu">20</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"닫기"</span>, command=root.destroy).<span class="fn">pack</span>()   <span class="cm"># destroy=창 닫기</span>
+
+root.<span class="fn">mainloop</span>()</code></pre>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 1-2. 창 꾸미기</h4>
+      <div class="req">실습 1-1의 창에 배경색과 라벨 글자색을 넣고 싶다고 ChatGPT에 요청하세요. 받은 코드를 실행해 색이 바뀌는지 검증하고, <code>bg</code>·<code>fg</code> 옵션이 어디에 쓰였는지 확인하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 · 핵심 보기</summary><div class="body">
+        <div class="prompt"><code>아래 tkinter 코드의 창 배경색을 연한 하늘색으로, 라벨 글자를 굵고 진한 파란색으로 바꿔 줘. 어떤 옵션(bg, fg, font)을 어디에 넣었는지 주석으로 설명해 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">창은 <code>root["bg"]="..."</code>, 위젯은 생성 시 <code>bg</code>·<code>fg</code> 옵션으로 색을 지정합니다.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 2 ============ -->
+<section class="module" id="m2">
+  <div class="mod-head"><div class="mod-num">2</div><h2>레이아웃 — pack()과 grid()</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>위젯을 화면에 배치하는 <b>레이아웃 매니저</b>의 역할을 이해한다.</li>
+        <li><code>pack()</code>으로 위/아래/좌/우로 쌓아 배치할 수 있다.</li>
+        <li><code>grid()</code>로 행·열 격자에 배치할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>위젯을 만들기만 해서는 화면에 안 나옵니다. <b class="hl">레이아웃 매니저</b>로 "어디에 놓을지"를 정해야 보입니다. tkinter에는 <code>pack()</code>, <code>grid()</code>, <code>place()</code> 세 가지가 있고, 입문 단계에서는 <code>pack</code>과 <code>grid</code>를 씁니다.</p>
+    <table>
+      <tr><th>방식</th><th>특징</th><th>주요 옵션</th></tr>
+      <tr><td><code>pack()</code></td><td>위젯을 한 방향으로 <b>쌓아서</b> 배치(한 줄에 하나씩이 기본)</td><td><code>side</code>, <code>fill</code>, <code>padx</code>, <code>pady</code></td></tr>
+      <tr><td><code>grid()</code></td><td>표처럼 <b>행(row)·열(column)</b> 격자에 배치, 한 줄에 여러 개 가능</td><td><code>row</code>, <code>column</code>, <code>columnspan</code></td></tr>
+    </table>
+    <div class="warn"><b>⚠️ 섞어 쓰지 마세요</b> 같은 컨테이너(창·프레임) 안에서는 <code>pack()</code>과 <code>grid()</code>를 <b>함께 쓰면 안 됩니다</b>. 프로그램이 멈춘 것처럼 반응이 없어집니다. 하나를 골라 통일하세요.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — pack()</span>
+    <p><code>side</code> 옵션으로 버튼을 좌우로 나란히 붙일 수 있습니다.</p>
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+root = <span class="fn">Tk</span>()
+root.<span class="fn">geometry</span>(<span class="st">"260x80"</span>)
+
+<span class="fn">Button</span>(root, text=<span class="st">"왼쪽"</span>).<span class="fn">pack</span>(side=<span class="st">"left"</span>, padx=<span class="nu">5</span>, pady=<span class="nu">10</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"가운데"</span>).<span class="fn">pack</span>(side=<span class="st">"left"</span>, padx=<span class="nu">5</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"오른쪽"</span>).<span class="fn">pack</span>(side=<span class="st">"left"</span>, padx=<span class="nu">5</span>)
+
+root.<span class="fn">mainloop</span>()</code></pre>
+    <div class="result"><b>실행 결과</b>
+[왼쪽] [가운데] [오른쪽] 버튼이 가로로 나란히 배치됩니다.</div>
+    <p style="text-align:center;margin:12px 0"><img src="images/5장_pack_예제.png" alt="pack() side=left로 왼쪽·가운데·오른쪽 버튼이 가로로 배치된 화면" style="max-width:340px;width:100%;border:1px solid var(--line);border-radius:8px;box-shadow:0 1px 4px rgba(20,40,80,.12)"></p>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — grid()</span>
+    <p>간단한 로그인 폼처럼 라벨과 입력창을 격자에 배치합니다.</p>
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+root = <span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="st">"로그인"</span>)
+
+<span class="fn">Label</span>(root, text=<span class="st">"아이디"</span>).<span class="fn">grid</span>(row=<span class="nu">0</span>, column=<span class="nu">0</span>, padx=<span class="nu">5</span>, pady=<span class="nu">5</span>)
+<span class="fn">Entry</span>(root).<span class="fn">grid</span>(row=<span class="nu">0</span>, column=<span class="nu">1</span>)
+<span class="fn">Label</span>(root, text=<span class="st">"비밀번호"</span>).<span class="fn">grid</span>(row=<span class="nu">1</span>, column=<span class="nu">0</span>, padx=<span class="nu">5</span>, pady=<span class="nu">5</span>)
+<span class="fn">Entry</span>(root, show=<span class="st">"*"</span>).<span class="fn">grid</span>(row=<span class="nu">1</span>, column=<span class="nu">1</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"로그인"</span>).<span class="fn">grid</span>(row=<span class="nu">2</span>, column=<span class="nu">0</span>, columnspan=<span class="nu">2</span>, pady=<span class="nu">8</span>)
+
+root.<span class="fn">mainloop</span>()</code></pre>
+    <div class="result"><b>실행 결과</b>
+아이디 / 비밀번호 라벨과 입력칸이 2행으로 정렬되고,
+맨 아래 [로그인] 버튼이 두 칸에 걸쳐 배치됩니다.</div>
+    <div class="note"><b>columnspan</b> 여러 열을 하나로 합쳐 넓게 배치합니다. 표의 '셀 병합'과 같은 개념입니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "pack이 나을까요, grid가 나을까요?"</h4>
+      <p>화면 배치가 뜻대로 안 될 때 AI에게 상황을 설명하고 조언을 구하세요.</p>
+      <div class="prompt"><code>tkinter에서 계산기처럼 버튼이 4x4 격자로 놓이는 화면은 pack과 grid 중 무엇으로 만드는 게 좋아? 이유와 함께 grid로 만든 짧은 예시 코드를 보여 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 2-1. 3x3 버튼판</h4>
+      <div class="req"><code>grid()</code>를 이용해 1~9 숫자가 적힌 버튼 9개를 <b>3행 3열</b>로 배치한 창을 만드세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+root = <span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="st">"3x3 버튼판"</span>)
+
+n = <span class="nu">1</span>
+<span class="kw">for</span> r <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">3</span>):
+    <span class="kw">for</span> c <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">3</span>):
+        <span class="fn">Button</span>(root, text=<span class="fn">str</span>(n), width=<span class="nu">5</span>).<span class="fn">grid</span>(row=r, column=c, padx=<span class="nu">2</span>, pady=<span class="nu">2</span>)
+        n += <span class="nu">1</span>
+
+root.<span class="fn">mainloop</span>()</code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 3 ============ -->
+<section class="module" id="m3">
+  <div class="mod-head"><div class="mod-num">3</div><h2>버튼 클릭 이벤트</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>버튼을 눌렀을 때 실행할 <b>함수(이벤트 핸들러)</b>를 연결할 수 있다.</li>
+        <li><code>command</code> 옵션에 함수를 <b>괄호 없이</b> 넘기는 이유를 안다.</li>
+        <li>입력창(Entry)의 값을 읽어 라벨에 결과를 표시할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>버튼은 <b>누를 때 무언가 실행</b>되어야 의미가 있습니다. tkinter는 버튼의 <code>command</code> 옵션에 <b class="hl">실행할 함수</b>를 연결합니다.</p>
+    <div class="warn"><b>⚠️ 괄호에 주의</b> <code>command=click</code>처럼 <b>괄호 없이</b> 함수 이름만 넘깁니다. <code>command=click()</code>처럼 괄호를 붙이면 <b>버튼을 만드는 순간 함수가 실행</b>되어 버립니다. 괄호를 빼야 <b>클릭할 때</b> 실행됩니다.</p>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 콘솔에 출력</span>
+    <p>버튼을 누르면 함수가 호출되어 콘솔에 글자를 출력합니다.</p>
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+<span class="kw">def</span> <span class="fn">click</span>():                 <span class="cm"># 버튼을 누르면 실행될 함수</span>
+    <span class="fn">print</span>(<span class="st">"버튼이 눌렸습니다!"</span>)
+
+root = <span class="fn">Tk</span>()
+<span class="fn">Button</span>(root, text=<span class="st">"확인"</span>, command=click).<span class="fn">pack</span>(padx=<span class="nu">20</span>, pady=<span class="nu">20</span>)
+<span class="cm"># command=click  → 괄호 없이! 클릭할 때 실행</span>
+root.<span class="fn">mainloop</span>()</code></pre>
+    <div class="result"><b>실행 결과</b> (버튼을 누를 때마다 콘솔에)
+버튼이 눌렸습니다!</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 입력값을 라벨에 출력</span>
+    <p>입력창에 쓴 이름을 읽어 인사말을 라벨에 표시합니다.</p>
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+<span class="kw">def</span> <span class="fn">greet</span>():
+    name = entry.<span class="fn">get</span>()             <span class="cm"># 입력창의 글자 읽기</span>
+    result.<span class="fn">config</span>(text=<span class="st">"안녕하세요, "</span> + name + <span class="st">"님!"</span>)  <span class="cm"># 라벨 글자 변경</span>
+
+root = <span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="st">"인사 프로그램"</span>)
+
+entry = <span class="fn">Entry</span>(root)
+entry.<span class="fn">pack</span>(padx=<span class="nu">10</span>, pady=<span class="nu">10</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"인사하기"</span>, command=greet).<span class="fn">pack</span>()
+result = <span class="fn">Label</span>(root, text=<span class="st">""</span>)      <span class="cm"># 결과를 표시할 빈 라벨</span>
+result.<span class="fn">pack</span>(pady=<span class="nu">10</span>)
+
+root.<span class="fn">mainloop</span>()</code></pre>
+    <div class="result"><b>실행 결과</b>
+입력창에 "파이썬"을 쓰고 [인사하기]를 누르면
+→ 안녕하세요, 파이썬님!</div>
+    <div class="note"><b>핵심 3단계</b> ① <code>entry.get()</code>으로 입력값 읽기 → ② 결과 문자열 만들기 → ③ <code>label.config(text=...)</code>로 화면에 반영.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "command=click()은 왜 안 돼요?"</h4>
+      <p>입문자가 가장 많이 하는 실수입니다. AI에게 이유를 물어 확실히 이해하세요.</p>
+      <div class="prompt"><code>tkinter 버튼에서 command=click 과 command=click() 의 차이가 뭐야? 괄호를 붙이면 왜 버튼을 누르기도 전에 함수가 실행되는지 초보자용으로 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 3-1. 클릭 카운터</h4>
+      <div class="req">버튼을 누를 때마다 숫자가 1씩 올라가 라벨에 "클릭 횟수: N"으로 표시되는 프로그램을 만드세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+count = <span class="nu">0</span>
+<span class="kw">def</span> <span class="fn">add</span>():
+    <span class="kw">global</span> count
+    count += <span class="nu">1</span>
+    label.<span class="fn">config</span>(text=<span class="st">"클릭 횟수: "</span> + <span class="fn">str</span>(count))
+
+root = <span class="fn">Tk</span>()
+label = <span class="fn">Label</span>(root, text=<span class="st">"클릭 횟수: 0"</span>, font=(<span class="st">"맑은 고딕"</span>, <span class="nu">14</span>))
+label.<span class="fn">pack</span>(pady=<span class="nu">10</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"누르기"</span>, command=add).<span class="fn">pack</span>(pady=<span class="nu">5</span>)
+root.<span class="fn">mainloop</span>()</code></pre>
+      </div></details>
+    </div>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 3-2. 간단 계산기</h4>
+      <div class="req">숫자 두 개를 입력받아 [더하기] 버튼을 누르면 합을 라벨에 표시하는 프로그램을 ChatGPT와 함께 만들고, 문자열을 <code>int()</code>로 바꾸는 부분이 왜 필요한지 확인하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 · 핵심 보기</summary><div class="body">
+        <div class="prompt"><code>tkinter로 입력창 2개와 [더하기] 버튼, 결과 라벨이 있는 창을 만들어 줘. 버튼을 누르면 두 입력값을 더해 라벨에 보여 주고, entry.get()이 문자열이라 int()로 바꿔야 하는 이유도 주석으로 설명해 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)"><code>entry.get()</code>은 항상 <b>문자열</b>을 돌려주므로, 숫자 계산 전에 <code>int()</code>로 변환해야 합니다.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 4 ============ -->
+<section class="module" id="m4">
+  <div class="mod-head"><div class="mod-num">4</div><h2>미니 프로젝트: 컴퓨터 용어 사전</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>딕셔너리 자료구조로 <b>용어–뜻</b> 데이터를 저장한다.</li>
+        <li>입력창·버튼·출력상자를 조합해 <b>검색 앱</b>을 완성한다.</li>
+        <li>검색 결과가 없을 때의 처리를 넣는다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>지금까지 배운 <b class="hl">딕셔너리</b>와 <b class="hl">tkinter</b>를 합쳐 실제 쓸 수 있는 앱을 만듭니다. 용어와 뜻을 딕셔너리에 미리 저장해 두고, 단어를 입력해 [검색]을 누르면 출력상자에 뜻을 보여 줍니다. 없는 단어면 "사전에 없는 용어입니다."라고 안내합니다.</p>
+    <ul class="plain">
+      <li><b>데이터</b>: <code>{"CPU": "중앙처리장치...", ...}</code> 딕셔너리</li>
+      <li><b>입력</b>: <code>Entry</code>에 단어 입력</li>
+      <li><b>처리</b>: <code>dict.get(단어)</code>로 뜻 찾기(없으면 안내문)</li>
+      <li><b>출력</b>: <code>Text</code> 상자에 결과 표시</li>
+    </ul>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 컴퓨터용어사전.py</span>
+<pre><code><span class="kw">from</span> tkinter <span class="kw">import</span> *
+
+<span class="cm"># 1. 용어를 미리 정의 (딕셔너리 자료구조)</span>
+words = {
+    <span class="st">"CPU"</span>: <span class="st">"중앙처리장치. 컴퓨터의 두뇌 역할을 한다."</span>,
+    <span class="st">"RAM"</span>: <span class="st">"주기억장치. 실행 중인 프로그램이 잠시 저장되는 공간."</span>,
+    <span class="st">"GUI"</span>: <span class="st">"그래픽 사용자 인터페이스. 버튼·창으로 조작하는 화면."</span>,
+    <span class="st">"IP"</span>: <span class="st">"인터넷에서 컴퓨터를 구분하는 주소."</span>,
+}
+
+<span class="kw">def</span> <span class="fn">search</span>():
+    word = entry.<span class="fn">get</span>().<span class="fn">strip</span>().<span class="fn">upper</span>()      <span class="cm"># 입력값(공백 제거, 대문자)</span>
+    meaning = words.<span class="fn">get</span>(word, <span class="st">"사전에 없는 용어입니다.."</span>)  <span class="cm"># 없으면 안내문</span>
+    output.<span class="fn">delete</span>(<span class="st">"1.0"</span>, END)                <span class="cm"># 이전 결과 지우기</span>
+    output.<span class="fn">insert</span>(END, word + <span class="st">" : "</span> + meaning)  <span class="cm"># 결과 출력</span>
+
+root = <span class="fn">Tk</span>()
+root.<span class="fn">title</span>(<span class="st">"컴퓨터 용어 사전"</span>)
+root.<span class="fn">geometry</span>(<span class="st">"360x220"</span>)
+
+entry = <span class="fn">Entry</span>(root, width=<span class="nu">20</span>)
+entry.<span class="fn">pack</span>(pady=<span class="nu">8</span>)
+<span class="fn">Button</span>(root, text=<span class="st">"검색"</span>, command=search).<span class="fn">pack</span>()
+output = <span class="fn">Text</span>(root, width=<span class="nu">40</span>, height=<span class="nu">6</span>)
+output.<span class="fn">pack</span>(pady=<span class="nu">8</span>)
+
+root.<span class="fn">mainloop</span>()</code></pre>
+    <div class="result"><b>실행 결과</b>
+"CPU" 입력 후 [검색] → CPU : 중앙처리장치. 컴퓨터의 두뇌 역할을 한다.
+"XYZ" 입력 후 [검색] → XYZ : 사전에 없는 용어입니다..</div>
+    <div class="note"><b>dict.get(키, 기본값)</b> 키가 없으면 오류 대신 <b>기본값</b>을 돌려줍니다. 검색 앱에서 "없는 단어" 처리에 딱 맞습니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 기능을 하나씩 늘려 가기</h4>
+      <p>완성한 앱에 기능을 추가하며 바이브 코딩을 연습하세요.</p>
+      <div class="prompt"><code>아래 tkinter 컴퓨터 용어 사전 코드에 '새 용어 추가' 기능을 넣어 줘. 단어와 뜻을 입력받아 딕셔너리에 저장하고, 그 다음부터 검색되게 해 줘. 초보자용으로 주석을 달아 줘.</code></div>
+      <p>엔터 키로도 검색하고 싶을 때:</p>
+      <div class="prompt"><code>tkinter Entry에서 엔터(Return) 키를 누르면 검색 버튼과 똑같이 동작하게 하려면 어떻게 해? bind를 초보자용으로 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 4-1. 나만의 사전 앱</h4>
+      <div class="req">위 예제를 바탕으로 <b>주제를 바꾼 나만의 사전</b>(예: 영어 단어장, 요리 용어, 게임 용어)을 만드세요. 용어를 5개 이상 넣고, 없는 단어 처리와 화면 배치를 직접 확인해 검증하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 · 핵심 보기</summary><div class="body">
+        <div class="prompt"><code>아래 컴퓨터 용어 사전 코드를 '영어 단어장'으로 바꿔 줘. apple, banana 같은 단어 6개를 넣고, 입력한 영어 단어의 뜻을 보여 주게 해 줘. 없는 단어면 '단어장에 없어요'라고 출력해 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">데이터(딕셔너리) 내용만 바꾸면 같은 구조로 전혀 다른 앱이 됩니다 — 재사용의 힘.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 5 ============ -->
+<section class="module" id="m5">
+  <div class="mod-head"><div class="mod-num">5</div><h2>GitHub Copilot로 코딩하기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>GitHub Copilot이 무엇이고 어떻게 코드를 도와주는지 이해한다.</li>
+        <li>GitHub 계정을 만들고 VS Code에 Copilot 확장을 설치할 수 있다.</li>
+        <li>주석·채팅으로 원하는 코드를 <b>제안받고 검증</b>하는 흐름을 익힌다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">GitHub Copilot</b>은 GitHub이 만든 <b>AI 코딩 도우미</b>입니다. 인터넷의 수많은 오픈소스로 학습했고, OpenAI의 언어 모델을 이용해 <b>작성 중인 코드의 맥락을 이해</b>하고 다음 줄을 자동으로 제안합니다. 주석으로 "이런 걸 만들어 줘"라고 쓰면 코드를 만들어 주기도 합니다.</p>
+    <p>이것이 <b class="hl">바이브 코딩</b>의 핵심 도구입니다. 다만 Copilot의 제안도 <b>틀릴 수 있으므로</b>, 항상 읽고 실행해 검증해야 합니다.</p>
+    <table>
+      <tr><th>단계</th><th>내용</th></tr>
+      <tr><td>① 계정</td><td><code>https://github.com</code> 접속 → 회원가입(Sign up)</td></tr>
+      <tr><td>② 확장 설치</td><td>VS Code → 확장(Extensions) → "GitHub Copilot" 검색 → 설치</td></tr>
+      <tr><td>③ 함께 설치</td><td>"GitHub Copilot"과 "GitHub Copilot Chat" 두 가지</td></tr>
+      <tr><td>④ 로그인</td><td>VS Code에서 GitHub 계정으로 로그인 후 사용</td></tr>
+    </table>
+    <div class="note"><b>사용법 두 가지</b> ① <b>인라인 제안</b> — 코드를 쓰다 보면 회색 글씨로 다음 코드를 제안(Tab으로 수락). ② <b>Copilot Chat</b> — 채팅창에 자연어로 요청하면 코드·설명을 답변.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 주석으로 코드 제안받기</span>
+    <p>원하는 동작을 <b>주석</b>으로 적으면 Copilot이 아래 코드를 제안합니다.</p>
+<pre><code><span class="cm"># 1부터 100까지 숫자 중 짝수의 합을 구해서 출력</span>
+<span class="cm">(여기서 Enter를 누르면 Copilot이 아래처럼 제안 → Tab으로 수락)</span>
+
+total = <span class="fn">sum</span>(i <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nu">2</span>, <span class="nu">101</span>, <span class="nu">2</span>))
+<span class="fn">print</span>(total)</code></pre>
+    <div class="result"><b>실행 결과</b>
+2550</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 Copilot Chat 활용법</h4>
+      <p>Copilot Chat(또는 ChatGPT)에 코드를 붙여넣고 설명·수정을 요청하세요.</p>
+      <div class="prompt"><code>내가 선택한 이 파이썬 함수가 무슨 일을 하는지 한 줄씩 설명해 줘. 그리고 초보자가 읽기 쉽게 변수 이름을 더 좋은 것으로 바꿔 줘.</code></div>
+      <div class="prompt"><code>이 코드에서 에러가 나는데 원인이 뭐야? 아래 에러 메시지를 보고 고친 코드를 알려 줘: (에러 메시지 붙여넣기)</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 5-1. Copilot으로 함수 만들기</h4>
+      <div class="req">VS Code에서 주석 <code># 섭씨를 화씨로 바꾸는 함수</code>를 쓰고 Copilot의 제안을 받아 보세요. 제안된 코드를 직접 실행해 <code>0℃ → 32℉</code>, <code>100℃ → 212℉</code>가 맞는지 검증하세요.</div>
+      <details class="answer"><summary>핵심 보기</summary><div class="body">
+<pre><code><span class="cm"># 섭씨를 화씨로 바꾸는 함수</span>
+<span class="kw">def</span> <span class="fn">c_to_f</span>(c):
+    <span class="kw">return</span> c * <span class="nu">9</span> / <span class="nu">5</span> + <span class="nu">32</span>
+
+<span class="fn">print</span>(<span class="fn">c_to_f</span>(<span class="nu">0</span>), <span class="fn">c_to_f</span>(<span class="nu">100</span>))   <span class="cm"># 32.0 212.0</span></code></pre>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">AI 제안은 <b>반드시 실행해 값으로 검증</b>하는 습관을 들이세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 6 ============ -->
+<section class="module" id="m6">
+  <div class="mod-head"><div class="mod-num">6</div><h2>실행 파일(.exe) 배포 — PyInstaller</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>파이썬 파일(<code>.py</code>)을 윈도우 실행 파일(<code>.exe</code>)로 만드는 이유를 안다.</li>
+        <li><code>pyinstaller</code>를 설치하고 배포 명령어를 사용할 수 있다.</li>
+        <li>주요 옵션(<code>--onefile</code>, <code>--windowed</code>)의 뜻을 이해한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>내가 만든 프로그램을 <b>다른 사람도 쓰게</b> 하려면, 그 사람 컴퓨터에 파이썬이 없어도 실행돼야 합니다. <b class="hl">PyInstaller</b>는 <code>.py</code> 파일과 필요한 것들을 묶어 하나의 <b class="hl">실행 파일(.exe)</b>로 만들어 줍니다. 더블클릭만으로 실행되죠.</p>
+    <table>
+      <tr><th>옵션</th><th>뜻</th></tr>
+      <tr><td><code>--onefile</code></td><td>여러 파일을 <b>하나의 exe</b>로 합침</td></tr>
+      <tr><td><code>--windowed</code></td><td>실행 시 <b>검은 콘솔 창을 숨김</b>(GUI 프로그램용)</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 배포 절차</span>
+    <p>터미널(명령 프롬프트)에서 아래 순서로 실행합니다.</p>
+<pre><code><span class="cm"># 1. PyInstaller 설치 (최초 한 번)</span>
+pip install pyinstaller
+
+<span class="cm"># 2. 내 파이썬 파일이 있는 폴더로 이동</span>
+cd C:\pyworks\컴퓨터사전
+
+<span class="cm"># 3. exe로 변환 (GUI 프로그램이므로 --windowed)</span>
+pyinstaller --onefile --windowed 컴퓨터용어사전.py</code></pre>
+    <div class="result"><b>실행 결과</b>
+같은 폴더에 <b>dist</b> 폴더가 생기고,
+그 안에 <b>컴퓨터용어사전.exe</b> 파일이 만들어집니다.
+이 exe를 더블클릭하면 파이썬 없이도 프로그램이 실행됩니다.</div>
+    <div class="warn"><b>⚠️ 자주 겪는 일</b> exe 파일이 커지고(수십 MB) 처음 실행이 느릴 수 있습니다. 또 백신이 오탐할 수 있는데, 직접 만든 파일이면 정상입니다. <code>build</code> 폴더와 <code>.spec</code> 파일도 함께 생깁니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "exe로 만들 때 오류가 나요"</h4>
+      <p>배포는 환경에 따라 오류가 잦습니다. 명령어와 오류를 그대로 붙여넣어 물어보세요.</p>
+      <div class="prompt"><code>pyinstaller --onefile --windowed 로 exe를 만들었는데 실행하면 창이 바로 꺼져. 원인으로 무엇이 있을 수 있고 어떻게 확인·해결하는지 초보자용으로 알려 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 6-1. 내 앱을 exe로</h4>
+      <div class="req">4장에서 만든 <b>컴퓨터 용어 사전</b>을 <code>--onefile --windowed</code> 옵션으로 exe로 만들고, <code>dist</code> 폴더의 exe를 더블클릭해 실행되는지 확인하세요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 7 ============ -->
+<section class="module" id="m7">
+  <div class="mod-head"><div class="mod-num">7</div><h2>미니 프로젝트: 단위 변환기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>입력 → 계산 → 출력의 흐름으로 실용 프로그램을 만든다.</li>
+        <li>함수로 변환 로직을 나누어 재사용한다.</li>
+        <li>AI에게 요구사항을 설명해 프로그램을 함께 완성한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>길이·무게·온도처럼 <b>단위를 바꿔 주는</b> 프로그램을 만듭니다. 먼저 콘솔 버전으로 로직을 익히고, 원하면 AI와 함께 GUI로 확장합니다. 바이브 코딩은 <b>"콘솔로 먼저 → 되면 화면 붙이기"</b> 순서가 안전합니다.</p>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 단위 변환기(콘솔)</span>
+<pre><code><span class="kw">def</span> <span class="fn">cm_to_inch</span>(cm):
+    <span class="kw">return</span> cm / <span class="nu">2.54</span>          <span class="cm"># 1인치 = 2.54cm</span>
+
+<span class="kw">def</span> <span class="fn">kg_to_lb</span>(kg):
+    <span class="kw">return</span> kg * <span class="nu">2.20462</span>       <span class="cm"># 1kg = 2.20462파운드</span>
+
+cm = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"길이(cm): "</span>))
+<span class="fn">print</span>(<span class="fn">round</span>(<span class="fn">cm_to_inch</span>(cm), <span class="nu">2</span>), <span class="st">"인치"</span>)
+
+kg = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"무게(kg): "</span>))
+<span class="fn">print</span>(<span class="fn">round</span>(<span class="fn">kg_to_lb</span>(kg), <span class="nu">2</span>), <span class="st">"파운드"</span>)</code></pre>
+    <div class="result"><b>실행 결과 예시</b>
+길이(cm): 100
+39.37 인치
+무게(kg): 70
+154.32 파운드</div>
+    <div class="note"><b>round(값, 자릿수)</b> 소수점을 지정한 자리까지 반올림합니다. 변환 결과를 깔끔하게 보여 줄 때 유용합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 콘솔 → GUI로 확장하기</h4>
+      <p>콘솔 로직이 완성되면 AI에게 GUI로 감싸 달라고 요청하세요.</p>
+      <div class="prompt"><code>아래 콘솔용 단위 변환기 함수를 tkinter GUI로 만들어 줘. 입력창에 cm를 넣고 [변환] 버튼을 누르면 인치 결과가 라벨에 표시되게 하고, 각 줄에 주석을 달아 줘.</code></div>
+      <div class="prompt"><code>단위 변환기에 '섭씨↔화씨' 변환도 추가하고 싶어. 라디오 버튼으로 변환 종류를 고르게 하려면 어떻게 해? 초보자용 예시를 보여 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 7-1. 온도 변환기</h4>
+      <div class="req">섭씨를 입력받아 화씨(<code>℃×9/5+32</code>)로 바꿔 출력하는 콘솔 프로그램을 만드세요. 36.5℃를 넣으면 97.7℉가 나와야 합니다.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>c = <span class="fn">float</span>(<span class="fn">input</span>(<span class="st">"섭씨: "</span>))
+f = c * <span class="nu">9</span> / <span class="nu">5</span> + <span class="nu">32</span>
+<span class="fn">print</span>(<span class="fn">round</span>(f, <span class="nu">1</span>), <span class="st">"℉"</span>)</code></pre>
+        <div class="result">섭씨: 36.5
+97.7 ℉</div>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 8 ============ -->
+<section class="module" id="m8">
+  <div class="mod-head"><div class="mod-num">8</div><h2>미니 프로젝트: QR 코드 생성기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>외부 라이브러리(<code>qrcode</code>)를 설치해 사용할 수 있다.</li>
+        <li>텍스트·링크를 QR 코드 이미지로 저장한다.</li>
+        <li>스마트폰으로 스캔해 결과를 검증한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">QR 코드</b>는 링크나 글자를 담은 사각형 무늬입니다. 파이썬 <b class="hl">qrcode</b> 라이브러리를 쓰면 몇 줄로 QR 이미지를 만들 수 있어요. 표준 라이브러리가 아니라 <code>pip</code>로 <b>설치</b>가 필요합니다.</p>
+<pre><code><span class="cm"># qrcode 라이브러리 설치 (최초 한 번)</span>
+pip install qrcode</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — qr.py</span>
+<pre><code><span class="kw">import</span> qrcode
+
+data = <span class="st">"https://www.python.org"</span>   <span class="cm"># QR에 담을 링크/텍스트</span>
+
+img = qrcode.<span class="fn">make</span>(data)            <span class="cm"># QR 이미지 생성</span>
+img.<span class="fn">save</span>(<span class="st">"my_qr.png"</span>)              <span class="cm"># 파일로 저장</span>
+<span class="fn">print</span>(<span class="st">"my_qr.png 저장 완료!"</span>)</code></pre>
+    <div class="result"><b>실행 결과</b>
+같은 폴더에 my_qr.png QR 이미지가 생성됩니다.
+스마트폰 카메라로 스캔하면 python.org로 이동합니다.</div>
+    <div class="note"><b>스캔 방법</b> 스마트폰 카메라(또는 QR 스캔 아이콘)로 코드를 비추면 링크 알림이 뜨고, 눌러서 해당 홈페이지로 이동합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 QR 생성기 GUI 만들기</h4>
+      <p>입력한 링크로 QR을 만들어 화면에 보여 주는 앱을 AI와 만들어 보세요.</p>
+      <div class="prompt"><code>tkinter로 QR 코드 생성기를 만들어 줘. 입력창에 링크를 넣고 [생성] 버튼을 누르면 qrcode로 이미지를 만들어 png로 저장하고, 만든 QR을 창에도 보여 줘. 초보자용으로 주석을 달아 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 8-1. 내 QR 만들기</h4>
+      <div class="req">자신의 블로그·SNS 주소나 좋아하는 사이트 링크로 QR 코드를 만들어 저장하고, <b>스마트폰으로 스캔</b>해 실제로 그 사이트로 이동하는지 검증하세요.</div>
+      <details class="answer"><summary>핵심 보기</summary><div class="body">
+<pre><code><span class="kw">import</span> qrcode
+qrcode.<span class="fn">make</span>(<span class="st">"https://내주소.com"</span>).<span class="fn">save</span>(<span class="st">"me.png"</span>)</code></pre>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">한 줄로도 만들 수 있습니다. 스캔 결과가 링크와 일치하는지 꼭 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 9 ============ -->
+<section class="module" id="m9">
+  <div class="mod-head"><div class="mod-num">9</div><h2>클라이언트와 서버</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>클라이언트와 서버가 각각 무슨 역할인지 이해한다.</li>
+        <li>요청(request)과 응답(response)의 흐름을 안다.</li>
+        <li>우리가 만들 웹 서버가 어디에 해당하는지 파악한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>웹은 <b class="hl">클라이언트</b>와 <b class="hl">서버</b>가 대화하는 구조입니다. 클라이언트가 "이거 주세요"라고 <b>요청(Request)</b>하면, 서버가 결과를 <b>응답(Response)</b>합니다.</p>
+<pre><code>  클라이언트                          서버
+ (브라우저·앱)   ── 요청(Request) ──▶  (데이터·기능)
+                ◀── 응답(Response) ──</code></pre>
+    <table>
+      <tr><th>구분</th><th>역할</th><th>예시</th></tr>
+      <tr><td><b>클라이언트</b></td><td>서버에 요청을 보내고, 받은 결과를 화면에 보여 줌</td><td>웹 브라우저(Chrome·Edge), 스마트폰 앱, 게임 실행 프로그램</td></tr>
+      <tr><td><b>서버</b></td><td>데이터·파일·웹페이지·기능을 제공. 항상 켜져 요청을 기다림</td><td>웹 서버(네이버·구글), 게임 서버, DB 서버</td></tr>
+    </table>
+    <div class="note"><b>이번 장에서는</b> 파이썬 Flask로 <b>웹 서버</b>를 직접 만들고, 내 브라우저(클라이언트)로 접속해 봅니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 개념을 비유로 잡기</h4>
+      <div class="prompt"><code>클라이언트와 서버의 관계를 식당에 비유해서 초보자용으로 설명해 줘. 요청(request)과 응답(response)이 각각 무엇에 해당하는지도 알려 줘.</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 10 ============ -->
+<section class="module" id="m10">
+  <div class="mod-head"><div class="mod-num">10</div><h2>Flask로 웹 서버 만들기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>Flask가 무엇인지 이해하고 설치할 수 있다.</li>
+        <li>간단한 웹 서버를 만들어 브라우저로 접속한다.</li>
+        <li><code>@app.route</code>로 여러 페이지(URL)를 연결(라우팅)한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">Flask(플라스크)</b>는 파이썬으로 만든 <b>마이크로 웹 프레임워크</b>입니다. 몇 줄의 코드로 웹 서버를 만들고 웹 애플리케이션을 제작할 수 있어요. 가볍고 배우기 쉬워 입문용으로 좋습니다.</p>
+<pre><code><span class="cm"># Flask 설치 (최초 한 번)</span>
+pip install Flask</code></pre>
+    <div class="note"><b>라우팅(routing)</b> "어떤 주소(URL)로 들어오면 어떤 함수를 실행할지" 연결하는 것. <code>@app.route("/")</code>는 첫 페이지(홈)를 뜻합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 가장 간단한 웹 서버 (server01.py)</span>
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+app = <span class="fn">Flask</span>(__name__)          <span class="cm"># Flask 앱 생성</span>
+
+<span class="nu">@app.route(<span class="st">"/"</span>)</span>                  <span class="cm"># 주소 "/"(홈)로 접속하면</span>
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="st">"안녕하세요! 첫 Flask 서버입니다."</span>
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)          <span class="cm"># 서버 실행(5000번 포트)</span></code></pre>
+    <div class="result"><b>실행 방법 & 결과</b>
+① 터미널: <b>python server01.py</b>
+② 브라우저 접속: <b>http://127.0.0.1:5000</b>
+→ 화면에 "안녕하세요! 첫 Flask 서버입니다." 출력</div>
+    <div class="note"><b>127.0.0.1:5000</b> <code>127.0.0.1</code>은 "내 컴퓨터"를 뜻하는 주소(localhost), <code>5000</code>은 어떤 프로그램인지 구분하는 <b>포트 번호</b>입니다. <code>localhost:5000</code>도 동일합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 여러 페이지 라우팅</span>
+    <p>주소마다 다른 함수를 연결해 여러 페이지를 만듭니다.</p>
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="nu">@app.route(<span class="st">"/"</span>)</span>
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="st">"홈페이지입니다."</span>
+
+<span class="nu">@app.route(<span class="st">"/about"</span>)</span>            <span class="cm"># /about 페이지</span>
+<span class="kw">def</span> <span class="fn">about</span>():
+    <span class="kw">return</span> <span class="st">"소개 페이지입니다."</span>
+
+<span class="nu">@app.route(<span class="st">"/hello/&lt;name&gt;"</span>)</span>     <span class="cm"># 주소의 일부를 값으로 받기</span>
+<span class="kw">def</span> <span class="fn">hello</span>(name):
+    <span class="kw">return</span> f<span class="st">"안녕하세요, {name}님!"</span>
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</code></pre>
+    <div class="result"><b>브라우저 접속 결과</b>
+http://127.0.0.1:5000/        → 홈페이지입니다.
+http://127.0.0.1:5000/about   → 소개 페이지입니다.
+http://127.0.0.1:5000/hello/파이썬 → 안녕하세요, 파이썬님!</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "서버가 안 떠요 / 포트 오류가 나요"</h4>
+      <div class="prompt"><code>flask 서버를 python server01.py로 실행했는데 'Address already in use' 또는 포트 5000 오류가 나. 원인과 해결 방법을 초보자용으로 알려 줘.</code></div>
+      <div class="prompt"><code>Flask에서 @app.route가 무슨 역할인지, 함수 위에 붙는 @데코레이터가 무엇인지 초보자용으로 비유를 들어 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 10-1. 내 소개 서버</h4>
+      <div class="req">홈(<code>/</code>)에는 인사말을, <code>/profile</code>에는 자기 이름과 취미를 보여 주는 Flask 서버를 만들고 두 주소로 접속해 확인하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="nu">@app.route(<span class="st">"/"</span>)</span>
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="st">"환영합니다!"</span>
+
+<span class="nu">@app.route(<span class="st">"/profile"</span>)</span>
+<span class="kw">def</span> <span class="fn">profile</span>():
+    <span class="kw">return</span> <span class="st">"이름: 홍길동 &lt;br&gt; 취미: 파이썬 코딩"</span>
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 11 ============ -->
+<section class="module" id="m11">
+  <div class="mod-head"><div class="mod-num">11</div><h2>HTML과 CSS 기초</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>HTML이 웹 문서의 <b>뼈대</b>를 만든다는 것을 이해한다.</li>
+        <li>자주 쓰는 태그(<code>h1~h6</code>, <code>p</code>, <code>img</code>, <code>a</code>, <code>ul/li</code>)를 안다.</li>
+        <li>CSS로 <b>디자인(색·크기·배치)</b>을 입힐 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p><b class="hl">HTML</b>(HyperText Markup Language)은 <b>태그(tag)</b>로 "어디가 제목이고 본문인지, 어디가 사진·링크인지" 표시하는 언어입니다. 웹 문서의 <b>뼈대</b>를 만들죠. 현재 버전은 HTML5입니다.</p>
+    <table>
+      <tr><th>태그</th><th>설명</th></tr>
+      <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>이 문서가 HTML5 문서임을 선언</td></tr>
+      <tr><td><code>&lt;html&gt;~&lt;/html&gt;</code></td><td>웹 문서의 시작과 끝</td></tr>
+      <tr><td><code>&lt;head&gt;~&lt;/head&gt;</code></td><td>브라우저가 해석할 정보(<code>&lt;meta&gt;</code>, <code>&lt;title&gt;</code>)</td></tr>
+      <tr><td><code>&lt;body&gt;~&lt;/body&gt;</code></td><td>화면에 실제로 보이는 내용</td></tr>
+      <tr><td><code>&lt;h1&gt;~&lt;h6&gt;</code></td><td>제목. 1이 가장 크고 6이 가장 작음</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>단락(paragraph). 앞뒤 줄바꿈이 있는 텍스트 덩어리</td></tr>
+      <tr><td><code>&lt;img&gt;</code></td><td>이미지. <code>src</code>(경로), <code>alt</code>(대체글), <code>width/height</code></td></tr>
+      <tr><td><code>&lt;a&gt;</code></td><td>링크. <code>&lt;a href="주소"&gt;텍스트&lt;/a&gt;</code></td></tr>
+      <tr><td><code>&lt;ul&gt; / &lt;li&gt;</code></td><td>목록과 목록 안 항목</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 기본 HTML 문서</span>
+<pre><code><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;head&gt;</span>
+  <span class="kw">&lt;meta</span> charset=<span class="st">"UTF-8"</span><span class="kw">&gt;</span>
+  <span class="kw">&lt;title&gt;</span>내 첫 웹페이지<span class="kw">&lt;/title&gt;</span>
+<span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;h1&gt;</span>안녕하세요<span class="kw">&lt;/h1&gt;</span>
+  <span class="kw">&lt;p&gt;</span>이것은 <span class="kw">&lt;a</span> href=<span class="st">"https://python.org"</span><span class="kw">&gt;</span>파이썬<span class="kw">&lt;/a&gt;</span> 페이지입니다.<span class="kw">&lt;/p&gt;</span>
+  <span class="kw">&lt;ul&gt;</span>
+    <span class="kw">&lt;li&gt;</span>첫째<span class="kw">&lt;/li&gt;</span>
+    <span class="kw">&lt;li&gt;</span>둘째<span class="kw">&lt;/li&gt;</span>
+  <span class="kw">&lt;/ul&gt;</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></code></pre>
+    <div class="result"><b>브라우저 표시</b>
+큰 제목 "안녕하세요", 그 아래 링크가 포함된 문장,
+그리고 • 첫째 • 둘째 목록이 나타납니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 CSS — 디자인 입히기</span>
+    <p><b class="hl">CSS</b>(Cascading Style Sheets)는 글자 색·크기, 이미지 위치, 배경 등 <b>디자인 요소</b>를 담당합니다. HTML이 뼈대라면 CSS는 옷과 화장입니다.</p>
+<pre><code><span class="fn">p</span> {
+    color: <span class="st">blue</span>;          <span class="cm">/* 글자색 */</span>
+    font-size: <span class="nu">20px</span>;      <span class="cm">/* 글자 크기 */</span>
+}</code></pre>
+    <div class="note"><b>CSS 형식</b> <code>태그 { 속성: 값; }</code> — 스타일 속성을 세미콜론(;)으로 구분해 중괄호 <code>{ }</code> 안에 나열합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 원하는 디자인을 말로 만들기</h4>
+      <div class="prompt"><code>제목은 가운데 정렬에 진한 남색, 배경은 연한 회색, 본문 글자는 18px인 간단한 HTML+CSS 페이지를 만들어 줘. CSS가 어디에 적용됐는지 주석으로 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 11-1. 자기소개 페이지</h4>
+      <div class="req">제목(<code>h1</code>)에 이름, 단락(<code>p</code>)에 소개글, 목록(<code>ul/li</code>)에 취미 3개를 담은 HTML 문서를 만들고 브라우저로 열어 보세요.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 12 ============ -->
+<section class="module" id="m12">
+  <div class="mod-head"><div class="mod-num">12</div><h2>종합 프로젝트: Flask 사진 갤러리</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>Flask 웹 프로젝트의 <b>폴더 구조</b>(templates·static)를 이해한다.</li>
+        <li><code>render_template</code>로 HTML 파일을 화면에 띄운다.</li>
+        <li>여러 사진을 보여 주는 <b>갤러리 페이지</b>를 완성한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>지금까지 배운 <b>Flask + HTML/CSS</b>를 합쳐 <b class="hl">사진 갤러리 웹사이트</b>를 만듭니다. 규모가 커지면 코드를 파일로 나누는데, Flask는 <b>정해진 폴더 구조</b>를 씁니다.</p>
+    <table>
+      <tr><th>위치</th><th>역할</th></tr>
+      <tr><td><code>app.py</code></td><td>서버 실행 파일(파이썬 코드)</td></tr>
+      <tr><td><code>templates/</code> 폴더</td><td><b>HTML</b> 파일들을 넣는 곳</td></tr>
+      <tr><td><code>static/</code> 폴더</td><td><b>이미지·CSS</b> 등 정적 파일을 넣는 곳</td></tr>
+    </table>
+<pre><code>myweb/
+├─ app.py
+├─ templates/
+│   ├─ index.html
+│   └─ gallery.html
+└─ static/
+    ├─ style.css
+    └─ 사진들(.jpg)</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — app.py</span>
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask, render_template
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="nu">@app.route(<span class="st">"/"</span>)</span>
+<span class="kw">def</span> <span class="fn">index</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)   <span class="cm"># templates/index.html 표시</span>
+
+<span class="nu">@app.route(<span class="st">"/gallery"</span>)</span>
+<span class="kw">def</span> <span class="fn">gallery</span>():
+    photos = [<span class="st">"cat.jpg"</span>, <span class="st">"dog.jpg"</span>, <span class="st">"bird.jpg"</span>]  <span class="cm"># 보여 줄 사진 목록</span>
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"gallery.html"</span>, photos=photos)
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — templates/gallery.html</span>
+    <p>파이썬이 넘겨준 <code>photos</code> 목록을 반복문으로 그려 냅니다(Jinja 템플릿 문법).</p>
+<pre><code><span class="kw">&lt;!DOCTYPE html&gt;</span>
+<span class="kw">&lt;html&gt;</span>
+<span class="kw">&lt;head&gt;</span><span class="kw">&lt;meta</span> charset=<span class="st">"UTF-8"</span><span class="kw">&gt;</span><span class="kw">&lt;title&gt;</span>갤러리<span class="kw">&lt;/title&gt;</span><span class="kw">&lt;/head&gt;</span>
+<span class="kw">&lt;body&gt;</span>
+  <span class="kw">&lt;h1&gt;</span>사진 갤러리<span class="kw">&lt;/h1&gt;</span>
+  <span class="cm">{% for photo in photos %}</span>
+    <span class="kw">&lt;img</span> src=<span class="st">"{{ url_for('static', filename=photo) }}"</span> width=<span class="st">"200"</span><span class="kw">&gt;</span>
+  <span class="cm">{% endfor %}</span>
+<span class="kw">&lt;/body&gt;</span>
+<span class="kw">&lt;/html&gt;</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+http://127.0.0.1:5000/gallery 접속 →
+static 폴더의 cat.jpg·dog.jpg·bird.jpg 사진이 가로로 나열됩니다.</div>
+    <div class="note"><b>{{ }} 와 {% %}</b> Flask는 HTML 안에서 <code>{{ 값 }}</code>으로 파이썬 값을 넣고, <code>{% for %}</code>로 반복합니다. 이 문법을 <b>템플릿(Jinja)</b>이라 합니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 갤러리를 예쁘게 & 기능 추가</h4>
+      <div class="prompt"><code>Flask 사진 갤러리의 gallery.html에 CSS를 적용해 사진을 3열 격자로 예쁘게 배치하고, 각 사진에 둥근 모서리와 그림자를 넣어 줘. static/style.css로 분리해 줘.</code></div>
+      <div class="prompt"><code>내 static 폴더에 있는 이미지들을 자동으로 모두 갤러리에 보여 주려면 app.py를 어떻게 바꿔야 해? os 모듈로 파일 목록을 읽는 방법을 초보자용으로 알려 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 12-1. 나만의 갤러리 완성하기</h4>
+      <div class="req"><code>static</code> 폴더에 자신의 사진 3장 이상을 넣고, 위 구조로 갤러리 서버를 완성해 브라우저에서 사진이 모두 보이는지 검증하세요. 막히는 부분은 폴더 구조와 파일명을 AI에게 설명하고 도움을 받으세요.</div>
+      <details class="answer"><summary>점검 체크리스트</summary><div class="body">
+        <ul class="plain">
+          <li><code>templates/</code> 안에 <code>gallery.html</code>이 있는가</li>
+          <li><code>static/</code> 안에 이미지가 있고, 파일명이 <code>app.py</code>의 목록과 <b>정확히 일치</b>하는가</li>
+          <li><code>python app.py</code> 실행 후 <code>127.0.0.1:5000/gallery</code>로 접속했는가</li>
+          <li>사진이 안 보이면 F12 개발자도구로 이미지 경로 오류를 확인했는가</li>
+        </ul>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <p>ChatGPT &amp; 파이썬 기초 프로그래밍 · 5장 윈도우(GUI)·서버·바이브 코딩 (AI 활용판)</p>
+</footer>
+
+</div>
+</body>
+</html>
