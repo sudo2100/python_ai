@@ -164,9 +164,9 @@
   <div class="grp">PART 1. 모듈 — 코드 재사용</div>
   <ol>
     <li><a href="#m1">모듈의 개념</a></li>
-    <li><a href="#m2">나만의 모듈 만들기</a></li>
     <li><a href="#m3">calendar 모듈</a></li>
     <li><a href="#m4">날짜·시간 모듈</a></li>
+    <li><a href="#m2">나만의 모듈 만들기</a></li>
     <li><a href="#m5">random 모듈</a></li>
     <li><a href="#m6">math 모듈</a></li>
   </ol>
@@ -295,119 +295,10 @@
     </div>
   </div>
 
-  <div class="block">
-    <span class="tag lab">✏️ 실습문제</span>
-    <div class="lab-box">
-      <h4>실습 1-1. 세 가지 import 방식</h4>
-      <div class="req"><code>math</code> 모듈을 (1) 전체 import, (2) <code>from math import sqrt</code>, (3) <code>import math as m</code> 세 방식으로 각각 불러와 <code>sqrt(25)</code>를 출력해 보세요.</div>
-      <details class="answer"><summary>정답 보기</summary><div class="body">
-<pre><code><span class="kw">import</span> math
-<span class="fn">print</span>(math.<span class="fn">sqrt</span>(<span class="nu">25</span>))
-
-<span class="kw">from</span> math <span class="kw">import</span> sqrt
-<span class="fn">print</span>(<span class="fn">sqrt</span>(<span class="nu">25</span>))
-
-<span class="kw">import</span> math <span class="kw">as</span> m
-<span class="fn">print</span>(m.<span class="fn">sqrt</span>(<span class="nu">25</span>))</code></pre>
-        <div class="result">5.0
-5.0
-5.0</div>
-      </div></details>
-    </div>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 1-2. 내 작업에 맞는 모듈 찾기</h4>
-      <div class="req">내가 만들고 싶은 기능(예: "로또 번호 뽑기", "오늘 요일 구하기")을 하나 정해, 어떤 표준 모듈과 함수를 쓰면 되는지 ChatGPT에 물어보세요. 추천받은 코드를 실제로 실행해 동작을 확인하세요.</div>
-      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>파이썬 표준 모듈만 써서 '오늘이 무슨 요일인지' 출력하려면 어떤 모듈과 함수를 쓰면 돼? import부터 출력까지 짧은 예시로 보여 주고 한 줄씩 설명해 줘.</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">이제 표준 모듈을 가져다 쓰는 것을 넘어, 직접 나만의 모듈을 만들어 보는 단원으로 이어집니다.</p>
-      </div></details>
-    </div>
-  </div>
 </section>
 
-<section class="module" id="m2">
-  <div class="mod-head"><div class="mod-num">2</div><h2>나만의 모듈 만들기</h2></div>
-
-  <div class="block">
-    <span class="tag goal">🎯 학습목표</span>
-    <div class="goal-box">
-      <ul>
-        <li>모듈이 곧 파이썬 파일 하나임을 이해한다.</li>
-        <li>내가 만든 함수를 다른 파일에서 <code>import</code>할 수 있다.</li>
-        <li><code>from ~ import ~</code> 문법을 구분해 사용한다.</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="block">
-    <span class="tag concept">📖 개념 및 설명</span>
-    <p>모듈은 특별한 게 아니라 <b class="hl">파이썬 파일(.py) 하나</b>입니다. 자주 쓰는 함수·클래스를 파일로 저장해 두면, 다른 프로그램에서 <b>가져다 재사용</b>할 수 있습니다.</p>
-    <table>
-      <tr><th>방법</th><th>사용</th></tr>
-      <tr><td>모듈 전체 가져오기</td><td><code>import 모듈</code> → <code>모듈.함수()</code></td></tr>
-      <tr><td>일부만 가져오기</td><td><code>from 모듈 import 함수</code> → <code>함수()</code></td></tr>
-      <tr><td>별칭 붙이기</td><td><code>import 모듈 as 별칭</code></td></tr>
-    </table>
-  </div>
-
-  <div class="block">
-    <span class="tag ex">💡 예제</span>
-    <p>두 파일로 나눠 작성합니다. 같은 폴더에 두 파일을 저장하세요.</p>
-<pre><code><span class="cm"># 파일 1: mycalc.py  (내가 만든 모듈)</span>
-<span class="kw">def</span> <span class="fn">add</span>(a, b):
-    <span class="kw">return</span> a + b
-
-<span class="kw">def</span> <span class="fn">sub</span>(a, b):
-    <span class="kw">return</span> a - b</code></pre>
-<pre><code><span class="cm"># 파일 2: main.py  (모듈을 사용하는 프로그램)</span>
-<span class="kw">from</span> mycalc <span class="kw">import</span> add, sub
-
-<span class="fn">print</span>(<span class="fn">add</span>(<span class="nu">3</span>, <span class="nu">5</span>))   <span class="cm"># 8</span>
-<span class="fn">print</span>(<span class="fn">sub</span>(<span class="nu">10</span>, <span class="nu">4</span>))  <span class="cm"># 6</span></code></pre>
-    <div class="result"><b>main.py 실행 결과</b>
-8
-6</div>
-  </div>
-
-  <div class="block">
-    <span class="tag ai">🤖 ChatGPT 활용</span>
-    <div class="ai-box">
-      <h4>🤖 ModuleNotFoundError, AI에게 진단받기</h4>
-      <p>내 모듈을 import할 때 <b>파일 위치·이름</b> 때문에 자주 막힙니다. 오류를 붙여넣으면 원인을 짚어 줍니다.</p>
-      <div class="prompt"><code>파이썬에서 내가 만든 mycalc.py를 main.py에서 import 하는데 ModuleNotFoundError: No module named 'mycalc' 오류가 나. 원인으로 뭘 확인해야 하는지 초보자용으로 체크리스트를 만들어 줘.</code></div>
-      <p><code>if __name__ == "__main__"</code>이 궁금할 때:</p>
-      <div class="prompt"><code>파이썬 모듈 파일 맨 아래에 자주 보이는 if __name__ == "__main__": 이 뭔지, 왜 쓰는지 초보자용으로 예시와 함께 설명해 줘.</code></div>
-    </div>
-  </div>
-
-  <div class="block">
-    <span class="tag lab">✏️ 실습문제</span>
-    <div class="lab-box">
-      <h4>실습 2-1. 인사 모듈</h4>
-      <div class="req"><code>greeting.py</code>에 <code>hello(name)</code> 함수(“OOO님 환영합니다” 출력)를 만들고, <code>main.py</code>에서 <code>import</code>해 호출하세요.</div>
-      <details class="answer"><summary>정답 보기</summary><div class="body">
-<pre><code><span class="cm"># greeting.py</span>
-<span class="kw">def</span> <span class="fn">hello</span>(name):
-    <span class="fn">print</span>(name + <span class="st">"님 환영합니다"</span>)</code></pre>
-<pre><code><span class="cm"># main.py</span>
-<span class="kw">from</span> greeting <span class="kw">import</span> hello
-<span class="fn">hello</span>(<span class="st">"홍길동"</span>)   <span class="cm"># 홍길동님 환영합니다</span></code></pre>
-      </div></details>
-    </div>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 2-2. 내 코드를 모듈로 분리하기</h4>
-      <div class="req">3장에서 만든 함수들(또는 이 장의 <code>Calculator</code> 클래스)을 하나의 모듈 파일로 분리하고 <code>main.py</code>에서 불러 쓰고 싶다고 ChatGPT에 요청하세요. 실제로 두 파일로 나눠 저장해 실행해 보고, import가 잘 되는지 검증하세요.</div>
-      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>내가 만든 파이썬 함수 add, sub, mul, div를 calc.py라는 모듈로 분리하고, main.py에서 그 함수들을 import해서 쓰는 구조로 정리해 줘. 두 파일을 각각 보여 주고, 같은 폴더에 둬야 하는 이유도 설명해 줘.</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">모듈 분리는 코드가 길어질 때 정리의 첫걸음입니다. 자주 쓰는 함수를 파일로 나눠 두면 어느 프로젝트에서든 재사용할 수 있습니다.</p>
-      </div></details>
-    </div>
-  </div>
-</section>
-
-<!-- ============ MODULE : calendar ============ -->
 <section class="module" id="m3">
-  <div class="mod-head"><div class="mod-num">3</div><h2>calendar 모듈</h2></div>
+  <div class="mod-head"><div class="mod-num">2</div><h2>calendar 모듈</h2></div>
 
   <div class="block">
     <span class="tag goal">🎯 학습목표</span>
@@ -483,7 +374,7 @@ Saturday</div>
   <div class="block">
     <span class="tag lab">✏️ 실습문제</span>
     <div class="lab-box">
-      <h4>실습 3-1. 내 생일 달력과 요일</h4>
+      <h4>실습 2-1. 내 생일 달력과 요일</h4>
       <div class="req">자신의 생일이 있는 연·월의 달력을 <code>prmonth</code>로 출력하고, <code>weekday()</code>와 <code>day_name</code>으로 <b>생일이 무슨 요일인지</b> 출력하세요.</div>
       <details class="answer"><summary>정답 보기</summary><div class="body">
 <pre><code><span class="kw">import</span> calendar
@@ -495,7 +386,7 @@ w = calendar.<span class="fn">weekday</span>(<span class="nu">2026</span>, <span
       </div></details>
     </div>
     <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 3-2. 한글 요일로 바꾸기</h4>
+      <h4>🤖 AI 실습 2-2. 한글 요일로 바꾸기</h4>
       <div class="req"><code>calendar.day_name</code>은 영어로 나옵니다. 요일 번호(0~6)를 한글 요일("월"~"일")로 바꿔 출력하는 방법을 ChatGPT에 물어, 실제로 <b>생일 요일을 한글로</b> 출력해 검증하세요.</div>
       <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
         <div class="prompt"><code>파이썬 calendar.weekday()가 돌려주는 요일 번호(월요일0~일요일6)를 한글 요일 문자열로 바꿔서 출력하고 싶어. 리스트를 활용한 간단한 방법을 초보자용으로 알려 줘.</code></div>
@@ -506,7 +397,7 @@ w = calendar.<span class="fn">weekday</span>(<span class="nu">2026</span>, <span
 </section>
 
 <section class="module" id="m4">
-  <div class="mod-head"><div class="mod-num">4</div><h2>날짜·시간 모듈</h2></div>
+  <div class="mod-head"><div class="mod-num">3</div><h2>날짜·시간 모듈</h2></div>
 
   <div class="block">
     <span class="tag goal">🎯 학습목표</span>
@@ -641,7 +532,7 @@ Fri Apr  3 22:54:29 2026
   <div class="block">
     <span class="tag lab">✏️ 실습문제</span>
     <div class="lab-box">
-      <h4>실습 4-1. D-day 계산</h4>
+      <h4>실습 3-1. D-day 계산</h4>
       <div class="req">목표 날짜(예: 2026년 12월 25일)까지 며칠 남았는지 오늘 날짜와 빼서 출력하세요. (힌트: <code>datetime.date</code>끼리 빼면 <code>.days</code>로 일수를 얻음)</div>
       <details class="answer"><summary>정답 보기</summary><div class="body">
 <pre><code><span class="kw">import</span> datetime
@@ -653,11 +544,83 @@ d_day = (target - today).days
       </div></details>
     </div>
     <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 4-2. 내 기념일 계산기 만들기</h4>
+      <h4>🤖 AI 실습 3-2. 내 기념일 계산기 만들기</h4>
       <div class="req">생일이나 시험일 등 나만의 날짜를 입력받아 <b>며칠 남았는지(또는 며칠 지났는지)</b>와 <b>무슨 요일인지</b> 알려주는 프로그램을 ChatGPT와 만들어 보세요. 오늘 기준으로 손으로 검산해 검증하세요.</div>
       <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
         <div class="prompt"><code>파이썬으로 사용자에게 목표 날짜(연,월,일)를 입력받아, 오늘로부터 며칠 남았는지와 그 날이 무슨 요일인지 출력하는 프로그램을 만들어 줘. 이미 지난 날짜면 "며칠 지났습니다"로 안내해 줘.</code></div>
         <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">검증: 오늘 날짜를 넣으면 "0일 남음"이 나오는지 등 경계도 확인하세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<section class="module" id="m2">
+  <div class="mod-head"><div class="mod-num">4</div><h2>나만의 모듈 만들기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>모듈이 곧 파이썬 파일 하나임을 이해한다.</li>
+        <li>내가 만든 함수를 다른 파일에서 <code>import</code>할 수 있다.</li>
+        <li><code>from ~ import ~</code> 문법을 구분해 사용한다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>모듈은 특별한 게 아니라 <b class="hl">파이썬 파일(.py) 하나</b>입니다. 자주 쓰는 함수·클래스를 파일로 저장해 두면, 다른 프로그램에서 <b>가져다 재사용</b>할 수 있습니다.</p>
+    <table>
+      <tr><th>방법</th><th>사용</th></tr>
+      <tr><td>모듈 전체 가져오기</td><td><code>import 모듈</code> → <code>모듈.함수()</code></td></tr>
+      <tr><td>일부만 가져오기</td><td><code>from 모듈 import 함수</code> → <code>함수()</code></td></tr>
+      <tr><td>별칭 붙이기</td><td><code>import 모듈 as 별칭</code></td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제</span>
+    <p>두 파일로 나눠 작성합니다. 같은 폴더에 두 파일을 저장하세요.</p>
+<pre><code><span class="cm"># 파일 1: mycalc.py  (내가 만든 모듈)</span>
+<span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+<span class="kw">def</span> <span class="fn">sub</span>(a, b):
+    <span class="kw">return</span> a - b</code></pre>
+<pre><code><span class="cm"># 파일 2: main.py  (모듈을 사용하는 프로그램)</span>
+<span class="kw">from</span> mycalc <span class="kw">import</span> add, sub
+
+<span class="fn">print</span>(<span class="fn">add</span>(<span class="nu">3</span>, <span class="nu">5</span>))   <span class="cm"># 8</span>
+<span class="fn">print</span>(<span class="fn">sub</span>(<span class="nu">10</span>, <span class="nu">4</span>))  <span class="cm"># 6</span></code></pre>
+    <div class="result"><b>main.py 실행 결과</b>
+8
+6</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 ModuleNotFoundError, AI에게 진단받기</h4>
+      <p>내 모듈을 import할 때 <b>파일 위치·이름</b> 때문에 자주 막힙니다. 오류를 붙여넣으면 원인을 짚어 줍니다.</p>
+      <div class="prompt"><code>파이썬에서 내가 만든 mycalc.py를 main.py에서 import 하는데 ModuleNotFoundError: No module named 'mycalc' 오류가 나. 원인으로 뭘 확인해야 하는지 초보자용으로 체크리스트를 만들어 줘.</code></div>
+      <p><code>if __name__ == "__main__"</code>이 궁금할 때:</p>
+      <div class="prompt"><code>파이썬 모듈 파일 맨 아래에 자주 보이는 if __name__ == "__main__": 이 뭔지, 왜 쓰는지 초보자용으로 예시와 함께 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 4-1. 인사 모듈</h4>
+      <div class="req"><code>greeting.py</code>에 <code>hello(name)</code> 함수(“OOO님 환영합니다” 출력)를 만들고, <code>main.py</code>에서 <code>import</code>해 호출하세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="cm"># greeting.py</span>
+<span class="kw">def</span> <span class="fn">hello</span>(name):
+    <span class="fn">print</span>(name + <span class="st">"님 환영합니다"</span>)</code></pre>
+<pre><code><span class="cm"># main.py</span>
+<span class="kw">from</span> greeting <span class="kw">import</span> hello
+<span class="fn">hello</span>(<span class="st">"홍길동"</span>)   <span class="cm"># 홍길동님 환영합니다</span></code></pre>
       </div></details>
     </div>
   </div>
@@ -690,17 +653,6 @@ d_day = (target - today).days
   </div>
 
   <div class="block">
-    <span class="tag ex">💡 예제</span>
-<pre><code><span class="kw">import</span> random
-
-<span class="fn">print</span>(random.<span class="fn">randint</span>(<span class="nu">1</span>, <span class="nu">6</span>))              <span class="cm"># 주사위 (예: 4)</span>
-<span class="fn">print</span>(random.<span class="fn">choice</span>([<span class="st">"가위"</span>, <span class="st">"바위"</span>, <span class="st">"보"</span>]))   <span class="cm"># (예: 바위)</span></code></pre>
-    <div class="result"><b>실행 결과 예시</b> (매번 달라짐)
-4
-바위</div>
-  </div>
-
-  <div class="block">
     <span class="tag ex">💡 예제 — 난수·시드·정수 난수</span>
 <pre><code><span class="kw">import</span> random
 
@@ -728,7 +680,7 @@ coin = random.<span class="fn">randint</span>(<span class="nu">0</span>, <span c
   </div>
 
   <div class="block">
-    <span class="tag ex">💡 예제 — choice·sample</span>
+    <span class="tag ex">💡 예제 — choice·shuffle</span>
 <pre><code><span class="cm"># 리스트에서 랜덤하게 하나 선택</span>
 <span class="fn">print</span>(random.<span class="fn">choice</span>([<span class="st">'apple'</span>, <span class="st">'banana'</span>, <span class="st">'cherry'</span>]))
 
@@ -736,20 +688,41 @@ coin = random.<span class="fn">randint</span>(<span class="nu">0</span>, <span c
 coin = random.<span class="fn">choice</span>([<span class="st">'앞면'</span>, <span class="st">'뒷면'</span>])
 <span class="fn">print</span>(coin)
 
-<span class="cm"># 1 ~ 45 사이에서 6개의 고유한 숫자 선택</span>
-<span class="fn">print</span>(random.<span class="fn">sample</span>(<span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">46</span>), <span class="nu">6</span>))</code></pre>
+<span class="cm"># 랜덤하게 섞기</span>
+carts = [<span class="st">'반팔티'</span>, <span class="st">'여름바지'</span>, <span class="st">'양말'</span>]
+random.<span class="fn">shuffle</span>(carts)
+<span class="fn">print</span>(carts)</code></pre>
     <div class="result"><b>실행 결과 예시</b> (매번 달라짐)
 apple
 앞면
+['여름바지', '양말', '반팔티']</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 로또 번호 뽑기 (두 가지 방법)</span>
+    <p>1~45에서 중복 없이 6개를 뽑는 같은 작업을, <code>while</code> 반복문과 <code>sample</code> 한 줄로 각각 만들어 비교합니다.</p>
+<pre><code><span class="kw">import</span> random
+
+<span class="cm"># 방법 1: while 반복 + 중복 검사</span>
+lotto = []
+<span class="kw">while</span> <span class="fn">len</span>(lotto) &lt; <span class="nu">6</span>:
+    n = random.<span class="fn">randint</span>(<span class="nu">1</span>, <span class="nu">45</span>)
+    <span class="kw">if</span> n <span class="kw">not in</span> lotto:
+        lotto.<span class="fn">append</span>(n)
+<span class="fn">print</span>(lotto)
+
+<span class="cm"># 방법 2: sample 한 줄</span>
+<span class="fn">print</span>(random.<span class="fn">sample</span>(<span class="fn">range</span>(<span class="nu">1</span>, <span class="nu">46</span>), <span class="nu">6</span>))</code></pre>
+    <div class="result"><b>실행 결과 예시</b> (매번 달라짐)
+[13, 2, 44, 21, 8, 30]
 [9, 7, 35, 6, 38, 28]</div>
+    <div class="note"><b>왜 sample이 편할까?</b> <code>sample</code>은 <b>중복 없이</b> 뽑아 주므로, <code>while</code>문·<code>if n not in lotto</code> 중복 검사·<code>append</code>가 모두 필요 없어 한 줄로 끝납니다.</div>
   </div>
 
   <div class="block">
     <span class="tag ai">🤖 ChatGPT 활용</span>
     <div class="ai-box">
       <h4>🤖 "테스트할 때마다 결과가 달라져요"</h4>
-      <p>난수는 재현이 어려워 디버깅이 힘듭니다. <code>seed</code>로 결과를 고정하는 법을 AI에게 배우세요.</p>
-      <div class="prompt"><code>파이썬 random을 쓸 때 실행할 때마다 결과가 달라져서 테스트가 어려워. random.seed()로 결과를 똑같이 재현하는 방법과, 왜 그렇게 되는지 초보자용으로 설명해 줘.</code></div>
       <p>게임을 함께 만들고 싶을 때:</p>
       <div class="prompt"><code>파이썬 random으로 사용자와 컴퓨터가 하는 가위바위보 게임을 만들어 줘. 승부 판정 로직을 초보자가 이해하기 쉽게 주석으로 설명해 줘.</code></div>
     </div>
@@ -762,26 +735,18 @@ apple
       <div class="req">1~100 사이 임의의 정답을 정하고, 사용자가 맞힐 때까지 입력받아 "더 큰 수"/"더 작은 수"를 안내하다 맞히면 "정답!"과 시도 횟수를 출력하세요.</div>
       <details class="answer"><summary>정답 보기</summary><div class="body">
 <pre><code><span class="kw">import</span> random
-answer = random.<span class="fn">randint</span>(<span class="nu">1</span>, <span class="nu">100</span>)
+com = random.<span class="fn">randint</span>(<span class="nu">1</span>, <span class="nu">100</span>)
 count = <span class="nu">0</span>
 <span class="kw">while</span> <span class="kw">True</span>:
-    guess = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"1~100 추측: "</span>))
+    you = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"1~100 추측: "</span>))
     count += <span class="nu">1</span>
-    <span class="kw">if</span> guess &lt; answer:
-        <span class="fn">print</span>(<span class="st">"더 큰 수!"</span>)
-    <span class="kw">elif</span> guess &gt; answer:
-        <span class="fn">print</span>(<span class="st">"더 작은 수!"</span>)
+    <span class="kw">if</span> you &lt; com:
+        <span class="fn">print</span>(<span class="st">"더 큰수 입력!"</span>)
+    <span class="kw">elif</span> you &gt; com:
+        <span class="fn">print</span>(<span class="st">"더 작은수 입력!"</span>)
     <span class="kw">else</span>:
         <span class="fn">print</span>(f<span class="st">"정답! {count}번 만에 맞혔습니다."</span>)
         <span class="kw">break</span></code></pre>
-      </div></details>
-    </div>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 5-2. 가위바위보 게임 만들고 검증</h4>
-      <div class="req">ChatGPT와 함께 “3판 2선승” 가위바위보 게임을 만들어 보세요. 받은 코드를 실제로 여러 번 플레이해 <b>승부 판정이 모든 경우에 맞는지</b>(비김 포함) 검증하고, 이상하면 다시 고쳐 달라고 하세요.</div>
-      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>파이썬으로 사용자 vs 컴퓨터 가위바위보 게임을 만들어 줘. 3판 2선승제로, 먼저 2번 이기면 최종 승자를 출력해. random.choice로 컴퓨터 선택을 만들고, 비긴 경우도 처리해 줘. 승부 판정 부분을 주석으로 설명해 줘.</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">검증 포인트: 가위-보, 바위-가위, 보-바위 등 <b>모든 승패 조합</b>과 비김이 올바른지 직접 확인하세요.</p>
       </div></details>
     </div>
   </div>
@@ -817,14 +782,23 @@ count = <span class="nu">0</span>
     <span class="tag ex">💡 예제</span>
 <pre><code><span class="kw">import</span> math
 
-<span class="fn">print</span>(math.<span class="fn">ceil</span>(<span class="nu">2.54</span>))    <span class="cm"># 3   올림</span>
-<span class="fn">print</span>(math.<span class="fn">floor</span>(<span class="nu">2.54</span>))   <span class="cm"># 2   내림</span>
-<span class="fn">print</span>(math.<span class="fn">sqrt</span>(<span class="nu">16</span>))     <span class="cm"># 4.0 제곱근</span>
-<span class="fn">print</span>(<span class="fn">round</span>(math.pi, <span class="nu">4</span>))  <span class="cm"># 3.1416 원주율</span></code></pre>
+v1 = math.<span class="fn">ceil</span>(<span class="nu">3.78</span>) <span class="cm"># 올림</span>
+<span class="fn">print</span>(v1)
+
+v2 = math.<span class="fn">floor</span>(<span class="nu">3.78</span>) <span class="cm"># 내림</span>
+<span class="fn">print</span>(v2)
+
+v3 = math.<span class="fn">sqrt</span>(<span class="nu">4</span>) <span class="cm"># 제곱근</span>
+<span class="fn">print</span>(v3)
+
+v4 = math.pi <span class="cm"># 원주율</span>
+<span class="fn">print</span>(v4)
+<span class="fn">print</span>(<span class="fn">round</span>(v4, <span class="nu">4</span>)) <span class="cm"># round() - 내장함수!</span></code></pre>
     <div class="result"><b>실행 결과</b>
+4
 3
-2
-4.0
+2.0
+3.141592653589793
 3.1416</div>
   </div>
 
@@ -834,8 +808,6 @@ count = <span class="nu">0</span>
       <h4>🤖 "이 작업에 맞는 표준 모듈 있어?"</h4>
       <p>직접 구현하기 전에 표준 모듈부터 물어보면 시간을 아낍니다. 파이썬은 "배터리 포함" 언어예요.</p>
       <div class="prompt"><code>파이썬 표준 라이브러리 중에서, 통계 계산(평균·중앙값)·최대공약수·거듭제곱 같은 수학 작업에 쓸 수 있는 모듈과 함수를 알려 주고, 각각 짧은 예시를 보여 줘.</code></div>
-      <p>import 방식이 헷갈릴 때:</p>
-      <div class="prompt"><code>파이썬에서 import math, from math import sqrt, import math as m 세 가지 방식의 차이와 각각 언제 쓰면 좋은지 초보자용으로 정리해 줘.</code></div>
     </div>
   </div>
 
@@ -1008,25 +980,156 @@ color = <span class="st">"빨강"</span>
 
   <div class="block">
     <span class="tag ex">💡 예제</span>
-    <p>색·바퀴 수를 속성으로, 달리기를 기능으로 갖는 Car 클래스입니다.</p>
+    <p>색·모델명·바퀴 수를 속성으로, 달리기를 기능으로 갖는 Car 클래스입니다.</p>
+    <div style="display:flex;justify-content:center;margin:16px 0">
+      <svg width="230" height="215" viewBox="0 0 230 215" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Car 클래스 다이어그램">
+        <style>
+          .uml-box{fill:#ffffff;stroke:#4a90d9;stroke-width:2}
+          .uml-name{font:700 18px "Malgun Gothic",sans-serif;fill:#1f2933}
+          .uml-mem{font:15px "D2Coding","Consolas",monospace;fill:#1f2933}
+        </style>
+        <rect class="uml-box" x="15" y="10" width="200" height="45"/>
+        <rect class="uml-box" x="15" y="55" width="200" height="100"/>
+        <rect class="uml-box" x="15" y="155" width="200" height="45"/>
+        <text class="uml-name" x="115" y="39" text-anchor="middle">Car</text>
+        <text class="uml-mem" x="32" y="85">-color: str</text>
+        <text class="uml-mem" x="32" y="112">-model: str</text>
+        <text class="uml-mem" x="32" y="139">-wheel: int</text>
+        <text class="uml-mem" x="32" y="184">+drive()</text>
+      </svg>
+    </div>
 <pre><code><span class="kw">class</span> <span class="fn">Car</span>:
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, color, wheel):
-        self.color = color      <span class="cm"># 멤버 변수(속성)</span>
-        self.wheel = wheel
-    <span class="kw">def</span> <span class="fn">drive</span>(self):            <span class="cm"># 멤버 함수(메서드)</span>
-        <span class="fn">print</span>(self.color, <span class="st">"자동차가 달립니다."</span>)
+    <span class="kw">def</span> <span class="fn">__init__</span>(self, color, model, wheel):
+        self.color = color  <span class="cm">#색상</span>
+        self.model = model  <span class="cm">#모델명</span>
+        self.wheel = wheel  <span class="cm">#바퀴 수</span>
 
-c = <span class="fn">Car</span>(<span class="st">"빨강"</span>, <span class="nu">4</span>)         <span class="cm"># 객체 생성</span>
-c.<span class="fn">drive</span>()                   <span class="cm"># 메서드 호출</span>
-<span class="fn">print</span>(<span class="st">"바퀴 수:"</span>, c.wheel)   <span class="cm"># 속성 접근</span></code></pre>
+    <span class="kw">def</span> <span class="fn">drive</span>(self):  <span class="cm"># 메서드</span>
+        <span class="cm"># print(self.color, self.model, "가 달립니다.")</span>
+        <span class="fn">print</span>(f<span class="st">"{self.color} {self.model}가 달립니다."</span>)
+
+car = <span class="fn">Car</span>(<span class="st">"빨강"</span>, <span class="st">"Sonata"</span>, <span class="nu">4</span>) <span class="cm">#객체(인스턴스) 생성</span>
+car.<span class="fn">drive</span>()  <span class="cm">#메서드 호출</span>
+<span class="fn">print</span>(<span class="st">"바퀴 수:"</span>, car.wheel) <span class="cm">#속성 접근</span></code></pre>
     <div class="result"><b>실행 결과</b>
-빨강 자동차가 달립니다.
+빨강 Sonata가 달립니다.
 바퀴 수: 4</div>
   </div>
 
   <div class="block">
     <span class="tag ex">💡 예제</span>
-    <p>잔액·커피 재고를 속성으로, 동전 투입·커피 추출·잔돈 반환을 기능으로 갖는 커피 자판기 클래스입니다.</p>
+    <p>두 수를 인자로 받아 사칙연산 결과를 반환하는 <code>Calculator</code> 클래스입니다. <code>div</code>는 0으로 나누는 경우도 처리합니다.</p>
+<pre><code><span class="kw">class</span> <span class="fn">Calculator</span>:
+
+    <span class="kw">def</span> <span class="fn">add</span>(self, x, y):
+        <span class="kw">return</span> x + y
+
+    <span class="kw">def</span> <span class="fn">sub</span>(self, x, y):
+        <span class="kw">return</span> x - y
+
+    <span class="kw">def</span> <span class="fn">mul</span>(self, x, y):
+        <span class="kw">return</span> x * y
+
+    <span class="kw">def</span> <span class="fn">div</span>(self, x, y):
+        <span class="cm"># y가 0이면 나눗셈을 할 수 없음</span>
+        <span class="kw">if</span> y == <span class="nu">0</span>:
+            <span class="kw">return</span> <span class="st">"0으로 나눌 수 없습니다"</span>
+
+        <span class="kw">return</span> x / y
+
+<span class="cm"># 계산기 객체 생성</span>
+calc = <span class="fn">Calculator</span>()
+
+<span class="fn">print</span>(calc.<span class="fn">add</span>(<span class="nu">10</span>, <span class="nu">5</span>))
+<span class="fn">print</span>(calc.<span class="fn">sub</span>(<span class="nu">10</span>, <span class="nu">5</span>))
+<span class="fn">print</span>(calc.<span class="fn">mul</span>(<span class="nu">10</span>, <span class="nu">5</span>))
+<span class="fn">print</span>(calc.<span class="fn">div</span>(<span class="nu">10</span>, <span class="nu">5</span>))
+
+<span class="cm"># y가 0인 경우</span>
+<span class="fn">print</span>(calc.<span class="fn">div</span>(<span class="nu">10</span>, <span class="nu">0</span>))</code></pre>
+    <div class="result"><b>실행 결과</b>
+15
+5
+50
+2.0
+0으로 나눌 수 없습니다</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 "self가 대체 뭐예요?"</h4>
+      <p>입문자의 최대 난관이 <code>self</code>입니다. AI에게 비유로 설명받으면 안개가 걷힙니다.</p>
+      <div class="prompt"><code>파이썬 클래스에서 self가 무엇이고 왜 모든 메서드의 첫 매개변수로 넣는지, 왜 호출할 때는 self를 안 쓰는지 초보자용으로 비유를 들어 설명해 줘.</code></div>
+      <p>내 클래스 설계를 검토받고 싶을 때:</p>
+      <div class="prompt"><code>파이썬으로 '학생' 클래스를 만들고 싶어. 이름·학번·학과를 속성으로 하고, 자기소개를 출력하는 메서드를 넣고 싶어. 초보자용으로 클래스를 만들어 주고 __init__과 self가 쓰인 부분을 주석으로 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 장바구니(리스트 속성)</span>
+    <p>리스트를 속성으로 두고, 아이템을 추가·제거·조회하는 <code>Cart</code> 클래스입니다.</p>
+    <div style="display:flex;justify-content:center;margin:16px 0">
+      <svg width="250" height="240" viewBox="0 0 250 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Cart 클래스 다이어그램">
+        <style>
+          .uml-box{fill:#ffffff;stroke:#4a90d9;stroke-width:2}
+          .uml-name{font:700 18px "Malgun Gothic",sans-serif;fill:#1f2933}
+          .uml-mem{font:15px "D2Coding","Consolas",monospace;fill:#1f2933}
+        </style>
+        <rect class="uml-box" x="15" y="10" width="220" height="45"/>
+        <rect class="uml-box" x="15" y="55" width="220" height="55"/>
+        <rect class="uml-box" x="15" y="110" width="220" height="115"/>
+        <text class="uml-name" x="125" y="39" text-anchor="middle">Cart</text>
+        <text class="uml-mem" x="32" y="88">-items: list</text>
+        <text class="uml-mem" x="32" y="145">+add_item()</text>
+        <text class="uml-mem" x="32" y="172">+remove_item()</text>
+        <text class="uml-mem" x="32" y="199">+get_items()</text>
+      </svg>
+    </div>
+<pre><code><span class="kw">class</span> <span class="fn">Cart</span>:
+    <span class="cm"># 초기화 메서드</span>
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        self.items = []  <span class="cm"># 아이템을 저장하는 리스트</span>
+
+    <span class="cm"># 아이템 추가 메서드</span>
+    <span class="kw">def</span> <span class="fn">add_item</span>(self, item):
+        self.items.<span class="fn">append</span>(item)
+
+    <span class="cm"># 아이템 제거 메서드</span>
+    <span class="kw">def</span> <span class="fn">remove_item</span>(self, item):
+        <span class="kw">if</span> item <span class="kw">in</span> self.items:
+            self.items.<span class="fn">remove</span>(item)
+
+    <span class="cm"># 아이템 조회 메서드</span>
+    <span class="kw">def</span> <span class="fn">get_items</span>(self):
+        <span class="kw">return</span> f<span class="st">"장바구니: {self.items}"</span>
+
+cart = <span class="fn">Cart</span>()  <span class="cm"># 장바구니 객체 생성</span>
+cart.<span class="fn">add_item</span>(<span class="st">"사과"</span>)
+cart.<span class="fn">add_item</span>(<span class="st">"바나나"</span>)
+<span class="fn">print</span>(cart.<span class="fn">get_items</span>())  <span class="cm"># 장바구니: ['사과', '바나나']</span>
+
+cart.<span class="fn">remove_item</span>(<span class="st">"사과"</span>)
+<span class="fn">print</span>(cart.<span class="fn">get_items</span>())  <span class="cm"># 장바구니: ['바나나']</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+장바구니: ['사과', '바나나']
+장바구니: ['바나나']</div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 8-1. 0으로 나누기 오류, AI로 막기</h4>
+      <div class="req">위 <b>계산기 예제</b>의 <code>Calculator</code>에서 <code>y=0</code>으로 <code>div()</code>를 호출해 보세요. 나타난 오류를 ChatGPT에 붙여넣고, “0으로 나눌 때 오류 대신 안내 메시지를 반환하도록” 고쳐 달라고 요청한 뒤 검증하세요.</div>
+      <details class="answer"><summary>예시 프롬프트 · 검증 보기</summary><div class="body">
+        <div class="prompt"><code>파이썬 계산기 클래스에서 div 메서드를 호출하니 ZeroDivisionError: division by zero 오류가 나. y가 0일 때는 오류 대신 "0으로 나눌 수 없습니다"를 반환하도록 고쳐 주고, 왜 이 오류가 나는지 설명해 줘.</code></div>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">검증: y=0과 y=3 두 경우 모두 실행해, 오류 없이 의도대로 동작하는지 확인하세요.</p>
+      </div></details>
+    </div>
+    <div class="lab-box">
+      <h4>실습 8-2. 커피 자판기 클래스</h4>
+      <div class="req">잔액·커피 재고를 속성으로, 동전 투입·커피 추출·잔돈 반환을 기능으로 갖는 커피 자판기 클래스(<code>CoffeeMachine</code>)를 만드세요. 500원을 넣고 커피를 뽑은 뒤 잔돈을 반환해 보세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
 <pre><code><span class="kw">class</span> <span class="fn">CoffeeMachine</span>:
     <span class="kw">def</span> <span class="fn">__init__</span>(self):
         self.balance = <span class="nu">0</span>            <span class="cm"># 넣은 금액</span>
@@ -1054,49 +1157,9 @@ machine = <span class="fn">CoffeeMachine</span>()
 machine.<span class="fn">insert_coin</span>(<span class="nu">500</span>)
 machine.<span class="fn">make_coffee</span>()
 machine.<span class="fn">return_change</span>()</code></pre>
-    <div class="result"><b>실행 결과</b>
-500원을 넣었습니다.
+        <div class="result">500원을 넣었습니다.
 ☕ 커피가 나왔습니다.
 잔돈 200원을 반환합니다.</div>
-  </div>
-
-  <div class="block">
-    <span class="tag ai">🤖 ChatGPT 활용</span>
-    <div class="ai-box">
-      <h4>🤖 "self가 대체 뭐예요?"</h4>
-      <p>입문자의 최대 난관이 <code>self</code>입니다. AI에게 비유로 설명받으면 안개가 걷힙니다.</p>
-      <div class="prompt"><code>파이썬 클래스에서 self가 무엇이고 왜 모든 메서드의 첫 매개변수로 넣는지, 왜 호출할 때는 self를 안 쓰는지 초보자용으로 비유를 들어 설명해 줘.</code></div>
-      <p>내 클래스 설계를 검토받고 싶을 때:</p>
-      <div class="prompt"><code>파이썬으로 '학생' 클래스를 만들고 싶어. 이름·학번·학과를 속성으로 하고, 자기소개를 출력하는 메서드를 넣고 싶어. 초보자용으로 클래스를 만들어 주고 __init__과 self가 쓰인 부분을 주석으로 설명해 줘.</code></div>
-    </div>
-  </div>
-
-  <div class="block">
-    <span class="tag lab">✏️ 실습문제</span>
-    <div class="lab-box">
-      <h4>실습 8-1. 계산기 클래스</h4>
-      <div class="req">두 수 <code>x</code>, <code>y</code>를 속성으로 갖고 <code>add</code>·<code>sub</code>·<code>mul</code>·<code>div</code> 메서드로 사칙연산 결과를 반환하는 <code>Calculator</code> 클래스를 만드세요.</div>
-      <details class="answer"><summary>정답 보기</summary><div class="body">
-<pre><code><span class="kw">class</span> <span class="fn">Calculator</span>:
-    <span class="kw">def</span> <span class="fn">__init__</span>(self, x, y):
-        self.x = x
-        self.y = y
-    <span class="kw">def</span> <span class="fn">add</span>(self): <span class="kw">return</span> self.x + self.y
-    <span class="kw">def</span> <span class="fn">sub</span>(self): <span class="kw">return</span> self.x - self.y
-    <span class="kw">def</span> <span class="fn">mul</span>(self): <span class="kw">return</span> self.x * self.y
-    <span class="kw">def</span> <span class="fn">div</span>(self): <span class="kw">return</span> self.x / self.y
-
-cal = <span class="fn">Calculator</span>(<span class="nu">10</span>, <span class="nu">3</span>)
-<span class="fn">print</span>(cal.<span class="fn">add</span>(), cal.<span class="fn">sub</span>(), cal.<span class="fn">mul</span>(), <span class="fn">round</span>(cal.<span class="fn">div</span>(), <span class="nu">2</span>))</code></pre>
-        <div class="result">13 7 30 3.33</div>
-      </div></details>
-    </div>
-    <div class="lab-box ai-lab">
-      <h4>🤖 AI 실습 8-2. 0으로 나누기 오류, AI로 막기</h4>
-      <div class="req">실습 8-1의 <code>Calculator</code>에서 <code>y=0</code>으로 객체를 만들어 <code>div()</code>를 호출해 보세요. 나타난 오류를 ChatGPT에 붙여넣고, “0으로 나눌 때 오류 대신 안내 메시지를 반환하도록” 고쳐 달라고 요청한 뒤 검증하세요.</div>
-      <details class="answer"><summary>예시 프롬프트 · 검증 보기</summary><div class="body">
-        <div class="prompt"><code>파이썬 계산기 클래스에서 div 메서드를 호출하니 ZeroDivisionError: division by zero 오류가 나. y가 0일 때는 오류 대신 "0으로 나눌 수 없습니다"를 반환하도록 고쳐 주고, 왜 이 오류가 나는지 설명해 줘.</code></div>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">검증: y=0과 y=3 두 경우 모두 실행해, 오류 없이 의도대로 동작하는지 확인하세요.</p>
       </div></details>
     </div>
   </div>
@@ -1128,15 +1191,24 @@ cal = <span class="fn">Calculator</span>(<span class="nu">10</span>, <span class
     <span class="kw">def</span> <span class="fn">__init__</span>(self, color, gears):
         self.color = color
         self.gears = gears
-    <span class="kw">def</span> <span class="fn">__str__</span>(self):
-        <span class="kw">return</span> f<span class="st">"{self.color} 자전거 (기어 {self.gears}단)"</span>
 
+    <span class="kw">def</span> <span class="fn">__str__</span>(self):
+        <span class="kw">return</span> f<span class="st">"{self.color} 자전거 (기어 {self.gears})"</span>
+
+<span class="cm"># 자전거 객체(인스턴스) 생성</span>
+bike1 = <span class="fn">Bike</span>(<span class="st">"노랑"</span>, <span class="nu">5</span>)
+<span class="fn">print</span>(bike1)
+
+<span class="cm"># 객체 리스트</span>
+<span class="fn">print</span>(<span class="st">"***** 자전거 리스트 *****"</span>)
 bikes = [<span class="fn">Bike</span>(<span class="st">"파랑"</span>, <span class="nu">7</span>), <span class="fn">Bike</span>(<span class="st">"검정"</span>, <span class="nu">21</span>)]
-<span class="kw">for</span> b <span class="kw">in</span> bikes:
-    <span class="fn">print</span>(b)          <span class="cm"># __str__ 결과가 출력됨</span></code></pre>
+<span class="kw">for</span> bike <span class="kw">in</span> bikes:
+    <span class="fn">print</span>(bike)</code></pre>
     <div class="result"><b>실행 결과</b>
-파랑 자전거 (기어 7단)
-검정 자전거 (기어 21단)</div>
+노랑 자전거 (기어 5)
+***** 자전거 리스트 *****
+파랑 자전거 (기어 7)
+검정 자전거 (기어 21)</div>
   </div>
 
   <div class="block">
