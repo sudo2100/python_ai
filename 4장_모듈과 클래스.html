@@ -720,6 +720,46 @@ lotto = []
   </div>
 
   <div class="block">
+    <span class="tag ex">💡 예제 — 영어 타자 게임 (random + time)</span>
+    <p><code>random.choice</code>로 단어를 뽑고, <code>time</code> 모듈로 걸린 시간을 재는 간단한 타자 게임입니다.</p>
+<pre><code><span class="kw">import</span> random
+<span class="kw">import</span> time
+
+word = [<span class="st">"python"</span>, <span class="st">"programming"</span>, <span class="st">"challenge"</span>, <span class="st">"developer"</span>, <span class="st">"algorithm"</span>]
+
+n = <span class="nu">1</span>
+
+<span class="fn">print</span>(<span class="st">"[타자 게임] 준비되면 엔터를 누르세요!"</span>)
+<span class="fn">input</span>()
+
+start_time = time.<span class="fn">time</span>()  <span class="cm"># 시작 시간 기록</span>
+
+<span class="kw">while</span> n &lt;= <span class="nu">5</span>:
+    q = random.<span class="fn">choice</span>(word)  <span class="cm"># 단어 리스트에서 랜덤하게 하나 선택</span>
+    <span class="fn">print</span>(<span class="st">"제시어:"</span>, q)
+
+    you = <span class="fn">input</span>()
+    <span class="kw">if</span> you == q:
+        <span class="fn">print</span>(<span class="st">"정답입니다!"</span>)
+        n += <span class="nu">1</span>
+    <span class="kw">else</span>:
+        <span class="fn">print</span>(<span class="st">"틀렸습니다. 다시 시도하세요."</span>)
+
+end_time = time.<span class="fn">time</span>()  <span class="cm"># 종료 시간 기록</span>
+elapsed_time = end_time - start_time  <span class="cm"># 경과 시간 계산</span>
+<span class="fn">print</span>(f<span class="st">"게임 종료! 총 걸린 시간: {elapsed_time:.2f}초"</span>)</code></pre>
+    <div class="result"><b>실행 결과 예시</b>
+[타자 게임] 준비되면 엔터를 누르세요!
+
+제시어: developer
+developer
+정답입니다!
+... (5단어 반복) ...
+게임 종료! 총 걸린 시간: 12.47초</div>
+    <div class="note"><b>time으로 시간 재기</b> <code>time.time()</code>은 현재 시각을 초로 돌려줍니다. 시작·종료 값을 빼면 <b>걸린 시간</b>을 알 수 있습니다.</div>
+  </div>
+
+  <div class="block">
     <span class="tag ai">🤖 ChatGPT 활용</span>
     <div class="ai-box">
       <h4>🤖 "테스트할 때마다 결과가 달라져요"</h4>
