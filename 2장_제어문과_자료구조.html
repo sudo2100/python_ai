@@ -1365,18 +1365,26 @@ student_list = [
       <h4>실습 11-3. 용어 사전 검색</h4>
       <div class="req">컴퓨터 용어 딕셔너리를 만들고, 사용자가 용어를 입력하면 뜻을 보여주되 없으면 "정의된 단어가 없습니다"를 출력하세요. (<code>get</code> 활용)</div>
       <details class="answer"><summary>정답 보기</summary><div class="body">
-<pre><code>terms = {<span class="st">"CPU"</span>: <span class="st">"중앙처리장치"</span>, <span class="st">"RAM"</span>: <span class="st">"주기억장치"</span>}
-word = <span class="fn">input</span>(<span class="st">"검색할 용어: "</span>)
-<span class="fn">print</span>(terms.<span class="fn">get</span>(word, <span class="st">"정의된 단어가 없습니다"</span>))</code></pre>
-        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)"><code>get(키, 기본값)</code>은 키가 없을 때 두 번째 인자를 대신 돌려줍니다.</p>
+<pre><code><span class="fn">print</span>(<span class="st">"♠ 컴퓨터 용어사전 ♠"</span>)
+dic = {
+    <span class="st">"CPU"</span>: <span class="st">"중앙처리장치"</span>,
+    <span class="st">"RAM"</span>: <span class="st">"주기억장치"</span>,
+    <span class="st">"변수"</span>: <span class="st">"데이터를 저장하는 메모리 공간"</span>,
+    <span class="st">"함수"</span>: <span class="st">"특정 작업을 수행하는 코드의 집합"</span>
+}
+word = <span class="fn">input</span>(<span class="st">"검색할 단어를 입력하세요: "</span>)
+<span class="kw">if</span> word <span class="kw">in</span> dic:
+    <span class="fn">print</span>(f<span class="st">"{word} : {dic[word]}"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(f<span class="st">"{word} : 사전에 없는 단어입니다."</span>)</code></pre>
+        <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)"><code>if word in dic</code>로 키가 있는지 확인하고, 없으면 안내 문구를 출력합니다. (<code>dic.get(word, "…")</code>로도 같은 처리를 할 수 있습니다.)</p>
       </div></details>
     </div>
     <div class="lab-box ai-lab">
       <h4>🤖 AI 실습 11-4. AI로 나만의 사전 앱 만들기</h4>
       <div class="req">실습 11-2를 확장해, “계속 검색하다 <code>종료</code>를 입력하면 끝나는” 반복 기능을 ChatGPT에 요청하세요(4장 while + break 복습). 받은 코드를 실행해 여러 단어로 검증하고, 없는 단어 처리까지 확인하세요.</div>
       <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
-        <div class="prompt"><code>아래 파이썬 용어 사전 코드를, 사용자가 '종료'를 입력할 때까지 계속 검색할 수 있도록 while문으로 감싸 줘. 없는 단어를 입력하면 안내 문구가 나오게 해 줘.
-terms = {"CPU": "중앙처리장치", "RAM": "주기억장치"}</code></div>
+        <div class="prompt"><code>아래 파이썬 용어 사전 코드를, 사용자가 '종료'를 입력할 때까지 계속 검색할 수 있도록 while문으로 감싸 줘. 없는 단어를 입력하면 안내 문구가 나오게 해 줘.</code></div>
         <p style="margin:6px 0 0;font-size:.9rem;color:var(--sub)">이 실습은 2장에서 배운 반복문 + 자료구조를 합치는 좋은 연습입니다.</p>
       </div></details>
     </div>
