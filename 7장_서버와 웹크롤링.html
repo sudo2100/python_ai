@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT &amp; 파이썬 · 7장 서버와 웹 크롤링 (AI 활용판)</title>
+<style>
+  :root{
+    --bg:#f5f7fb; --card:#ffffff; --ink:#1f2933; --sub:#52606d;
+    --brand:#e11d48; --brand-d:#9f1239; --accent:#e11d48;
+    --line:#e4e9f2; --code-bg:#1e2430; --code-ink:#e6edf3;
+    --goal:#fff1f4; --goal-b:#e11d48;
+    --lab:#fff7ed; --lab-b:#f59e0b;
+    --warn:#fef2f2; --warn-b:#ef4444;
+    --ai:#ecfeff; --ai-b:#0d9488; --ai-ink:#0f766e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+    line-height:1.7;-webkit-font-smoothing:antialiased}
+  a{color:var(--brand)}
+  .wrap{max-width:920px;margin:0 auto;padding:0 20px 80px}
+
+  header.hero{background:linear-gradient(135deg,#e11d48,#0d9488);color:#fff;
+    padding:52px 20px 44px;margin-bottom:28px}
+  header.hero .inner{max-width:920px;margin:0 auto}
+  .kicker{font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;opacity:.85;margin:0 0 10px}
+  header.hero h1{margin:0 0 12px;font-size:2rem;font-weight:800;line-height:1.3}
+  header.hero p{margin:0;opacity:.92;font-size:1.02rem}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:8px}
+  .meta span{background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.25);
+    padding:5px 12px;border-radius:20px;font-size:.82rem}
+
+  nav.toc{background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:20px 24px;margin-bottom:34px;box-shadow:0 1px 3px rgba(20,40,80,.05)}
+  nav.toc h2{margin:0 0 6px;font-size:1.05rem;color:var(--brand-d)}
+  nav.toc .grp{font-size:.8rem;font-weight:700;color:var(--sub);margin:12px 0 4px;letter-spacing:.03em}
+  nav.toc ol{margin:0;padding-left:20px;columns:2;column-gap:32px}
+  nav.toc li{margin:5px 0;break-inside:avoid}
+  nav.toc a{text-decoration:none;color:var(--ink)}
+  nav.toc a:hover{color:var(--brand);text-decoration:underline}
+  nav.toc .solo{padding-left:20px;margin:0 0 4px}
+  nav.toc .solo a{font-weight:700;color:var(--ai-ink)}
+
+  section.module{background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:0 28px 26px;margin-bottom:30px;box-shadow:0 1px 3px rgba(20,40,80,.05);overflow:hidden}
+  .mod-head{margin:0 -28px 20px;padding:18px 28px;background:#fff5f7;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px}
+  .mod-num{flex:0 0 auto;width:42px;height:42px;border-radius:11px;background:var(--brand);color:#fff;
+    display:grid;place-items:center;font-weight:800;font-size:1.15rem}
+  .mod-head h2{margin:0;font-size:1.35rem;font-weight:800}
+
+  section.module.intro .mod-head{background:#ecfeff;border-bottom-color:#bff0ec}
+  section.module.intro .mod-num{background:var(--ai-b);font-size:.95rem}
+
+  .block{margin:22px 0}
+  .tag{display:inline-flex;align-items:center;gap:7px;font-weight:800;font-size:.82rem;
+    letter-spacing:.03em;padding:4px 12px;border-radius:8px;margin-bottom:12px}
+  .tag.goal{background:var(--goal);color:var(--goal-b)}
+  .tag.concept{background:#eef2f9;color:#334155}
+  .tag.ex{background:#f0fbf7;color:#0b7a72}
+  .tag.lab{background:var(--lab);color:#b45309}
+  .tag.ai{background:var(--ai);color:var(--ai-ink)}
+
+  .goal-box{background:var(--goal);border-left:4px solid var(--goal-b);border-radius:0 10px 10px 0;
+    padding:14px 18px}
+  .goal-box ul{margin:0;padding-left:20px}
+  .goal-box li{margin:4px 0}
+
+  p{margin:10px 0}
+  ul.plain{margin:10px 0;padding-left:22px}
+  ul.plain li{margin:6px 0}
+  b.hl{color:var(--brand-d)}
+
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.94rem}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+  th{background:#f1f5fb;font-weight:700;color:#334155}
+  td code{white-space:nowrap}
+
+  pre{background:var(--code-bg);color:var(--code-ink);border-radius:12px;padding:16px 18px;
+    overflow-x:auto;margin:12px 0;font-size:.92rem;line-height:1.6}
+  code{font-family:"D2Coding","Consolas","Menlo",monospace}
+  pre code{font-family:"D2Coding","Consolas","Menlo",monospace}
+  p code,li code,td code{background:#eef1f6;color:#b23a48;padding:1px 6px;border-radius:5px;font-size:.9em}
+  .cm{color:#7f9cc0}
+  .kw{color:#ff9d6a}
+  .st{color:#9ae6a0}
+  .nu{color:#f6c177}
+  .fn{color:#7cc7ff}
+  .out{display:block;color:#8b97a7;margin-top:2px}
+  .result{background:#fff5f7;border:1px dashed #f4b8c6;border-radius:10px;padding:10px 14px;
+    margin:10px 0;font-family:"D2Coding","Consolas",monospace;font-size:.9rem;color:#334155;white-space:pre-wrap}
+  .result b{color:var(--brand-d)}
+
+  .note{background:#f0fbf7;border-left:4px solid #0ea5a4;border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.95rem}
+  .warn{background:var(--warn);border-left:4px solid var(--warn-b);border-radius:0 10px 10px 0;
+    padding:12px 16px;margin:14px 0;font-size:.95rem}
+  .note b,.warn b{display:block;margin-bottom:3px}
+
+  .ai-box{background:var(--ai);border:1px solid #bff0ec;border-left:4px solid var(--ai-b);
+    border-radius:0 12px 12px 0;padding:16px 18px;margin:14px 0}
+  .ai-box h4{margin:0 0 8px;font-size:1.02rem;color:var(--ai-ink);display:flex;align-items:center;gap:8px}
+  .ai-box p{margin:8px 0}
+  .prompt{background:#fff;border:1px solid #bff0ec;border-radius:10px;padding:10px 14px;margin:8px 0;
+    font-size:.93rem;white-space:pre-wrap}
+  .prompt::before{content:"💬 프롬프트 예시";display:block;font-size:.72rem;font-weight:800;
+    letter-spacing:.05em;color:var(--ai-b);margin-bottom:5px;text-transform:uppercase}
+  .prompt code{background:transparent;color:#134e4a;padding:0;font-size:.95em}
+  .ai-box ul.plain li{margin:5px 0}
+
+  .lab-box{background:var(--lab);border:1px solid #fcd9a0;border-left:4px solid var(--lab-b);
+    border-radius:0 10px 10px 0;padding:16px 18px;margin:14px 0}
+  .lab-box h4{margin:0 0 8px;font-size:1.02rem;color:#b45309}
+  .lab-box .req{background:#fff;border:1px solid #fcd9a0;border-radius:8px;padding:8px 12px;margin:8px 0;font-size:.92rem}
+  .lab-box.ai-lab{background:var(--ai);border-color:#bff0ec;border-left-color:var(--ai-b)}
+  .lab-box.ai-lab h4{color:var(--ai-ink)}
+  .lab-box.ai-lab .req{border-color:#bff0ec}
+
+  details.answer{margin-top:12px;background:#fff;border:1px solid #fcd9a0;border-radius:10px;overflow:hidden}
+  details.answer summary{cursor:pointer;padding:10px 14px;font-weight:700;color:#b45309;
+    background:#fffaf1;list-style:none;user-select:none}
+  details.answer summary::-webkit-details-marker{display:none}
+  details.answer summary::before{content:"▶ ";font-size:.8em}
+  details.answer[open] summary::before{content:"▼ "}
+  details.answer .body{padding:6px 14px 14px}
+  .lab-box.ai-lab details.answer{border-color:#bff0ec}
+  .lab-box.ai-lab details.answer summary{color:var(--ai-ink);background:#ecfeff}
+
+  .diagram{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+    background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:20px 16px;margin:14px 0}
+  .diagram .node{background:#fff;border:2px solid var(--brand);color:var(--brand-d);border-radius:12px;
+    padding:12px 18px;font-weight:700;text-align:center;min-width:120px}
+  .diagram .node.srv{border-color:var(--ai-b);color:var(--ai-ink)}
+  .diagram .flow{display:flex;flex-direction:column;align-items:center;gap:4px;color:var(--sub);font-size:.82rem;font-weight:700}
+  .diagram .flow .arw{font-size:1.2rem;line-height:1}
+  .flowline{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;
+    background:#f8fafc;border:1px solid var(--line);border-radius:12px;padding:16px;margin:14px 0;font-size:.9rem}
+  .flowline .step{background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-weight:700;color:#334155}
+  .flowline .ar{color:var(--brand);font-weight:800}
+
+  footer{text-align:center;color:var(--sub);font-size:.9rem;margin-top:40px}
+  @media(max-width:640px){
+    nav.toc ol{columns:1}
+    header.hero h1{font-size:1.55rem}
+    .wrap{padding:0 14px 60px}
+    section.module{padding:0 18px 20px}
+    .mod-head{margin:0 -18px 18px;padding:16px 18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="inner">
+    <p class="kicker">ChatGPT &amp; 파이썬 기초 프로그래밍</p>
+    <h1>7장 · 서버와 웹 크롤링 <span style="font-weight:700;opacity:.9">— AI 활용판</span></h1>
+    <p>Flask로 웹 서버를 만들고, requests·BeautifulSoup으로 웹의 데이터를 수집하기 — ChatGPT와 함께 만들고 검증하기</p>
+    <div class="meta">
+      <span>👥 대상: 일반인 입문자</span>
+      <span>🐍 Python 3.x</span>
+      <span>🌐 Flask 웹 서버</span>
+      <span>🕸️ requests · BeautifulSoup</span>
+      <span>✍️ 예제 · 실습 · AI 실습(정답 포함)</span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+<nav class="toc">
+  <h2>📚 학습 목차</h2>
+  <div class="grp">AI 학습 가이드</div>
+  <div class="solo"><a href="#m0">서버와 크롤링을 AI와 함께 다루기</a></div>
+  <div class="grp">단원</div>
+  <ol>
+    <li><a href="#m1">클라이언트와 서버</a></li>
+    <li><a href="#m2">Flask 웹 서버 만들기</a></li>
+    <li><a href="#m3">HTML &amp; CSS 기초</a></li>
+    <li><a href="#m4">Flask 사진 서버 만들기</a></li>
+    <li><a href="#m5">웹 크롤링과 requests</a></li>
+    <li><a href="#m6">BeautifulSoup으로 파싱하기</a></li>
+    <li><a href="#m7">실전 웹 크롤링</a></li>
+  </ol>
+</nav>
+
+<!-- ============ AI GUIDE ============ -->
+<section class="module intro" id="m0">
+  <div class="mod-head"><div class="mod-num">AI</div><h2>서버와 크롤링을 AI와 함께 다루기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>서버·웹 개발과 크롤링을 배울 때 ChatGPT를 <b>‘코드를 만들고 오류를 진단해 주는’ 도우미</b>로 활용할 수 있다.</li>
+        <li>“코드 짜 줘”보다 <b>“이 태그를 어떻게 찾아? 이 선택자가 맞아?”</b>처럼 구체적으로 묻는 법을 익힌다.</li>
+        <li>AI가 만든 크롤링 코드를 <b>직접 실행해 실제 웹 데이터가 나오는지 확인</b>하는 습관을 기른다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 개념 및 설명</span>
+    <p>웹 크롤링은 <b class="hl">사이트 구조에 따라 코드가 자주 바뀌는</b> 분야입니다. 태그 이름이나 <code>class</code>가 달라지면 바로 결과가 안 나옵니다. 이럴 때 <b>대상 페이지의 HTML 일부를 붙여넣고</b> “여기서 제목만 뽑는 선택자를 알려 줘”라고 물으면 ChatGPT가 정확한 <code>select()</code> 문을 만들어 줍니다.</p>
+    <p>이 교안은 항상 <b>“AI에게 묻고 → 직접 실행하고 → 브라우저·출력으로 결과를 확인한다”</b>는 흐름을 지킵니다.</p>
+    <table>
+      <tr><th>이럴 때 물어보세요</th><th>이렇게</th></tr>
+      <tr><td>선택자를 모를 때</td><td>HTML 조각을 붙여넣고 “여기서 ○○를 뽑는 CSS 선택자 알려 줘”</td></tr>
+      <tr><td>오류가 날 때</td><td>오류 메시지 전체를 붙여넣고 “왜 이런 오류가 나?”</td></tr>
+      <tr><td>결과가 비어 있을 때</td><td>“<code>find</code> 결과가 None이야. 어떻게 확인하고 고쳐?”</td></tr>
+    </table>
+    <div class="warn"><b>⚠️ 학습 원칙</b>
+      크롤링은 <b>robots.txt와 저작권</b>을 반드시 지켜야 합니다. AI가 준 코드라도 대상 사이트의 이용약관을 벗어나면 안 됩니다. 짧은 간격으로 반복 요청해 서버에 부담을 주지 않도록 주의하세요.
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 좋은 프롬프트의 4가지 요소</span>
+    <div class="ai-box">
+      <h4>🤖 원하는 답을 얻는 질문법</h4>
+      <ul class="plain">
+        <li><b>역할</b> — “너는 파이썬 웹 크롤링을 가르치는 선생님이야”</li>
+        <li><b>수준</b> — “나는 오늘 처음 배우는 초보야”</li>
+        <li><b>작업</b> — “이 HTML에서 뉴스 제목만 뽑고 싶어”</li>
+        <li><b>형식</b> — “requests와 BeautifulSoup으로, 한 줄씩 설명을 달아 줘”</li>
+      </ul>
+      <div class="prompt"><code>너는 파이썬 웹 크롤링을 가르치는 친절한 선생님이야. 나는 오늘 처음 배우는 초보야. requests와 BeautifulSoup으로 어떤 뉴스 페이지의 기사 제목(h4 태그) 하나를 가져와 출력하는 코드를 만들어 주고 한 줄씩 설명해 줘.</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 1 ============ -->
+<section class="module" id="m1">
+  <div class="mod-head"><div class="mod-num">1</div><h2>클라이언트와 서버</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>클라이언트와 서버가 <b>요청(Request)과 응답(Response)</b>으로 통신하는 구조를 이해한다.</li>
+        <li>웹 서버, 게임 서버, DB 서버 등 서버의 종류를 예로 들 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 서버와 클라이언트 기본 구조</span>
+    <p>웹은 <b>요청을 보내는 쪽(클라이언트)</b>과 <b>서비스를 제공하는 쪽(서버)</b>이 주고받는 구조입니다. 클라이언트가 “이거 주세요”라고 <b class="hl">request</b>를 보내면, 서버가 결과를 <b class="hl">response</b>로 돌려줍니다.</p>
+    <div class="diagram">
+      <div class="node">Client<br><span style="font-weight:500;font-size:.82rem">브라우저 · 앱</span></div>
+      <div class="flow"><span class="arw">➡️</span><span>request 요청</span><span>response 응답</span><span class="arw">⬅️</span></div>
+      <div class="node srv">Server<br><span style="font-weight:500;font-size:.82rem">데이터 · 기능</span></div>
+    </div>
+    <table>
+      <tr><th>구분</th><th>역할</th><th>예시</th></tr>
+      <tr><td><b>클라이언트</b></td><td>서버에 요청을 보내고, 받은 결과를 화면에 보여줌</td><td>웹 브라우저(Chrome, Edge), 스마트폰 앱, 게임 실행 프로그램</td></tr>
+      <tr><td><b>서버</b></td><td>데이터·파일·웹페이지·기능을 제공. 항상 켜져 요청을 기다림</td><td>웹 서버(네이버·구글), 게임 서버(접속·점수 관리), DB 서버(데이터 저장·조회)</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 개념을 비유로 이해하기</h4>
+      <div class="prompt"><code>클라이언트와 서버가 무엇인지, 식당에 비유해서 초보자용으로 설명해 줘. request와 response가 각각 무엇에 해당하는지도 예를 들어 줘.</code></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 2 ============ -->
+<section class="module" id="m2">
+  <div class="mod-head"><div class="mod-num">2</div><h2>Flask 웹 서버 만들기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>Flask가 파이썬용 <b>마이크로 웹 프레임워크</b>임을 이해하고 설치할 수 있다.</li>
+        <li><code>@app.route()</code>로 <b>페이지 라우팅(URL 연결)</b>을 만들 수 있다.</li>
+        <li>서버를 실행해 <code>http://127.0.0.1:5000</code>으로 접속할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 Flask란?</span>
+    <p><b class="hl">플라스크(Flask)</b>는 파이썬으로 제작된 마이크로 웹 프레임워크의 하나로, 웹 서버를 만들고 웹 애플리케이션을 제작할 수 있게 해 줍니다. 가볍고 배우기 쉬워 입문용으로 널리 쓰입니다.</p>
+    <div class="note"><b>설치</b> 터미널에서 아래 명령으로 설치합니다.
+<pre><code>pip install Flask</code></pre>
+    공식 문서: <a href="https://flask.palletsprojects.com/en/stable/">flask.palletsprojects.com</a></div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 가장 작은 웹 서버 (server01.py)</span>
+    <p><code>@app.route('/')</code>는 “<b>루트 경로(/)</b>로 접속하면 이 함수를 실행하라”는 뜻입니다.</p>
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+<span class="cm"># Flask 애플리케이션 인스턴스(app 객체) 생성</span>
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="cm"># 루트 경로에 대한 라우트 설정</span>
+<span class="fn">@app.route</span>(<span class="st">'/'</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="st">"&lt;h1&gt;Hello, Flask!&lt;/h1&gt;"</span>
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    <span class="cm"># 디버그 모드로 서버 실행 (운영 시에는 debug=False)</span>
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</code></pre>
+    <div class="result"><b>실행 방법</b>
+1. 터미널:  python server01.py
+2. 브라우저 접속:  http://127.0.0.1:5000
+
+* Running on http://127.0.0.1:5000
+Press CTRL+C to quit</div>
+    <div class="note"><b>127.0.0.1 과 5000</b> <code>127.0.0.1</code>은 <b>내 컴퓨터(localhost)</b>에서 실행 중인 서버 주소이고, <code>5000</code>은 <b>포트 번호</b>(어떤 프로그램인지 구분하는 번호)입니다. <code>localhost:5000</code>도 같은 뜻입니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 페이지 라우팅 여러 개</span>
+    <p>경로마다 함수를 연결하면 여러 페이지를 가진 서버가 됩니다.</p>
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+app = <span class="fn">Flask</span>(__name__)  <span class="cm"># app 객체 생성</span>
+
+<span class="fn">@app.route</span>(<span class="st">'/'</span>)            <span class="cm"># http://127.0.0.1:5000/</span>
+<span class="kw">def</span> <span class="fn">index</span>():
+    <span class="kw">return</span> <span class="st">"Hello~ Flask"</span>
+
+<span class="fn">@app.route</span>(<span class="st">'/login'</span>)       <span class="cm"># http://127.0.0.1:5000/login</span>
+<span class="kw">def</span> <span class="fn">login</span>():
+    <span class="kw">return</span> <span class="st">"&lt;h2&gt;&lt;i&gt;로그인&lt;/i&gt; 페이지입니다.&lt;/h2&gt;"</span>
+
+<span class="fn">@app.route</span>(<span class="st">'/register'</span>)
+<span class="kw">def</span> <span class="fn">register</span>():
+    <span class="kw">return</span> <span class="st">"&lt;h2&gt;회원가입 페이지입니다.&lt;/h2&gt;"</span>
+
+<span class="fn">@app.route</span>(<span class="st">'/board/view'</span>)
+<span class="kw">def</span> <span class="fn">view</span>():
+    <span class="kw">return</span> <span class="st">"&lt;h2&gt;게시글 상세 페이지입니다.&lt;/h2&gt;"</span></code></pre>
+    <div class="result"><b>확인</b>
+/login       → 로그인 페이지입니다.
+/board/view  → 게시글 상세 페이지입니다.</div>
+    <div class="note"><b>반환값은 HTML</b> <code>return</code>으로 돌려주는 문자열 안에 <code>&lt;h2&gt;</code> 같은 HTML 태그를 넣으면 브라우저가 그대로 해석해 보여줍니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 웹 프레임워크 디렉터리 구조</span>
+    <p>Flask 프로젝트는 보통 아래처럼 폴더를 나눕니다.</p>
+    <table>
+      <tr><th>구성</th><th>역할</th></tr>
+      <tr><td><code>templates</code> 폴더</td><td>HTML 파일을 넣는 곳</td></tr>
+      <tr><td><code>static</code> 폴더</td><td>CSS, 이미지 파일을 넣는 곳</td></tr>
+      <tr><td><code>app.py</code></td><td>서버 실행 파일</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 라우팅이 헷갈릴 때</h4>
+      <div class="prompt"><code>Flask에서 @app.route가 무슨 역할인지, /login과 /board/view 같은 경로가 브라우저 주소와 어떻게 연결되는지 초보자용으로 그림 없이 설명해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 2-1. 자기소개 페이지 서버</h4>
+      <div class="req"><code>/</code>에는 "환영합니다", <code>/about</code>에는 자기 이름과 취미를 <code>&lt;h2&gt;</code> 태그로 보여주는 Flask 서버를 만들어 실행해 보세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask
+
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="fn">@app.route</span>(<span class="st">'/'</span>)
+<span class="kw">def</span> <span class="fn">index</span>():
+    <span class="kw">return</span> <span class="st">"&lt;h1&gt;환영합니다!&lt;/h1&gt;"</span>
+
+<span class="fn">@app.route</span>(<span class="st">'/about'</span>)
+<span class="kw">def</span> <span class="fn">about</span>():
+    <span class="kw">return</span> <span class="st">"&lt;h2&gt;이름: 홍길동 / 취미: 등산&lt;/h2&gt;"</span>
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 3 ============ -->
+<section class="module" id="m3">
+  <div class="mod-head"><div class="mod-num">3</div><h2>HTML &amp; CSS 기초</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>HTML이 <b>태그로 문서 구조를 표시</b>하는 마크업 언어임을 이해한다.</li>
+        <li>주요 태그(<code>h1~h6</code>, <code>p</code>, <code>img</code>, <code>a</code>, <code>ul</code>, <code>li</code>)의 쓰임을 안다.</li>
+        <li>CSS로 <b>디자인(색·크기·글꼴)</b>을 입히고, <b>선택자</b>로 원하는 요소를 고를 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 HTML이란?</span>
+    <p><b class="hl">HTML</b>은 하이퍼텍스트를 마크업하는 언어(현재 버전 HTML5)입니다. <b>마크업</b>이란 태그(tag)를 사용해 문서에서 어디가 제목이고 본문인지, 어디가 사진·링크인지 표시하는 것을 말합니다.</p>
+    <table>
+      <tr><th>기본 태그</th><th>설명</th></tr>
+      <tr><td><code>&lt;!DOCTYPE html&gt;</code></td><td>현재 문서가 HTML5로 작성된 웹 문서라는 뜻(문서 유형 지정)</td></tr>
+      <tr><td><code>&lt;html&gt;~&lt;/html&gt;</code></td><td>웹 문서의 시작과 끝</td></tr>
+      <tr><td><code>&lt;head&gt;~&lt;/head&gt;</code></td><td>문서 해석에 필요한 정보. <code>&lt;meta&gt;</code>(문자 세트 등), <code>&lt;title&gt;</code>(제목 표시줄)</td></tr>
+      <tr><td><code>&lt;body&gt;~&lt;/body&gt;</code></td><td>실제 브라우저 화면에 나타날 내용</td></tr>
+    </table>
+    <table>
+      <tr><th>본문 태그</th><th>설명</th></tr>
+      <tr><td><code>&lt;h1&gt;~&lt;h6&gt;</code></td><td>제목(Headline). 1이 가장 크고 6이 가장 작음</td></tr>
+      <tr><td><code>&lt;p&gt;</code></td><td>단락(paragraph). 앞뒤 줄바꿈이 있는 텍스트 덩어리</td></tr>
+      <tr><td><code>&lt;img&gt;</code></td><td><code>&lt;img src="경로" alt="설명" width="너비"&gt;</code> — 이미지 삽입</td></tr>
+      <tr><td><code>&lt;a&gt;</code></td><td><code>&lt;a href="주소"&gt;텍스트&lt;/a&gt;</code> — 클릭 시 다른 페이지로 이동</td></tr>
+      <tr><td><code>&lt;ul&gt; / &lt;li&gt;</code></td><td>목록(ul)과 목록 안의 항목(li)</td></tr>
+    </table>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 CSS란?</span>
+    <p>HTML이 텍스트·이미지·표로 <b>뼈대</b>를 만든다면, <b class="hl">CSS(Cascading Style Sheets)</b>는 색상·크기·위치·배치 같은 <b>디자인 요소</b>를 담당합니다.</p>
+    <p>스타일은 <b>태그 { 속성: 값; }</b> 형식으로, 세미콜론(<code>;</code>)으로 구분해 중괄호 <code>{ }</code> 안에 나열합니다.</p>
+<pre><code><span class="fn">p</span> {
+    color: blue;      <span class="cm">/* 속성: 값; */</span>
+    font-size: <span class="nu">20</span>px;
+}</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 선택자(Selector)</span>
+    <p>스타일을 적용할 대상을 <b>선택자</b>라고 합니다. 태그 하나가 될 수도 있고, id·class로 지정할 수도 있습니다.</p>
+    <table>
+      <tr><th>선택자</th><th>표기</th><th>쓰임</th></tr>
+      <tr><td>태그 선택자</td><td><code>p { }</code></td><td>해당 태그를 쓴 모든 요소에 적용</td></tr>
+      <tr><td>id 선택자</td><td><code>#이름 { }</code></td><td>문서에서 <b>한 번만</b> 쓰는 요소에 지정</td></tr>
+      <tr><td>class 선택자</td><td><code>.이름 { }</code></td><td>문서에서 <b>여러 번 반복</b>할 스타일에 지정</td></tr>
+    </table>
+    <p>아래 예제는 같은 <code>&lt;p&gt;</code>라도 class에 따라 다른 스타일이 적용되는 모습입니다.</p>
+<pre><code><span class="cm">&lt;!DOCTYPE html&gt;</span>
+&lt;<span class="kw">html</span> lang=<span class="st">"ko"</span>&gt;
+&lt;<span class="kw">head</span>&gt;
+    &lt;<span class="kw">meta</span> charset=<span class="st">"UTF-8"</span>&gt;
+    &lt;<span class="kw">title</span>&gt;제품 목록&lt;/<span class="kw">title</span>&gt;
+    &lt;<span class="kw">style</span>&gt;
+        h1 { color: blue; }
+        p  { font-size: <span class="nu">18</span>px; }
+        .p1 { color: red; }
+        .p2 { font-family: <span class="st">"궁서"</span>; }
+        .p3 { font-weight: bold; }
+    &lt;/<span class="kw">style</span>&gt;
+&lt;/<span class="kw">head</span>&gt;
+&lt;<span class="kw">body</span>&gt;
+    &lt;<span class="kw">h1</span>&gt;마늘&lt;/<span class="kw">h1</span>&gt;
+    &lt;<span class="kw">h2</span>&gt;마늘의 효능&lt;/<span class="kw">h2</span>&gt;
+    &lt;<span class="kw">p</span> class=<span class="st">"p1"</span>&gt;마늘은 면역력 강화에 도움을 줍니다.&lt;/<span class="kw">p</span>&gt;
+    &lt;<span class="kw">p</span> class=<span class="st">"p2"</span>&gt;마늘은 심혈관 건강에 좋습니다.&lt;/<span class="kw">p</span>&gt;
+    &lt;<span class="kw">p</span> class=<span class="st">"p3"</span>&gt;마늘은 항산화 작용을 합니다.&lt;/<span class="kw">p</span>&gt;
+&lt;/<span class="kw">body</span>&gt;
+&lt;/<span class="kw">html</span>&gt;</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 id와 class 차이</h4>
+      <div class="prompt"><code>CSS에서 id 선택자(#)와 class 선택자(.)의 차이를 초보자용으로 예제와 함께 설명해 줘. 언제 무엇을 쓰는 게 좋은지도 알려 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 3-1. 나만의 소개 페이지</h4>
+      <div class="req"><code>&lt;h1&gt;</code>으로 이름을, <code>&lt;ul&gt;&lt;li&gt;</code>로 취미 3가지를 넣고, CSS로 <code>h1</code>은 파란색, 취미 목록은 글자 크기 <code>18px</code>로 꾸며 보세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="cm">&lt;!DOCTYPE html&gt;</span>
+&lt;<span class="kw">html</span> lang=<span class="st">"ko"</span>&gt;
+&lt;<span class="kw">head</span>&gt;
+    &lt;<span class="kw">meta</span> charset=<span class="st">"UTF-8"</span>&gt;
+    &lt;<span class="kw">style</span>&gt;
+        h1 { color: blue; }
+        li { font-size: <span class="nu">18</span>px; }
+    &lt;/<span class="kw">style</span>&gt;
+&lt;/<span class="kw">head</span>&gt;
+&lt;<span class="kw">body</span>&gt;
+    &lt;<span class="kw">h1</span>&gt;홍길동&lt;/<span class="kw">h1</span>&gt;
+    &lt;<span class="kw">ul</span>&gt;
+        &lt;<span class="kw">li</span>&gt;등산&lt;/<span class="kw">li</span>&gt;
+        &lt;<span class="kw">li</span>&gt;독서&lt;/<span class="kw">li</span>&gt;
+        &lt;<span class="kw">li</span>&gt;코딩&lt;/<span class="kw">li</span>&gt;
+    &lt;/<span class="kw">ul</span>&gt;
+&lt;/<span class="kw">body</span>&gt;
+&lt;/<span class="kw">html</span>&gt;</code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 4 ============ -->
+<section class="module" id="m4">
+  <div class="mod-head"><div class="mod-num">4</div><h2>Flask 사진 서버 만들기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li><code>render_template()</code>로 <b>HTML 파일을 화면에 띄울</b> 수 있다.</li>
+        <li><code>static/photos</code> 폴더의 이미지를 <code>os.listdir()</code>로 읽어 목록으로 넘길 수 있다.</li>
+        <li>템플릿 문법 <code>{{ }}</code>·<code>{% %}</code>로 <b>파이썬 값을 HTML에 반복 출력</b>할 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 프로젝트 폴더 구조</span>
+    <p>사진 서버는 아래처럼 파일을 배치합니다.</p>
+<pre><code>사진서버/
+├── <span class="kw">static/</span>
+│   ├── photos/
+│   │   ├── photo1.jpg
+│   │   ├── photo2.jpg
+│   │   ├── photo3.jpg
+│   │   └── photo4.jpg
+│   └── main_pic.jpg
+├── <span class="kw">templates/</span>
+│   ├── gallery.html
+│   └── index.html
+└── app.py</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — app.py</span>
+    <p><code>render_template()</code>은 <code>templates</code> 폴더의 HTML을 찾아 보여줍니다. <code>photos=photos</code>로 <b>파이썬 리스트를 HTML로 전달</b>합니다.</p>
+<pre><code><span class="kw">from</span> flask <span class="kw">import</span> Flask, render_template
+<span class="kw">import</span> os
+
+app = <span class="fn">Flask</span>(__name__)
+
+<span class="fn">@app.route</span>(<span class="st">"/"</span>)
+<span class="kw">def</span> <span class="fn">home</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"index.html"</span>)
+
+<span class="fn">@app.route</span>(<span class="st">"/gallery"</span>)
+<span class="kw">def</span> <span class="fn">gallery</span>():
+    photos = os.<span class="fn">listdir</span>(<span class="st">"static/photos"</span>)   <span class="cm"># 폴더 안 파일 이름 목록</span>
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="st">"gallery.html"</span>, photos=photos)
+
+<span class="kw">if</span> __name__ == <span class="st">"__main__"</span>:
+    app.<span class="fn">run</span>(debug=<span class="kw">True</span>)</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — index.html (대표 사진 1장)</span>
+    <p><code>{{ url_for('static', filename='...') }}</code>는 <b>static 폴더 안 파일 경로를 안전하게 만들어</b> 줍니다.</p>
+<pre><code><span class="cm">&lt;!DOCTYPE html&gt;</span>
+&lt;<span class="kw">html</span> lang=<span class="st">"ko"</span>&gt;
+&lt;<span class="kw">head</span>&gt;
+    &lt;<span class="kw">meta</span> charset=<span class="st">"UTF-8"</span>&gt;
+    &lt;<span class="kw">title</span>&gt;사진 보기&lt;/<span class="kw">title</span>&gt;
+&lt;/<span class="kw">head</span>&gt;
+&lt;<span class="kw">body</span>&gt;
+    &lt;<span class="kw">h1</span>&gt;어느 봄날 카페에서...&lt;/<span class="kw">h1</span>&gt;
+    &lt;<span class="kw">img</span> src=<span class="st">"{{ url_for('static', filename='main_pic.jpg') }}"</span> width=<span class="st">"500"</span>&gt;
+&lt;/<span class="kw">body</span>&gt;
+&lt;/<span class="kw">html</span>&gt;</code></pre>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — gallery.html (여러 장 반복 출력)</span>
+    <p>템플릿 언어의 <b>제어문 <code>{% %}</code></b>와 <b>출력문 <code>{{ }}</code></b>로 리스트를 반복해 이미지를 여러 개 출력합니다.</p>
+<pre><code><span class="cm">&lt;!DOCTYPE html&gt;</span>
+&lt;<span class="kw">html</span> lang=<span class="st">"ko"</span>&gt;
+&lt;<span class="kw">head</span>&gt;
+    &lt;<span class="kw">meta</span> charset=<span class="st">"UTF-8"</span>&gt;
+    &lt;<span class="kw">title</span>&gt;사진 갤러리&lt;/<span class="kw">title</span>&gt;
+    <span class="cm">&lt;!-- CSS 스타일 추가 --&gt;</span>
+    &lt;<span class="kw">style</span>&gt;
+        h1 { color: blue; }
+        img { width: <span class="nu">200</span>px; margin: <span class="nu">10</span>px; }
+    &lt;/<span class="kw">style</span>&gt;
+&lt;/<span class="kw">head</span>&gt;
+&lt;<span class="kw">body</span>&gt;
+    &lt;<span class="kw">h1</span>&gt;사진 갤러리&lt;/<span class="kw">h1</span>&gt;
+    <span class="cm">{# 파이썬 템플릿 언어 - 제어문 {% %}, 출력문 {{ }} #}</span>
+    {% <span class="kw">for</span> photo <span class="kw">in</span> photos %}
+        &lt;<span class="kw">img</span> src=<span class="st">"{{ url_for('static', filename='photos/' + photo) }}"</span>&gt;
+    {% <span class="kw">endfor</span> %}
+&lt;/<span class="kw">body</span>&gt;
+&lt;/<span class="kw">html</span>&gt;</code></pre>
+    <div class="result"><b>실행 결과 — http://127.0.0.1:5000/gallery</b>
+"사진 갤러리" 제목 아래에 photos 폴더의 사진 4장이 나란히 표시됨</div>
+    <div class="note"><b>{{ }} vs {% %}</b> <code>{{ 값 }}</code>은 <b>값을 화면에 출력</b>할 때, <code>{% 문법 %}</code>은 <b>for·if 같은 제어문</b>을 쓸 때 사용합니다. <code>{# #}</code>은 템플릿 주석입니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 템플릿 반복이 어려울 때</h4>
+      <div class="prompt"><code>Flask 템플릿에서 {% for %}로 리스트의 이미지를 반복 출력하는 코드를 초보자용으로 설명해 줘. url_for('static', ...)가 왜 필요한지도 알려 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 4-1. 사진마다 이름 붙이기</h4>
+      <div class="req">gallery.html에서 사진 아래에 <b>파일 이름</b>도 함께 보여주도록 바꾸고 싶다. ChatGPT에게 물어 <code>{% for %}</code> 안을 수정해 보세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>Flask 템플릿 gallery.html에서 {% for photo in photos %} 반복문 안에서 이미지 아래에 그 파일 이름(photo)을 &lt;p&gt; 태그로 함께 출력하고 싶어. 코드를 고쳐 주고 설명해 줘.</code></div>
+<pre><code>{% <span class="kw">for</span> photo <span class="kw">in</span> photos %}
+    &lt;<span class="kw">div</span>&gt;
+        &lt;<span class="kw">img</span> src=<span class="st">"{{ url_for('static', filename='photos/' + photo) }}"</span>&gt;
+        &lt;<span class="kw">p</span>&gt;{{ photo }}&lt;/<span class="kw">p</span>&gt;
+    &lt;/<span class="kw">div</span>&gt;
+{% <span class="kw">endfor</span> %}</code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 5 ============ -->
+<section class="module" id="m5">
+  <div class="mod-head"><div class="mod-num">5</div><h2>웹 크롤링과 requests</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>웹 크롤링(스크래핑)의 <b>기본 흐름</b>을 이해한다.</li>
+        <li><code>requests.get()</code>으로 웹 페이지의 HTML을 가져오고 <b>상태 코드</b>를 확인할 수 있다.</li>
+        <li><b>robots.txt</b>와 저작권 등 크롤링 시 지켜야 할 규칙을 안다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 웹 크롤링이란?</span>
+    <p><b class="hl">웹 크롤링</b>은 웹 페이지에서 자동으로 데이터를 수집하는 기술입니다. 업무 자동화나 데이터 분석에 아주 많이 쓰입니다. (예: 뉴스 제목 수집, 쇼핑몰 가격 모니터링, 공지사항 자동 수집, 환율·날씨 데이터 수집)</p>
+    <div class="flowline">
+      <span class="step">요청(Request)</span><span class="ar">→</span>
+      <span class="step">웹 서버</span><span class="ar">→</span>
+      <span class="step">응답(Response, HTML)</span><span class="ar">→</span>
+      <span class="step">파싱(분석)</span><span class="ar">→</span>
+      <span class="step">데이터 추출</span>
+    </div>
+    <p>주로 사용하는 라이브러리는 <b>requests</b>(요청)와 <b>BeautifulSoup(bs4)</b>(파싱)입니다.</p>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 requests 모듈</span>
+    <p><b class="hl">requests</b>는 파이썬용 HTTP 라이브러리로, HTTP 프로토콜을 이용해 웹 사이트로부터 데이터를 주고받습니다. URL 요청은 <code>requests.get(url)</code>로 합니다.</p>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 페이지 가져오기와 상태 코드</span>
+    <p><code>status_code</code>가 <b>200이면 정상</b>, 404면 페이지 없음을 뜻합니다.</p>
+<pre><code><span class="kw">import</span> requests
+
+url = <span class="st">"https://www.python.org"</span>
+response = requests.<span class="fn">get</span>(url)
+
+<span class="fn">print</span>(response)              <span class="cm"># &lt;Response [200]&gt;</span>
+<span class="fn">print</span>(response.status_code)  <span class="cm"># 200</span>
+
+html = response.text          <span class="cm"># 응답받은 HTML 원문</span>
+<span class="fn">print</span>(html)</code></pre>
+    <div class="result"><b>실행 결과</b>
+&lt;Response [200]&gt;
+200
+&lt;!doctype html&gt; ... (페이지 HTML 전체) ...</div>
+    <div class="note"><b>상태 코드</b> <code>200</code> 성공 · <code>404</code> 없음 · <code>403</code> 접근 금지 · <code>500</code> 서버 오류. 없는 주소(예: <code>python.org/3</code>)를 요청하면 <code>&lt;Response [404]&gt;</code>가 나옵니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 로봇 배제 표준 (robots.txt)</span>
+    <p><b class="hl">로봇 배제 표준</b>은 웹사이트에 로봇(크롤러)이 접근하는 것을 조절하기 위한 규약으로, <code>robots.txt</code> 파일에 규칙을 적습니다.</p>
+    <table>
+      <tr><th>규칙</th><th>의미</th></tr>
+      <tr><td><code>User-agent: *</code><br><code>Disallow: /</code></td><td>모든 로봇에게 루트(/) 이하 <b>모든 문서 접근을 차단</b></td></tr>
+      <tr><td><code>User-agent: *</code><br><code>Allow: /</code></td><td>모든 로봇에게 <b>모든 문서 접근을 허용</b></td></tr>
+      <tr><td><code>User-agent: *</code><br><code>Disallow: /temp/</code></td><td>특정 디렉터리(<code>/temp/</code>)만 접근 차단</td></tr>
+    </table>
+    <div class="warn"><b>⚠️ 지켜야 할 것</b>
+      접근이 허용되더라도 <b>서버에 무리가 갈 만큼 반복 요청</b>하지 않아야 하며, 수집한 자료를 임의로 배포·변경하면 <b>저작권 침해</b>가 될 수 있습니다. 사이트의 <code>주소/robots.txt</code>로 규칙을 먼저 확인하세요.
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — 여러 사이트의 robots.txt 확인</span>
+<pre><code><span class="kw">import</span> requests
+
+urls = [<span class="st">"https://www.naver.com/"</span>, <span class="st">"https://www.python.org/"</span>]
+filename = <span class="st">"robots.txt"</span>
+
+<span class="kw">for</span> url <span class="kw">in</span> urls:
+    url_path = url + filename
+    <span class="fn">print</span>(url_path)
+    response = requests.<span class="fn">get</span>(url_path)
+    <span class="fn">print</span>(response)</code></pre>
+    <div class="result"><b>실행 결과</b>
+https://www.naver.com/robots.txt
+&lt;Response [200]&gt;
+https://www.python.org/robots.txt
+&lt;Response [200]&gt;</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 이 사이트, 크롤링해도 될까?</h4>
+      <div class="prompt"><code>웹 크롤링을 할 때 robots.txt는 무엇이고 어떻게 확인하는지, 그리고 크롤링 시 법적·윤리적으로 주의할 점을 초보자용으로 정리해 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 5-1. 상태 코드 확인기</h4>
+      <div class="req">주소를 하나 정해 <code>requests.get()</code>으로 가져오고, "정상(200)"인지 아닌지 <code>if</code>문으로 출력해 보세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">import</span> requests
+
+url = <span class="st">"https://www.python.org"</span>
+res = requests.<span class="fn">get</span>(url)
+
+<span class="kw">if</span> res.status_code == <span class="nu">200</span>:
+    <span class="fn">print</span>(<span class="st">"정상적으로 가져왔습니다!"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"오류 코드:"</span>, res.status_code)</code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 6 ============ -->
+<section class="module" id="m6">
+  <div class="mod-head"><div class="mod-num">6</div><h2>BeautifulSoup으로 파싱하기</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>BeautifulSoup으로 HTML을 <b>파싱(구조 분석)</b>할 수 있다.</li>
+        <li><code>find()</code>·<code>find_all()</code>로 태그와 class를 기준으로 요소를 찾을 수 있다.</li>
+        <li><code>select_one()</code>·<code>select()</code>로 <b>CSS 선택자</b>를 이용해 요소를 찾을 수 있다.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 BeautifulSoup이란?</span>
+    <p>웹 서버로부터 받아온 HTML 소스코드는 그냥 긴 문자열입니다. 이 <b>태그 구조를 해석하는 과정</b>을 <b class="hl">파싱(parsing)</b>이라 하고, 이때 쓰는 라이브러리가 <b>BeautifulSoup</b>입니다.</p>
+    <div class="note"><b>설치와 사용</b>
+<pre><code>pip install BeautifulSoup4</code></pre>
+<pre><code><span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup</code></pre>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag concept">📖 주요 검색 함수</span>
+    <table>
+      <tr><th>함수</th><th>설명</th></tr>
+      <tr><td><code>soup.find(태그)</code></td><td>처음 나오는 태그 <b>하나</b> 찾기</td></tr>
+      <tr><td><code>soup.find_all(태그)</code></td><td>해당 태그의 <b>모든 요소</b>를 리스트로 반환</td></tr>
+      <tr><td><code>soup.find(태그, attrs={'class':'값'})</code></td><td>태그 + class 선택자로 찾기</td></tr>
+      <tr><td><code>soup.select_one("선택자")</code></td><td>CSS 선택자로 <b>첫 번째</b> 요소 찾기</td></tr>
+      <tr><td><code>soup.select("선택자")</code></td><td>CSS 선택자로 <b>모든</b> 요소 찾기(리스트)</td></tr>
+    </table>
+    <div class="note"><b>선택자 표기</b> <code>태그</code>는 그대로, <code>class</code>는 <code>.이름</code>, <code>id</code>는 <code>#이름</code>, 자식 관계는 <code>&gt;</code>로 씁니다. 예: <code>div.m_service &gt; ul &gt; li.public</code></div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — find() / find_all()</span>
+    <p><code>attrs={'class': ...}</code>로 특정 class를 가진 요소만 골라냅니다.</p>
+<pre><code><span class="cm"># find() : 조건에 맞는 첫 번째 요소 반환</span>
+first_li = soup.<span class="fn">find</span>(<span class="st">'li'</span>, attrs={<span class="st">'class'</span>: <span class="st">'public'</span>})
+<span class="fn">print</span>(first_li)
+<span class="fn">print</span>(first_li.text)   <span class="cm"># 태그를 뺀 글자만</span>
+
+<span class="cm"># find_all() : 조건에 맞는 모든 요소 반환</span>
+div = soup.<span class="fn">find</span>(<span class="st">'div'</span>, attrs={<span class="st">'class'</span>: <span class="st">'m_service'</span>})
+all_li = div.<span class="fn">find_all</span>(<span class="st">'li'</span>)
+
+<span class="kw">for</span> li <span class="kw">in</span> all_li:
+    <span class="fn">print</span>(li.text)
+
+<span class="fn">print</span>(all_li[<span class="nu">1</span>].text)   <span class="cm"># 두 번째 항목만</span></code></pre>
+    <div class="result"><b>실행 결과</b>
+공공서비스예약
+응답소(민원신고)
+서울일자리
+... (이하 생략) ...</div>
+    <div class="note"><b>.text</b> 요소에서 <b>태그를 뺀 순수한 글자</b>만 얻고 싶을 때 <code>.text</code> 또는 <code>.get_text()</code>를 씁니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 — select_one() / select()</span>
+    <p>CSS 선택자를 그대로 쓸 수 있어 <b>find보다 간결</b>합니다.</p>
+<pre><code><span class="cm"># select_one() : CSS 선택자로 첫 번째 요소 반환</span>
+first_li = soup.<span class="fn">select_one</span>(<span class="st">'div.m_service &gt; ul &gt; li.public'</span>)
+<span class="fn">print</span>(first_li.text)
+
+<span class="cm"># select() : CSS 선택자로 모든 요소 반환</span>
+li = soup.<span class="fn">select</span>(<span class="st">'div.m_service &gt; ul &gt; li'</span>)
+<span class="kw">for</span> item <span class="kw">in</span> li:
+    <span class="fn">print</span>(item.text)</code></pre>
+    <div class="result"><b>실행 결과</b>
+공공서비스예약
+응답소(민원신고)
+서울일자리
+... (이하 생략) ...</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 선택자를 대신 만들어 달라고 하기</h4>
+      <p>원하는 부분의 HTML 조각을 붙여넣고 선택자를 요청하면 정확한 코드를 얻을 수 있습니다.</p>
+      <div class="prompt"><code>다음 HTML에서 "공공서비스예약" 같은 메뉴 글자만 전부 뽑고 싶어. BeautifulSoup의 select()에 넣을 CSS 선택자를 알려 줘.
+&lt;div class="m_service"&gt;&lt;ul&gt;&lt;li class="public"&gt;&lt;a&gt;공공서비스예약&lt;/a&gt;&lt;/li&gt;...&lt;/ul&gt;&lt;/div&gt;</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 6-1. find와 select 비교</h4>
+      <div class="req">같은 요소를 <code>find(태그, attrs=...)</code>와 <code>select_one(선택자)</code> 두 가지 방법으로 각각 찾아 <code>.text</code>를 출력하고, 결과가 같은지 확인해 보세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="cm"># 방법 1 — find</span>
+a = soup.<span class="fn">find</span>(<span class="st">'li'</span>, attrs={<span class="st">'class'</span>: <span class="st">'public'</span>})
+<span class="fn">print</span>(a.text)
+
+<span class="cm"># 방법 2 — select_one</span>
+b = soup.<span class="fn">select_one</span>(<span class="st">'li.public'</span>)
+<span class="fn">print</span>(b.text)
+
+<span class="fn">print</span>(a.text == b.text)   <span class="cm"># True 이면 같은 결과</span></code></pre>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODULE 7 ============ -->
+<section class="module" id="m7">
+  <div class="mod-head"><div class="mod-num">7</div><h2>실전 웹 크롤링</h2></div>
+
+  <div class="block">
+    <span class="tag goal">🎯 학습목표</span>
+    <div class="goal-box">
+      <ul>
+        <li>실제 사이트에서 <b>F12(검사)로 태그·class를 확인</b>하고 원하는 데이터를 뽑을 수 있다.</li>
+        <li>서울시청·박물관·뉴스·환율 등 <b>다양한 형태의 데이터를 수집</b>해 본다.</li>
+      </ul>
+    </div>
+    <div class="note"><b>개발자 도구</b> 웹 브라우저에서 <b>우클릭 → 검사</b>(단축키 <code>F12</code>)를 누르면 그 부분의 HTML 태그와 class를 볼 수 있습니다. 여기서 확인한 선택자를 코드에 그대로 씁니다.</div>
+    <div class="warn"><b>⚠️ 주의</b> 실제 사이트는 <b>구조가 자주 바뀝니다.</b> 아래 선택자(class 이름 등)는 교안 작성 시점 기준이며, 실행 시 결과가 안 나오면 F12로 현재 구조를 다시 확인하거나 ChatGPT에 HTML을 붙여넣어 선택자를 새로 받으세요.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 1 — 서울시청 메뉴 글자 수집</span>
+    <p>먼저 페이지를 가져와 파싱하고, <code>title</code>부터 확인합니다.</p>
+<pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+url = <span class="st">"https://www.seoul.go.kr/main/index.jsp"</span>
+response = requests.<span class="fn">get</span>(url)
+
+soup = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">'html.parser'</span>)
+<span class="fn">print</span>(soup.title)</code></pre>
+    <div class="result"><b>실행 결과</b>
+&lt;title&gt;동행·매력 특별시 서울 | 서울특별시&lt;/title&gt;</div>
+    <p>그 다음 “주요 서비스” 메뉴 글자를 <code>select()</code>로 한꺼번에 뽑습니다.</p>
+<pre><code><span class="cm"># 메뉴 글자 수집 — 여러 요소를 리스트로</span>
+li = soup.<span class="fn">select</span>(<span class="st">'div.m_service &gt; ul &gt; li'</span>)
+<span class="kw">for</span> item <span class="kw">in</span> li:
+    <span class="fn">print</span>(item.text.<span class="fn">strip</span>())</code></pre>
+    <div class="result"><b>실행 결과</b>
+공공서비스예약
+응답소(민원신고)
+서울일자리
+부동산정보
+서울런
+서울복지포털
+서울주거포털</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 2 — 국립중앙박물관 관람 정보</span>
+    <p>홈페이지: <a href="https://www.museum.go.kr/">museum.go.kr</a> → 관람정보 → 관람안내에서 F12로 <code>ul.display-content</code>를 확인했습니다.</p>
+<pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+<span class="cm"># 국립중앙박물관 관람 안내 페이지</span>
+url = <span class="st">"https://www.museum.go.kr/MUSEUM/contents/M0101000000.do?menuId=tour-guidance"</span>
+response = requests.<span class="fn">get</span>(url)
+html = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">'html.parser'</span>)
+
+<span class="cm"># 관람 안내 — 첫 번째 목록 전체 글자</span>
+first_ul = html.<span class="fn">select_one</span>(<span class="st">'ul.display-content'</span>)
+<span class="fn">print</span>(first_ul.<span class="fn">get_text</span>())
+
+<span class="cm"># 세부 목록 여러 개 중 원하는 항목만</span>
+contents = html.<span class="fn">select</span>(<span class="st">'ul.display-content-area &gt; li &gt; ul'</span>)
+<span class="fn">print</span>(contents[<span class="nu">2</span>].<span class="fn">get_text</span>())   <span class="cm"># 세 번째 블록(예: 관람료)</span></code></pre>
+    <div class="result"><b>실행 결과(예시)</b>
+관람시간
+월, 화, 목, 금, 일요일: 9:30 – 17:30 (입장 마감 17:00)
+수, 토요일: 9:30 – 21:00 (입장 마감 20:30)
+...
+관람료 — 무료: 상설전시관, 어린이박물관, 무료 특별전시 / 유료: 유료 특별전시</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 3 — KBS 뉴스 기사 제목</span>
+    <p>기사 상세 페이지에서 제목은 보통 하나(<code>select_one</code>)이므로 <code>.text.strip()</code>으로 깔끔하게 가져옵니다.</p>
+<pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+url = <span class="st">"https://news.kbs.co.kr/news/pc/view/view.do?ncd=8539528"</span>
+response = requests.<span class="fn">get</span>(url)
+html = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">"html.parser"</span>)
+
+<span class="cm"># 기사 제목 추출</span>
+title = html.<span class="fn">select_one</span>(<span class="st">"h4.headline-title"</span>).text.<span class="fn">strip</span>()
+<span class="fn">print</span>(<span class="st">"기사 제목:"</span>, title)</code></pre>
+    <div class="result"><b>실행 결과(예시)</b>
+기사 제목: (해당 기사 페이지의 제목이 출력됩니다)</div>
+    <div class="note"><b>news 주소의 ncd</b> URL 끝의 <code>ncd=번호</code>가 기사 고유 번호입니다. 다른 기사를 크롤링하려면 이 번호만 바꾸면 됩니다.</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ex">💡 예제 4 — 네이버 금융 환율 정보</span>
+    <p>홈페이지: 네이버 → 증권 → 시장지표 → 환전 고시 환율. F12로 <code>div.market1</code> 아래 <code>span.blind</code>(이름), <code>span.value</code>(가격)를 확인했습니다.</p>
+<pre><code><span class="cm"># 네이버 환율 정보</span>
+<span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+url = <span class="st">"https://finance.naver.com/marketindex/"</span>
+response = requests.<span class="fn">get</span>(url)
+html = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">"html.parser"</span>)
+
+<span class="cm"># 환율 정보 리스트 전체</span>
+all_li = html.<span class="fn">select</span>(<span class="st">"div.market1 ul li"</span>)
+
+<span class="cm"># 환율 종류 및 가격 출력</span>
+<span class="kw">for</span> li <span class="kw">in</span> all_li:
+    exchange_name = li.<span class="fn">select_one</span>(<span class="st">"span.blind"</span>).text.<span class="fn">strip</span>()
+    exchange_price = li.<span class="fn">select_one</span>(<span class="st">"span.value"</span>).text.<span class="fn">strip</span>()
+    <span class="fn">print</span>(f<span class="st">"{exchange_name.split()[0]}: {exchange_price}"</span>)</code></pre>
+    <div class="result"><b>실행 결과(예시)</b>
+미국: 1,467.80
+일본: 925.44
+유럽연합: 1,726.72
+중국: 215.30</div>
+    <div class="note"><b>문자열 다듬기</b> <code>.strip()</code>은 앞뒤 공백 제거, <code>.split()[0]</code>은 공백으로 나눈 첫 단어만 사용합니다. (예: “미국 USD” → “미국”)</div>
+  </div>
+
+  <div class="block">
+    <span class="tag ai">🤖 ChatGPT 활용</span>
+    <div class="ai-box">
+      <h4>🤖 결과가 비어 있을 때(None 오류)</h4>
+      <div class="prompt"><code>BeautifulSoup에서 select_one으로 요소를 찾았는데 None이 나오고 .text에서 AttributeError가 나. 원인이 뭔지, 선택자가 맞는지 어떻게 확인하는지 초보자용으로 알려 줘.</code></div>
+    </div>
+  </div>
+
+  <div class="block">
+    <span class="tag lab">✏️ 실습문제</span>
+    <div class="lab-box">
+      <h4>실습 7-1. 환율을 표로 정리</h4>
+      <div class="req">네이버 환율 예제를 응용해, 수집한 환율을 <code>{'미국': '1,467.80', ...}</code> 형태의 <b>딕셔너리</b>로 저장하고 출력해 보세요.</div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+url = <span class="st">"https://finance.naver.com/marketindex/"</span>
+html = <span class="fn">BeautifulSoup</span>(requests.<span class="fn">get</span>(url).text, <span class="st">"html.parser"</span>)
+all_li = html.<span class="fn">select</span>(<span class="st">"div.market1 ul li"</span>)
+
+rates = {}
+<span class="kw">for</span> li <span class="kw">in</span> all_li:
+    name = li.<span class="fn">select_one</span>(<span class="st">"span.blind"</span>).text.<span class="fn">split</span>()[<span class="nu">0</span>]
+    price = li.<span class="fn">select_one</span>(<span class="st">"span.value"</span>).text.<span class="fn">strip</span>()
+    rates[name] = price
+
+<span class="fn">print</span>(rates)</code></pre>
+      </div></details>
+    </div>
+
+    <div class="lab-box ai-lab">
+      <h4>🤖 AI 실습 7-2. 나만의 크롤러 만들기</h4>
+      <div class="req">평소 자주 보는 사이트(날씨, 공지사항 등) 하나를 골라 F12로 원하는 부분의 HTML을 찾고, ChatGPT의 도움을 받아 그 내용을 뽑는 코드를 완성해 보세요.</div>
+      <details class="answer"><summary>예시 프롬프트 보기</summary><div class="body">
+        <div class="prompt"><code>나는 파이썬 초보야. 아래 HTML에서 오늘 날씨 요약 문장만 뽑고 싶어. requests와 BeautifulSoup을 쓰고, select 또는 find 중 뭐가 좋은지와 CSS 선택자를 알려 주고, 전체 코드를 한 줄씩 설명해 줘.
+(여기에 F12로 복사한 HTML 조각을 붙여넣기)</code></div>
+        <p style="margin:8px 0 0">AI가 준 선택자를 <b>직접 실행해 결과가 맞는지 반드시 확인</b>하고, 안 나오면 HTML을 다시 붙여넣어 되물으세요.</p>
+      </div></details>
+    </div>
+  </div>
+</section>
+
+<footer>
+  ChatGPT &amp; 파이썬 기초 프로그래밍 · 7장 서버와 웹 크롤링 (AI 활용판)<br>
+  requests / BeautifulSoup는 robots.txt와 저작권을 지켜 사용하세요.
+</footer>
+
+</div>
+</body>
+</html>
