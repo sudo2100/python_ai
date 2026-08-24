@@ -1139,15 +1139,34 @@ for x in range(1, 11):
 <span class="fn">print</span>(s[<span class="nu">0</span>])       <span class="cm"># P</span>
 <span class="fn">print</span>(s[<span class="nu">0</span>:<span class="nu">3</span>])     <span class="cm"># Pyt</span>
 <span class="fn">print</span>(s[-<span class="nu">1</span>])      <span class="cm"># n</span>
+<span class="fn">print</span>(s[::<span class="nu">2</span>])     <span class="cm"># Pto</span>
 
+<span class="cm"># split(구분기호) - 문자열을 리스트로 변환</span>
 fruit = <span class="st">"banana,grape,kiwi"</span>
 fruit_list = fruit.<span class="fn">split</span>(<span class="st">","</span>) <span class="cm"># 리스트로 분리</span>
-<span class="fn">print</span>(fruit_list)
+<span class="fn">print</span>(fruit_list)     
 <span class="fn">print</span>(fruit_list[<span class="nu">0</span>])
 <span class="fn">print</span>(fruit_list[<span class="nu">1</span>])
 
-<span class="fn">print</span>(<span class="st">"Hello"</span>.<span class="fn">replace</span>(<span class="st">"l"</span>, <span class="st">"L"</span>)) <span class="cm"># 문자 수정</span>
-<span class="fn">print</span>(<span class="st">"  hi  "</span>.<span class="fn">strip</span>()) <span class="cm"># 공백 제거</span></code></pre>
+<span class="cm"># replace() - 문자 수정(대체)</span>
+msg = <span class="st">"hello, world"</span>
+<span class="fn">print</span>(msg) <span class="cm"># hello, world</span>
+msg = msg.<span class="fn">replace</span>(<span class="st">"world"</span>, <span class="st">"korea"</span>)
+<span class="fn">print</span>(msg) <span class="cm"># hello, korea</span>
+
+<span class="cm">#공백제거 strip()</span>
+greeting = <span class="st">" hi, jun "</span>
+greeting = greeting.<span class="fn">strip</span>()
+<span class="fn">print</span>(greeting) <span class="cm">#'hi, jun'</span>
+
+<span class="cm"># find() - 특정 문자의 시작 위치(인덱스) 찾기</span>
+book = <span class="st">"AI python programming"</span>
+<span class="fn">print</span>(book.<span class="fn">find</span>(<span class="st">"python"</span>)) <span class="cm"># 3</span>
+<span class="fn">print</span>(book.<span class="fn">find</span>(<span class="st">"java"</span>)) <span class="cm"># -1</span>
+<span class="kw">if</span> book.<span class="fn">find</span>(<span class="st">"python"</span>) != -<span class="nu">1</span>:
+    <span class="fn">print</span>(<span class="st">"python에 관련된 책이군요!"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"python에 관련된 책이 아니군요!"</span>)</code></pre>
   </div>
 
   <div class="block">
@@ -1173,6 +1192,30 @@ parts = email.<span class="fn">split</span>(<span class="st">"@"</span>)
 <span class="fn">print</span>(<span class="st">f"도메인: {parts[1]}"</span>)</code></pre>
         <div class="result">아이디: user
 도메인: naver.com</div>
+      </div></details>
+
+      <h4>실습 9-2. 출생연도로 지원금 신청일 안내</h4>
+      <div class="req"><b>출생연도 4자리</b>를 입력받아, 끝자리 숫자에 따라 민생회복 지원금 <b>신청 요일</b>을 안내하세요. 끝자리가 <code>1·6</code>→월, <code>2·7</code>→화, <code>3·8</code>→수, <code>4·9</code>→목, <code>5·0</code>→금요일입니다. 단, 출생연도가 <b>1900~2006</b> 범위를 벗어나면 안내 메시지를 출력하세요. <span style="color:var(--sub)">(힌트: 끝자리는 <code>birth_year[-1]</code>, 범위 검사는 <code>int()</code>로 변환 후 비교)</span></div>
+      <details class="answer"><summary>정답 보기</summary><div class="body">
+<pre><code>birth_year = <span class="fn">input</span>(<span class="st">"출생연도 4자리를 입력하세요: "</span>)
+last_digit = birth_year[-<span class="nu">1</span>]   <span class="cm"># 출생연도 끝자리 숫자</span>
+year = <span class="fn">int</span>(birth_year)
+
+<span class="kw">if</span> year &lt; <span class="nu">1900</span> <span class="kw">or</span> year &gt; <span class="nu">2006</span>:
+    <span class="fn">print</span>(<span class="st">"출생연도는 1900년부터 2006년 사이로 입력해주세요."</span>)
+<span class="kw">else</span>:
+    <span class="kw">if</span> last_digit <span class="kw">in</span> [<span class="st">'1'</span>, <span class="st">'6'</span>]:
+        <span class="fn">print</span>(<span class="st">"신청일은 월요일입니다."</span>)
+    <span class="kw">elif</span> last_digit <span class="kw">in</span> [<span class="st">'2'</span>, <span class="st">'7'</span>]:
+        <span class="fn">print</span>(<span class="st">"신청일은 화요일입니다."</span>)
+    <span class="kw">elif</span> last_digit <span class="kw">in</span> [<span class="st">'3'</span>, <span class="st">'8'</span>]:
+        <span class="fn">print</span>(<span class="st">"신청일은 수요일입니다."</span>)
+    <span class="kw">elif</span> last_digit <span class="kw">in</span> [<span class="st">'4'</span>, <span class="st">'9'</span>]:
+        <span class="fn">print</span>(<span class="st">"신청일은 목요일입니다."</span>)
+    <span class="kw">elif</span> last_digit <span class="kw">in</span> [<span class="st">'5'</span>, <span class="st">'0'</span>]:
+        <span class="fn">print</span>(<span class="st">"신청일은 금요일입니다."</span>)</code></pre>
+        <div class="result">출생연도 4자리를 입력하세요: 1995
+신청일은 금요일입니다.</div>
       </div></details>
     </div>
   </div>
