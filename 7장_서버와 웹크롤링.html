@@ -870,9 +870,32 @@ soup = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">'ht
       <figcaption style="font-size:.85rem;color:var(--sub);margin-top:6px">▲ F12(검사)로 본 구조 — <code>div.m_service &gt; ul &gt; li</code> 안에 메뉴가 들어 있음</figcaption>
     </figure>
     <p>그 다음 “주요 서비스” 메뉴 글자를 <code>select()</code>로 한꺼번에 뽑습니다.</p>
-<pre><code><span class="cm"># 메뉴 글자 수집 — 여러 요소를 리스트로</span>
-li = soup.<span class="fn">select</span>(<span class="st">'div.m_service &gt; ul &gt; li'</span>)
-<span class="kw">for</span> item <span class="kw">in</span> li:
+<pre><code><span class="kw">import</span> requests
+<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
+
+<span class="cm"># 1단계. HTML 구조 확인하기</span>
+<span class="st">'''브라우저에서 서울시청 홈페이지를 열고:
+F12 → Elements(요소) 를 선택합니다.
+공공서비스예약, 서울소식, 주요뉴스 같은 글자를 찾아보세요.
+CSS 선택자 확인'''</span>
+
+<span class="cm"># 2단계. requests로 서울시청 HTML 가져오기</span>
+url = <span class="st">"https://www.seoul.go.kr/main/index.jsp"</span>
+response = requests.<span class="fn">get</span>(url)
+<span class="cm"># print(response.text)</span>
+
+<span class="cm"># 3단계. BeautifulSoup으로 HTML 분석하기</span>
+soup = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">'html.parser'</span>)
+<span class="fn">print</span>(soup.title) <span class="cm">#title 태그</span>
+<span class="fn">print</span>(soup.title.text) <span class="cm"># 제목 문자열</span>
+
+<span class="cm"># 4단계. 메뉴 글자 수집 — 여러 요소를 리스트로</span>
+all_li = soup.<span class="fn">select</span>(<span class="st">'div.m_service &gt; ul &gt; li'</span>)
+<span class="cm"># print(all_li)</span>
+<span class="fn">print</span>(all_li[<span class="nu">0</span>])
+
+<span class="cm"># 전체 목록</span>
+<span class="kw">for</span> item <span class="kw">in</span> all_li:
     <span class="fn">print</span>(item.text.<span class="fn">strip</span>())</code></pre>
     <div class="result"><b>실행 결과</b>
 공공서비스예약
@@ -936,24 +959,6 @@ contents = html.<span class="fn">select</span>(<span class="st">'ul.display-cont
 수, 토요일: 9:30 – 21:00 (입장 마감 20:30)
 ...
 관람료 — 무료: 상설전시관, 어린이박물관, 무료 특별전시 / 유료: 유료 특별전시</div>
-  </div>
-
-  <div class="block">
-    <span class="tag ex">💡 예제 3 — KBS 뉴스 기사 제목</span>
-    <p>기사 상세 페이지에서 제목은 보통 하나(<code>select_one</code>)이므로 <code>.text.strip()</code>으로 깔끔하게 가져옵니다.</p>
-<pre><code><span class="kw">import</span> requests
-<span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
-
-url = <span class="st">"https://news.kbs.co.kr/news/pc/view/view.do?ncd=8539528"</span>
-response = requests.<span class="fn">get</span>(url)
-html = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">"html.parser"</span>)
-
-<span class="cm"># 기사 제목 추출</span>
-title = html.<span class="fn">select_one</span>(<span class="st">"h4.headline-title"</span>).text.<span class="fn">strip</span>()
-<span class="fn">print</span>(<span class="st">"기사 제목:"</span>, title)</code></pre>
-    <div class="result"><b>실행 결과(예시)</b>
-기사 제목: (해당 기사 페이지의 제목이 출력됩니다)</div>
-    <div class="note"><b>news 주소의 ncd</b> URL 끝의 <code>ncd=번호</code>가 기사 고유 번호입니다. 다른 기사를 크롤링하려면 이 번호만 바꾸면 됩니다.</div>
   </div>
 
   <div class="block">
