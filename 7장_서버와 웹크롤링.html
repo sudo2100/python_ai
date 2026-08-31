@@ -964,28 +964,41 @@ contents = html.<span class="fn">select</span>(<span class="st">'ul.display-cont
   <div class="block">
     <span class="tag ex">💡 예제 4 — 네이버 금융 환율 정보</span>
     <p>홈페이지: 네이버 → 증권 → 시장지표 → 환전 고시 환율. F12로 <code>div.market1</code> 아래 <code>span.blind</code>(이름), <code>span.value</code>(가격)를 확인했습니다.</p>
-<pre><code><span class="cm"># 네이버 환율 정보</span>
-<span class="kw">import</span> requests
+<pre><code><span class="kw">import</span> requests
 <span class="kw">from</span> bs4 <span class="kw">import</span> BeautifulSoup
 
+<span class="cm"># 1. 네이버 &gt; 증권 &gt; 시장지표</span>
+
+<span class="cm"># 2. url</span>
 url = <span class="st">"https://finance.naver.com/marketindex/"</span>
 response = requests.<span class="fn">get</span>(url)
-html = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">"html.parser"</span>)
 
-<span class="cm"># 환율 정보 리스트 전체</span>
-all_li = html.<span class="fn">select</span>(<span class="st">"div.market1 ul li"</span>)
+<span class="cm"># 3. html parsing</span>
+soup = <span class="fn">BeautifulSoup</span>(response.text, <span class="st">'html.parser'</span>)
 
-<span class="cm"># 환율 종류 및 가격 출력</span>
+<span class="cm"># 4. 환율 정보 - 첫째 항목</span>
+exchange_name = soup.<span class="fn">select_one</span>(<span class="st">'ul.data_lst span.blind'</span>).text
+<span class="fn">print</span>(exchange_name) <span class="cm">#미국 USD</span>
+exchange_price = soup.<span class="fn">select_one</span>(<span class="st">'ul.data_lst span.value'</span>).text
+<span class="fn">print</span>(exchange_price)
+
+<span class="cm"># 5. 환율 정보 - 모든 항목</span>
+all_li = soup.<span class="fn">select</span>(<span class="st">'div.market1 ul li'</span>)
+<span class="cm"># print(all_li)</span>
+
 <span class="kw">for</span> li <span class="kw">in</span> all_li:
-    exchange_name = li.<span class="fn">select_one</span>(<span class="st">"span.blind"</span>).text.<span class="fn">strip</span>()
-    exchange_price = li.<span class="fn">select_one</span>(<span class="st">"span.value"</span>).text.<span class="fn">strip</span>()
-    <span class="fn">print</span>(f<span class="st">"{exchange_name.split()[0]}: {exchange_price}"</span>)</code></pre>
+  exchange_name = li.<span class="fn">select_one</span>(<span class="st">'span.blind'</span>).<span class="fn">get_text</span>()
+  exchange_price = li.<span class="fn">select_one</span>(<span class="st">'span.value'</span>).<span class="fn">get_text</span>()
+  <span class="cm"># print(f"{exchange_name} : {exchange_price}")</span>
+  <span class="fn">print</span>(f<span class="st">"{exchange_name.split()[1]} : {exchange_price}"</span>)</code></pre>
     <div class="result"><b>실행 결과(예시)</b>
-미국: 1,467.80
-일본: 925.44
-유럽연합: 1,726.72
-중국: 215.30</div>
-    <div class="note"><b>문자열 다듬기</b> <code>.strip()</code>은 앞뒤 공백 제거, <code>.split()[0]</code>은 공백으로 나눈 첫 단어만 사용합니다. (예: “미국 USD” → “미국”)</div>
+미국 USD
+1,467.80
+USD : 1,467.80
+JPY : 925.44
+EUR : 1,726.72
+CNY : 215.30</div>
+    <div class="note"><b>코드 살펴보기</b> <code>ul.data_lst span.blind</code>로 <b>첫 항목</b>만 먼저 확인한 뒤, <code>div.market1 ul li</code>로 <b>모든 항목</b>을 반복합니다. <code>.get_text()</code>는 <code>.text</code>와 같고, <code>.split()[1]</code>은 공백으로 나눈 <b>두 번째 단어</b>(통화 코드)를 사용합니다. (예: “미국 USD” → “USD”)</div>
   </div>
 
   <div class="block">
