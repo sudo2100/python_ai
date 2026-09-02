@@ -793,67 +793,101 @@ conn.<span class="fn">close</span>() <span class="cm"># 접속 끊기</span>
     <div class="note"><b>검색 함수 비교</b> <code>fetchall()</code>은 조건에 맞는 <b>모든 행</b>을 리스트로, <code>fetchone()</code>은 <b>한 행</b>만 돌려줍니다.</div>
   </div>
   <div class="block">
-    <span class="tag ex">💡 예제 — 회원(member) 테이블 만들기</span>
-    <p>연결을 만들어 돌려주는 <code>getconn()</code> 함수를 두면 반복 작업이 편리합니다. 기본키·NOT NULL·기본값(DEFAULT)을 함께 적용합니다.</p>
+    <span class="tag ex">💡 예제 — 회원(member) 관리 CRUD 함수</span>
+    <p>연결을 돌려주는 <code>getconn()</code>을 두고, 작업별로 함수(생성·삽입·조회·1건조회·수정·삭제)를 나눠 둡니다. 값은 <code>?</code> <b>동적 바인딩</b>으로 튜플에 담아 안전하게 전달합니다. 맨 아래에서 <b>필요한 함수만 주석을 풀어</b> 실행합니다.</p>
     <pre><code><span class="kw">import</span> sqlite3
 
-<span class="cm"># 연결을 만들어 돌려주는 함수 — 반복 사용에 편리</span>
+<span class="cm"># DB 접속 함수 정의</span>
 <span class="kw">def</span> <span class="fn">getconn</span>():
-    <span class="kw">return</span> sqlite3.<span class="fn">connect</span>(<span class="st">"c:/pydb/member.db"</span>)
+    conn = sqlite3.<span class="fn">connect</span>(<span class="st">"c:/pydb/member.db"</span>)
+    <span class="kw">return</span> conn
 
-<span class="cm"># 회원 테이블 생성</span>
+<span class="cm"># 테이블 생성 함수 정의</span>
 <span class="kw">def</span> <span class="fn">create_table</span>():
+    <span class="cm"># 테이블 생성</span>
     conn = <span class="fn">getconn</span>()
     cur = conn.<span class="fn">cursor</span>()
-    cur.<span class="fn">execute</span>(<span class="st">"""
-        CREATE TABLE IF NOT EXISTS member(
-            m_id       CHAR(5)  PRIMARY KEY,
-            m_passwd   CHAR(10) NOT NULL,
-            m_name     TEXT     NOT NULL,
-            m_joindate TEXT     DEFAULT (datetime('now','localtime'))
-        )
-    """</span>)
+    sql = <span class="st">"""
+    CREATE TABLE member(
+        m_id CHAR(4) PRIMARY KEY,
+        m_passwd CHAR(10) NOT NULL,
+        m_name TEXT NOT NULL,
+        m_joindate TEXT DEFAULT (datetime('now','localtime'))
+    )
+    """</span>
+    cur.<span class="fn">execute</span>(sql)
+    conn.<span class="fn">commit</span>()
+    <span class="fn">print</span>(<span class="st">"테이블 생성"</span>)
+    conn.<span class="fn">close</span>()
+
+<span class="kw">def</span> <span class="fn">insert_member</span>():
+    <span class="cm"># 자료 삽입</span>
+    conn = <span class="fn">getconn</span>()
+    cur = conn.<span class="fn">cursor</span>()
+    <span class="cm"># 자료 삽입 방법 - 동적 바인딩('?' 기호로 대응)</span>
+    sql = <span class="st">"INSERT INTO member(m_id, m_passwd, m_name) VALUES (?, ?, ?)"</span>
+    cur.<span class="fn">execute</span>(sql, (<span class="st">'1001'</span>, <span class="st">'m123456781'</span>, <span class="st">'김도영'</span>))  <span class="cm"># 튜플</span>
+    conn.<span class="fn">commit</span>()
+    <span class="fn">print</span>(<span class="st">"회원 추가"</span>)
+    conn.<span class="fn">close</span>()
+
+<span class="kw">def</span> <span class="fn">select_member</span>():
+    <span class="cm"># 자료 검색</span>
+    conn = <span class="fn">getconn</span>()
+    cur = conn.<span class="fn">cursor</span>()
+    sql = <span class="st">"SELECT * FROM member"</span>
+    cur.<span class="fn">execute</span>(sql)
+    rs = cur.<span class="fn">fetchall</span>()
+    <span class="kw">for</span> i <span class="kw">in</span> rs:
+        <span class="fn">print</span>(i)
+    conn.<span class="fn">close</span>()
+
+<span class="kw">def</span> <span class="fn">select_one</span>():
+    <span class="cm"># 특정한 자료 1개 검색</span>
+    conn = <span class="fn">getconn</span>()
+    cur = conn.<span class="fn">cursor</span>()
+    sql = <span class="st">"SELECT * FROM member WHERE m_id = ?"</span>
+    cur.<span class="fn">execute</span>(sql, (<span class="st">'1001'</span>,))  <span class="cm"># 튜플 - 자료 1개(콤머 붙임)</span>
+    rs = cur.<span class="fn">fetchone</span>()
+    <span class="fn">print</span>(rs)
+    conn.<span class="fn">close</span>()
+
+<span class="kw">def</span> <span class="fn">update_member</span>():
+    <span class="cm"># 자료 수정</span>
+    conn = <span class="fn">getconn</span>()
+    cur = conn.<span class="fn">cursor</span>()
+    sql = <span class="st">"UPDATE member SET m_passwd = ? WHERE m_name = ?"</span>
+    cur.<span class="fn">execute</span>(sql, (<span class="st">'m123456782'</span>, <span class="st">'김도영'</span>))
     conn.<span class="fn">commit</span>()
     conn.<span class="fn">close</span>()
-    <span class="fn">print</span>(<span class="st">"member 테이블 생성 완료"</span>)</code></pre>
+
+<span class="kw">def</span> <span class="fn">delete_member</span>():
+    <span class="cm"># 자료 삭제</span>
+    conn = <span class="fn">getconn</span>()
+    cur = conn.<span class="fn">cursor</span>()
+    sql = <span class="st">"DELETE FROM member WHERE m_id = ?"</span>
+    cur.<span class="fn">execute</span>(sql, (<span class="st">'1001'</span>, ))
+    conn.<span class="fn">commit</span>()
+    conn.<span class="fn">close</span>()
+
+<span class="cm"># 함수 호출</span>
+<span class="cm"># create_table()</span>
+<span class="fn">insert_member</span>()
+<span class="cm">#select_one()</span>
+<span class="cm">#update_member()</span>
+<span class="cm">#delete_member()</span>
+<span class="fn">select_member</span>()</code></pre>
     <table>
       <tr><th>칼럼</th><th>자료형</th><th>설명</th></tr>
-      <tr><td><code>m_id</code></td><td>CHAR(5) PRIMARY KEY</td><td>회원번호(기본키)</td></tr>
+      <tr><td><code>m_id</code></td><td>CHAR(4) PRIMARY KEY</td><td>회원번호(기본키)</td></tr>
       <tr><td><code>m_passwd</code></td><td>CHAR(10) NOT NULL</td><td>비밀번호</td></tr>
       <tr><td><code>m_name</code></td><td>TEXT NOT NULL</td><td>이름</td></tr>
       <tr><td><code>m_joindate</code></td><td>TEXT DEFAULT (datetime…)</td><td>가입일(자동)</td></tr>
     </table>
-  </div>
-  <div class="block">
-    <span class="tag ex">💡 예제 — 책(book) 관리와 AUTOINCREMENT</span>
-    <p><code>AUTOINCREMENT</code>를 붙이면 <code>book_no</code>가 <b>1씩 자동으로 증가</b>합니다. 그래서 삽입할 때 <b>book_no는 직접 넣지 않습니다.</b></p>
-    <pre><code><span class="kw">import</span> sqlite3
-
-<span class="kw">def</span> <span class="fn">getconn</span>():
-    <span class="kw">return</span> sqlite3.<span class="fn">connect</span>(<span class="st">"c:/pydb/test.db"</span>)
-
-<span class="cm"># book 테이블 — book_no는 AUTOINCREMENT(1씩 자동 증가)</span>
-<span class="kw">def</span> <span class="fn">create_book</span>():
-    conn = <span class="fn">getconn</span>()
-    cur = conn.<span class="fn">cursor</span>()
-    cur.<span class="fn">execute</span>(<span class="st">"""
-        CREATE TABLE IF NOT EXISTS book(
-            book_no   INTEGER PRIMARY KEY AUTOINCREMENT,
-            title     TEXT NOT NULL,
-            publisher TEXT NOT NULL,
-            page      INTEGER
-        )
-    """</span>)
-    conn.<span class="fn">commit</span>(); conn.<span class="fn">close</span>()
-
-<span class="cm"># 책 추가 — book_no는 넣지 않는다(자동 증가)</span>
-<span class="kw">def</span> <span class="fn">add_book</span>(title, publisher, page):
-    conn = <span class="fn">getconn</span>(); cur = conn.<span class="fn">cursor</span>()
-    cur.<span class="fn">execute</span>(<span class="st">"INSERT INTO book(title, publisher, page) VALUES (?, ?, ?)"</span>,
-                (title, publisher, page))
-    conn.<span class="fn">commit</span>(); conn.<span class="fn">close</span>()
-
-<span class="fn">add_book</span>(<span class="st">"파이썬 입문"</span>, <span class="st">"한빛"</span>, <span class="nu">320</span>)</code></pre>
+    <div class="result"><b>실행 결과</b>
+회원 추가
+('1001', 'm123456781', '김도영', '2026-09-02 20:15:00')</div>
+    <div class="note"><b>동적 바인딩(?)과 튜플</b> 값을 <code>?</code> 자리에 넣을 때는 튜플로 전달합니다. 값이 <b>1개일 때는 <code>('1001',)</code>처럼 콤마</b>를 꼭 붙여야 튜플로 인식됩니다. 처음 실행할 때는 <code>create_table()</code> 주석을 먼저 풀어 테이블을 만든 뒤 나머지를 실행하세요.</div>
   </div>
   <div class="block">
     <span class="tag lab">✏️ 실습문제</span>
