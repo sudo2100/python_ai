@@ -593,14 +593,11 @@ result = food[<span class="st">"가격"</span>] &lt; food[<span class="st">"가�
 <span class="cm"># 그룹핑 - groupby()</span>
 food[<span class="st">"분류"</span>].<span class="fn">value_counts</span>()
 food[<span class="st">"메뉴"</span>].<span class="fn">value_counts</span>()
-<span class="cm"># 메뉴별 평균</span>
-<span class="cm"># food.groupby("메뉴").mean(numeric_only=True)</span>
-<span class="cm"># 분류별 평균</span>
-<span class="cm"># food.groupby("분류").mean(numeric_only=True)</span>
 <span class="cm"># 분류별 가격의 평균</span>
 food.<span class="fn">groupby</span>(<span class="st">"분류"</span>)[<span class="st">"가격"</span>].<span class="fn">mean</span>()
-<span class="cm"># 분류별 수량의 평균 (※ '수량' 칼럼이 있을 때)</span>
-<span class="cm"># food.groupby("분류")["수량"].mean()</span></code></pre>
+<span class="cm"># 메뉴별 가격의 최대값 계산</span>
+grouped_max = food.<span class="fn">groupby</span>(<span class="st">'메뉴'</span>)[<span class="st">'가격'</span>].<span class="fn">max</span>()
+<span class="fn">print</span>(grouped_max)   <span class="cm"># 메뉴별 가격의 최대값 출력</span></code></pre>
     <table>
       <tr><th>함수</th><th>기능</th></tr>
       <tr><td><code>sum() / mean()</code></td><td>합계 / 평균</td></tr>
@@ -664,10 +661,9 @@ df_nan[<span class="st">'C'</span>] = np.nan
 <span class="cm"># df_nan.info()</span>
 df_nan.<span class="fn">isna</span>().<span class="fn">sum</span>()          <span class="cm"># 열별 결측치 개수</span>
 
-<span class="cm"># 결측치가 있는 1행 삭제</span>
-<span class="cm"># inplace=True → 즉시 삭제</span>
-<span class="cm"># df_nan.drop(1, axis=0, inplace=True)</span>
-<span class="cm"># df_nan</span>
+<span class="cm"># 결측치가 있는 행 제거하기</span>
+df_nan.<span class="fn">dropna</span>(inplace=<span class="kw">True</span>)
+<span class="fn">print</span>(df_nan)
 
 <span class="cm"># 결측치가 있는 열(C) 삭제</span>
 df_nan = df_nan.<span class="fn">drop</span>(<span class="st">'C'</span>, axis=<span class="nu">1</span>)
